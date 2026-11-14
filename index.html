@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실습 유인물 — 생성형 AI로 상담·코칭 도구 체험하기</title>
+<style>
+:root{--navy:#14284b;--navy2:#1f3d6e;--sky:#4aa8e0;--sky-l:#e6f3fb;--sky-m:#b9def4;--red:#e2483d;--teal:#18a596;--amber:#e7a93a;--muted:#5a6b85;--bg:#f6f9fc;--ease:cubic-bezier(.22,.8,.3,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;background:var(--bg);color:var(--navy);font-size:18px;line-height:1.65}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+code{font-family:"D2Coding","Consolas","Menlo",monospace;background:var(--sky-l);padding:1px 6px;border-radius:6px;font-size:.92em}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 120px}
+/* top */
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:28px 20px 24px}
+.hero .in{max-width:860px;margin:0 auto}
+.hero small{display:inline-block;background:rgba(255,255,255,.15);padding:3px 12px;border-radius:999px;font-size:14px;font-weight:700}
+.hero h1{font-size:clamp(24px,5vw,34px);line-height:1.3;margin:10px 0 6px}
+.hero p{opacity:.85;font-size:16px}
+.hero .who{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.hero input{flex:1;min-width:150px;min-height:48px;border-radius:12px;border:none;padding:0 14px;font-size:17px}
+nav.jump{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #dde6f0;overflow-x:auto;white-space:nowrap;padding:8px 12px}
+nav.jump a{display:inline-block;padding:8px 14px;margin-right:6px;border-radius:999px;background:var(--sky-l);color:var(--navy);text-decoration:none;font-weight:700;font-size:15px}
+nav.jump a.done{background:var(--teal);color:#fff}
+.prog{height:5px;background:#e6edf5}.prog div{height:100%;width:0;background:var(--sky);transition:width .6s var(--ease)}
+/* sections */
+section.sec{margin-top:26px;opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+section.sec.in{opacity:1;transform:none}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sh .no{flex:0 0 44px;height:44px;border-radius:14px;color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px}
+.sh h2{font-size:23px;line-height:1.3}
+.sh .time{font-size:13px;font-weight:700;color:var(--muted)}
+.card{background:#fff;border-radius:18px;padding:18px;border:1px solid #e3ebf4;box-shadow:0 3px 14px rgba(20,40,75,.05);margin-bottom:14px}
+.card h3{font-size:19px;margin-bottom:8px}
+.small{font-size:15px;color:var(--muted)}
+.warn{background:#fff8ec;border:1px solid #f3cf95;color:#8a5300;border-radius:12px;padding:10px 14px;font-size:15px;margin-top:10px}
+/* prompt box */
+.pbox{position:relative;background:#0f1e38;color:#dbe9f7;border-radius:14px;padding:16px 16px 60px;font-size:16px;line-height:1.75;white-space:pre-wrap;font-family:"D2Coding","Consolas","Menlo",monospace;margin:8px 0}
+.pbox .lbl{display:block;font-family:inherit;color:#7fb8de;font-size:13px;font-weight:700;margin-bottom:4px}
+.cbtn{position:absolute;right:10px;bottom:10px;min-height:44px;padding:0 16px;border-radius:10px;border:none;background:var(--sky);color:#fff;font-weight:800;font-size:15px;transition:background .3s,transform .2s}
+.cbtn:active{transform:scale(.96)}
+.cbtn.ok{background:var(--teal)}
+.btn{min-height:50px;padding:0 18px;border-radius:12px;border:2px solid var(--navy);background:#fff;color:var(--navy);font-size:16px;font-weight:800}
+.btn.primary{background:var(--navy);color:#fff}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+a.ext.pdf{display:flex;margin:6px 0;width:100%}
+a.ext{display:inline-flex;align-items:center;min-height:48px;padding:0 16px;border-radius:12px;background:var(--sky-l);border:2px solid var(--sky-m);color:var(--navy);text-decoration:none;font-weight:800;font-size:16px}
+/* checklist */
+.chk{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid #eef2f7;cursor:pointer}
+.chk:last-child{border-bottom:none}
+.chk .box{flex:0 0 30px;height:30px;border-radius:9px;border:3px solid var(--sky);display:grid;place-items:center;color:#fff;font-weight:900;transition:background .35s,border-color .35s,transform .25s}
+.chk.on .box{background:var(--teal);border-color:var(--teal);transform:scale(1.08)}
+.chk.on span{color:var(--muted);text-decoration:line-through}
+/* stars */
+.rate{width:100%;border-collapse:collapse;font-size:16px}
+.rate th{font-size:14px;color:var(--muted);text-align:center;padding:6px}
+.rate th:first-child{text-align:left}
+.rate td{padding:8px 4px;border-top:1px solid #eef2f7;vertical-align:middle}
+.rate td:first-child{font-weight:700;width:38%}
+.stars{text-align:center;white-space:nowrap}
+.stars button{border:none;background:none;font-size:26px;color:#cfd8e3;padding:0;line-height:1;transition:color .25s,transform .25s}
+.stars button.on{color:#f2b84b}
+.stars button.pop{transform:scale(1.35)}
+@media(max-width:420px){.stars button{font-size:21px}.rate td:first-child{width:34%}}
+.tot{display:grid;grid-template-columns:72px 1fr 48px;align-items:center;gap:8px;margin-top:8px;font-weight:700;font-size:15px}
+.tbar{height:18px;background:#e6edf5;border-radius:9px;overflow:hidden}
+.tbar div{height:100%;width:0;border-radius:9px;transition:width .7s var(--ease)}
+/* fields */
+label.f{display:block;font-weight:800;font-size:16px;margin:12px 0 6px}
+label.f i{font-style:normal;display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px}
+textarea,input.t{width:100%;border:2px solid #d6e3f0;border-radius:12px;padding:12px 14px;font-size:17px;line-height:1.6;background:#fff;transition:border-color .3s}
+textarea:focus,input.t:focus{outline:none;border-color:var(--sky)}
+textarea{min-height:76px;resize:vertical}
+.meter{height:12px;background:#e6edf5;border-radius:6px;overflow:hidden;margin-top:10px}
+.meter div{height:100%;width:0;background:linear-gradient(90deg,var(--sky),var(--teal));transition:width .6s var(--ease)}
+/* tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tabs button{min-height:48px;padding:0 14px;border-radius:12px;border:2px solid #d6e3f0;background:#fff;font-size:15px;font-weight:800;color:var(--navy);transition:all .35s}
+.tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.vres{margin-top:8px;font-weight:700;min-height:28px}
+/* verdict */
+.vrow{border:2px solid #e3ebf4;border-radius:14px;padding:12px;margin-bottom:10px;transition:border-color .4s,background .4s}
+.vrow.ok{border-color:var(--teal);background:#f0faf8}.vrow.bad{border-color:var(--red);background:#fdf0ef}.vrow.none{border-color:var(--amber);background:#fff8ec}
+.vbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.vbtns button{min-height:44px;padding:0 12px;border-radius:10px;border:2px solid #d6e3f0;background:#fff;font-weight:800;font-size:15px;transition:all .3s}
+.vbtns button.on[data-v=ok]{background:var(--teal);border-color:var(--teal);color:#fff}
+.vbtns button.on[data-v=bad]{background:var(--red);border-color:var(--red);color:#fff}
+.vbtns button.on[data-v=none]{background:var(--amber);border-color:var(--amber);color:#fff}
+.vrow input.t{font-size:16px;padding:10px 12px}
+.opt .lbl{font-weight:800;font-size:16px;margin:10px 0 6px}
+.opt button{min-height:46px;padding:0 14px;margin:0 6px 6px 0;border-radius:12px;border:2px solid #d6e3f0;background:#fff;font-size:15px;font-weight:700;color:var(--navy);transition:all .3s}
+.opt button.on{background:var(--sky);border-color:var(--sky);color:#fff}
+/* bottom bar */
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #dde6f0;padding:10px 12px;display:flex;gap:8px;justify-content:center;z-index:20}
+.bottom .btn{flex:1;max-width:280px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:all .45s var(--ease);z-index:30;font-size:16px}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{margin-top:30px;font-size:14px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}section.sec{opacity:1;transform:none}}
+@media print{.bottom,nav.jump,.cbtn,.btnrow{display:none}section.sec{opacity:1;transform:none}.pbox{background:#f4f7fb;color:#14284b}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="in">
+  <small>학생용 실습지 · 120분</small>
+  <h1>생성형 AI로 상담·코칭 도구 체험하기</h1>
+  <p>복사 버튼으로 프롬프트를 가져가고, 결과는 여기에 바로 기록하세요.</p>
+  <div class="who"><input id="who" class="save" placeholder="이름 또는 조 (예: 3조 김하늘)"></div>
+</div></header>
+<nav class="jump" id="jump">
+  <a href="#s0">준비</a><a href="#s1">① 비교</a><a href="#s2">② 프롬프트</a><a href="#s3">③ 스킬</a><a href="#s4">④ 팩트 체크</a><a href="#s5">⑤ 문서</a><a href="#s6">마무리</a>
+</nav>
+<div class="prog"><div id="prog"></div></div>
+
+<div class="wrap">
+
+<!-- 0 준비 -->
+<section class="sec" id="s0">
+  <div class="sh"><div class="no" style="background:var(--navy2)">0</div><div><h2>시작 전 준비</h2><div class="time">수업 시작 전 3분</div></div></div>
+  <div class="card">
+    <div class="chk" data-k="p1"><div class="box">✓</div><span>Gemini에 Google 계정으로 로그인했다</span></div>
+    <div class="chk" data-k="p2"><div class="box">✓</div><span>ChatGPT에 로그인했다</span></div>
+    <div class="chk" data-k="p3"><div class="box">✓</div><span>Gemini ‘활동 기록 유지’가 켜져 있다 (스킬 사용 조건 · 만 18세 이상)</span></div>
+    <div class="btnrow"><a class="ext" href="https://gemini.google.com" target="_blank" rel="noopener">✨ Gemini 열기</a><a class="ext" href="https://chatgpt.com" target="_blank" rel="noopener">💬 ChatGPT 열기</a></div>
+  </div>
+  <div class="card" style="border-left:6px solid var(--red)">
+    <h3>🔒 오늘의 약속</h3>
+    <div class="chk" data-k="p4"><div class="box">✓</div><span>실명·연락처·학번·실제 상담 기록은 AI에 넣지 않는다 (가상 사례·공개 자료만)</span></div>
+    <div class="chk" data-k="p5"><div class="box">✓</div><span>AI 답은 틀릴 수 있다 — 근거(출처)를 확인한다</span></div>
+    <div class="chk" data-k="p6"><div class="box">✓</div><span>판단과 책임은 사람이 진다. 위기 신호는 AI가 아니라 전문가·기관에 연계한다</span></div>
+  </div>
+</section>
+
+<!-- 1 비교 -->
+<section class="sec" id="s1">
+  <div class="sh"><div class="no" style="background:#2f6fb5">1</div><div><h2>제미나이 vs 챗GPT 비교</h2><div class="time">오리엔테이션 · 10분</div></div></div>
+  <div class="card">
+    <h3>STEP 1. 아래 프롬프트를 두 서비스에 똑같이 붙여 넣기</h3>
+    <div class="pbox" id="pr_cmp">너는 대학 학생상담센터의 코치야.
+진로 때문에 불안하다는 20대 대학생(가상 사례)과 첫 상담을 한다고 할 때 쓸 열린 질문 5개를 만들어 줘.
+표로 정리하고, 질문마다 의도를 한 줄씩 붙여 줘.<button class="cbtn" data-copy="pr_cmp">📋 복사</button></div>
+  </div>
+  <div class="card">
+    <h3>STEP 2. 별을 눌러 평가하기</h3>
+    <table class="rate" id="rate"><tr><th>기준</th><th>제미나이</th><th>챗GPT</th></tr></table>
+    <div class="tot"><span>제미나이</span><div class="tbar"><div id="tG" style="background:var(--sky)"></div></div><span id="nG">0점</span></div>
+    <div class="tot"><span>챗GPT</span><div class="tbar"><div id="tC" style="background:var(--teal)"></div></div><span id="nC">0점</span></div>
+  </div>
+  <div class="card">
+    <h3>STEP 3. 한 줄 소감</h3>
+    <textarea id="cmp_note" class="save" placeholder="가장 달랐던 점은? 상담·코칭 준비에는 어느 쪽이 더 도움이 될 것 같나요?"></textarea>
+  </div>
+</section>
+
+<!-- 2 프롬프트 -->
+<section class="sec" id="s2">
+  <div class="sh"><div class="no" style="background:#18a596">2</div><div><h2>4요소로 프롬프트 쓰기</h2><div class="time">프롬프트 → 스킬 · 15분</div></div></div>
+  <div class="card">
+    <h3>칸을 채우면 프롬프트가 자동으로 완성돼요</h3>
+    <p class="small">막히면 <b>예시 채우기</b>를 누른 뒤 내 상황에 맞게 고쳐 보세요. 사례는 꼭 가상으로!</p>
+    <label class="f"><i style="background:#2f6fb5"></i>🎭 역할 — AI가 누구인지</label>
+    <textarea id="r1" class="save pf" placeholder="예: 너는 대학 학생상담센터에서 일하는 진로 코치야."></textarea>
+    <label class="f"><i style="background:#18a596"></i>📍 상황 — 어떤 사례·맥락인지</label>
+    <textarea id="r2" class="save pf" placeholder="예: 진로 결정을 앞두고 불안하다는 20대 대학생(가상 사례)과 첫 회기를 준비하고 있어."></textarea>
+    <label class="f"><i style="background:#e2483d"></i>🎯 요청 — 무엇을 해 달라는지</label>
+    <textarea id="r3" class="save pf" placeholder="예: 관계를 여는 열린 질문 5개를 만들어 줘. 유도 질문은 피해 줘."></textarea>
+    <label class="f"><i style="background:#7a52c7"></i>📐 형식 — 어떤 모양으로 받을지</label>
+    <textarea id="r4" class="save pf" placeholder="예: 표(질문 | 의도 | 주의할 점)로 정리해 줘."></textarea>
+    <div class="meter"><div id="pm"></div></div>
+    <p class="small" id="pmsg">0 / 4 칸 완성</p>
+    <div class="pbox" id="pr_mine"><span class="lbl">완성된 내 프롬프트</span><span id="mine">(칸을 채우면 여기에 나타나요)</span><button class="cbtn" data-copy="pr_mine">📋 복사</button></div>
+    <div class="btnrow"><button class="btn" id="fillEx">✏️ 예시 채우기</button></div>
+  </div>
+  <div class="card">
+    <h3>다듬기 기록 — 결과를 보고 무엇을 고쳤나요?</h3>
+    <label class="f">1차 → 2차에서 고친 점</label><textarea id="ref1" class="save" placeholder="예: 형식을 표로 바꿨다"></textarea>
+    <label class="f">2차 → 3차에서 고친 점</label><textarea id="ref2" class="save" placeholder="예: '정보가 부족하면 먼저 되물어 줘'를 추가했다"></textarea>
+    <div class="pbox" id="pr_add"><span class="lbl">다듬을 때 덧붙이기 좋은 문장</span>정보가 부족하면 추측하지 말고 먼저 나에게 되물어 줘.
+유도 질문과 한 번에 두 가지를 묻는 질문은 빼 줘.
+마지막에 내가 직접 점검할 점 2가지를 덧붙여 줘.<button class="cbtn" data-copy="pr_add">📋 복사</button></div>
+  </div>
+</section>
+
+<!-- 3 스킬 -->
+<section class="sec" id="s3">
+  <div class="sh"><div class="no" style="background:#18a596">3</div><div><h2>Gemini 스킬로 저장하기</h2><div class="time">프롬프트 → 스킬 · 15분</div></div></div>
+  <div class="card">
+    <h3>순서대로 체크하며 따라 하기</h3>
+    <div class="chk" data-k="k1"><div class="box">✓</div><span>Gemini 메뉴(☰) → <b>맞춤설정</b> → <b>스킬</b></span></div>
+    <div class="chk" data-k="k2"><div class="box">✓</div><span>‘스킬’ 글자 옆 <b>＋</b> → <b>수동으로 만들기</b></span></div>
+    <div class="chk" data-k="k3"><div class="box">✓</div><span>아래 템플릿의 이름·설명·요청 사항을 <b>칸별로 복사</b>해 붙여 넣기 → <b>만들기</b></span></div>
+    <div class="chk" data-k="k4"><div class="box">✓</div><span>새 채팅에서 <code>/</code>(또는 <code>@</code>) 입력 → 내 스킬 선택 → 테스트 사례 붙여 넣기</span></div>
+    <div class="chk" data-k="k5"><div class="box">✓</div><span>결과를 보고 <b>더보기 → Gemini로 수정</b>으로 한 군데 고치기</span></div>
+    <p class="small" style="margin-top:6px">💡 더 빠른 길: 채팅창에 “방금 프롬프트를 스킬로 만들어 줘”라고 요청해도 돼요.</p>
+  </div>
+  <div class="card">
+    <div class="tabs" id="skTabs"><button class="on" data-t="0">📘 코칭 질문 만들기</button><button data-t="1">🗂️ 역할극 기록 정리</button></div>
+    <div id="skBody"></div>
+  </div>
+  <div class="card">
+    <h3>✍️ 내 스킬 이름 검사기</h3>
+    <p class="small">동사(하는 일)로 · 띄어쓰기 대신 하이픈(-) · ‘도우미·helper’ 같은 막연한 말 피하기</p>
+    <input class="t save" id="nameIn" placeholder="예: draft-coaching-questions 또는 코칭질문-만들기" autocomplete="off">
+    <div class="vres" id="nameRes"></div>
+    <div class="warn">⚠️ SKILL.md 파일로 올릴 때는 영문 소문자-하이픈 규칙. 화면에서 만들 때 한글 이름이 저장되는지는 직접 확인해 보세요.</div>
+  </div>
+  <div class="card">
+    <h3>🧪 도전 — 스킬이 개인정보를 걸러 낼까?</h3>
+    <div class="pbox" id="pr_test">(가상) 내담자 박지은, 010-1234-5678, 경영학과 3학년. 졸업을 앞두고 진로가 막막하다고 함.<button class="cbtn" data-copy="pr_test">📋 복사</button></div>
+    <p class="small">일부러 식별 정보를 넣은 가짜 사례예요. 스킬이 작업을 멈추고 지워 달라고 했나요?</p>
+    <div class="vbtns" data-k="test"><button data-v="ok">✅ 멈췄다</button><button data-v="bad">❌ 그냥 진행했다</button></div>
+    <textarea id="test_fix" class="save" placeholder="진행했다면, 요청 사항을 어떻게 고치면 될까요?" style="margin-top:10px"></textarea>
+  </div>
+</section>
+
+<!-- 4 팩트체크 -->
+<section class="sec" id="s4">
+  <div class="sh"><div class="no" style="background:#e2483d">4</div><div><h2>노트북으로 팩트 체크</h2><div class="time">35분 · Gemini Notebook(구 노트북LM)</div></div></div>
+  <div class="card">
+    <h3>STEP 1. 노트북 만들고 공개 자료 올리기</h3>
+    <div class="chk" data-k="n1"><div class="box">✓</div><span>Gemini Notebook(웹) 또는 Gemini 앱의 ‘노트북’에서 새 노트북 만들기 · 이름 붙이기</span></div>
+    <div class="chk" data-k="n2"><div class="box">✓</div><span>강사가 나눠 준 <b>예시 PDF 3개</b>를 소스로 추가 (자료1 이용 안내 · 자료2 실습 윤리 메모 · 자료3 코칭 질문 메모)</span></div>
+    <div class="pdfs">
+      <p class="small" style="margin:8px 0 6px"><b>📥 예시 PDF 받기</b> — 눌러서 저장한 뒤 노트북에 소스로 추가하세요</p>
+      <a class="ext pdf" href="source1-counseling-center-guide.pdf" download>📄 자료1 학생상담센터 이용 안내</a>
+      <a class="ext pdf" href="source2-practice-ethics-memo.pdf" download>📄 자료2 실습 윤리 메모</a>
+      <a class="ext pdf" href="source3-coaching-questions-memo.pdf" download>📄 자료3 코칭 질문 메모</a>
+      <p class="small" style="margin-top:4px">※ 수업 실습용 가상 자료예요 (실제 기관 정보 아님)</p>
+    </div>
+    <label class="f">내가 올린 소스 이름</label>
+    <textarea id="srcs" class="save" placeholder="예: 자료1 학생상담센터 이용 안내, 자료2 실습 윤리 메모, 자료3 코칭 질문 메모"></textarea>
+    <div class="btnrow"><a class="ext" href="https://notebooklm.google.com" target="_blank" rel="noopener">📓 Gemini Notebook 열기</a></div>
+  </div>
+  <div class="card">
+    <h3>STEP 2. 질문 3개 — 복사해서 [ ] 부분만 바꾸기</h3>
+    <div class="pbox" id="q1"><span class="lbl">① 사실 질문</span>‘[소스 이름, 예: 학생상담센터 이용 안내]’ 문서에서 [궁금한 항목, 예: 휴학생이 받을 수 있는 회기 수]는 무엇이라고 되어 있어? 소스에 근거해서만 답하고, 소스에 없으면 없다고 말해 줘.<button class="cbtn" data-copy="q1">📋 복사</button></div>
+    <div class="pbox" id="q2"><span class="lbl">② 비교 질문</span>올린 소스들에서 [주제, 예: 비밀보장의 예외 / 기록 보관 기간]을 어떻게 설명하는지 표로 비교해 줘. 소스마다 다른 점을 따로 표시해 줘.<button class="cbtn" data-copy="q2">📋 복사</button></div>
+    <div class="pbox" id="q3"><span class="lbl">③ 함정 질문 (소스에 없을 법한 것)</span>[소스에 없을 것 같은 질문, 예: 학생상담센터가 있는 건물과 층수]을 알려 줘. 소스에 없으면 지어내지 말고 “자료 없음”이라고 답해 줘.<button class="cbtn" data-copy="q3">📋 복사</button></div>
+  </div>
+  <div class="card">
+    <h3>STEP 3. 답을 한 문장씩 원문과 대조하기</h3>
+    <p class="small">답에서 문장을 옮겨 적고, 인용 번호를 눌러 원문을 확인한 뒤 판정하세요.</p>
+    <div id="fcRows"></div>
+  </div>
+</section>
+
+<!-- 5 문서 -->
+<section class="sec" id="s5">
+  <div class="sh"><div class="no" style="background:#7a52c7">5</div><div><h2>노트북으로 문서 만들기</h2><div class="time">40분 · 요약 보고서 · Q&amp;A</div></div></div>
+  <div class="card opt" id="optb">
+    <h3>STEP 1. 골라서 보고서 요청문 만들기</h3>
+    <div data-g="who"><div class="lbl">누가 읽나요?</div><button class="on">지도 교수님</button><button>함께 실습한 동기</button><button>기관 담당자</button></div>
+    <div data-g="what"><div class="lbl">어떤 형식?</div><button class="on">1쪽 요약 보고서</button><button>비교 표</button><button>점검 체크리스트</button></div>
+    <div data-g="tone"><div class="lbl">말투는?</div><button class="on">공식적인 문체</button><button>쉬운 말</button></div>
+    <div class="pbox" id="req"><span id="reqTxt"></span><button class="cbtn" data-copy="req">📋 복사</button></div>
+  </div>
+  <div class="card">
+    <h3>STEP 2. 최종 과제 체크</h3>
+    <div class="chk" data-k="d1"><div class="box">✓</div><span>노트북 채팅 또는 보고서 메뉴에서 요약 보고서 만들기</span></div>
+    <div class="chk" data-k="d2"><div class="box">✓</div><span>Gemini 스킬(예: 역할극 기록 정리 스킬 응용)로 양식·말투 다듬기</span></div>
+    <div class="chk" data-k="d3"><div class="box">✓</div><span>보고서 속 사실 3개를 원문과 대조 (아래 기록)</span></div>
+    <div class="chk" data-k="d4"><div class="box">✓</div><span>조별로 1분 공유</span></div>
+  </div>
+  <div class="card">
+    <h3>STEP 3. 보고서 속 사실 3개 대조</h3>
+    <div id="fcRows2"></div>
+  </div>
+</section>
+
+<!-- 6 마무리 -->
+<section class="sec" id="s6">
+  <div class="sh"><div class="no" style="background:var(--navy)">✓</div><div><h2>마무리 · 집에서 다시 보기</h2><div class="time">Q&amp;A</div></div></div>
+  <div class="card">
+    <label class="f" style="margin-top:0">오늘 가장 쓸모 있었던 것 한 가지</label><textarea id="end1" class="save"></textarea>
+    <label class="f">다음 실습에서도 쓰고 싶은 스킬 / 새로 만들고 싶은 스킬</label><textarea id="end2" class="save"></textarea>
+    <label class="f">강사에게 질문</label><textarea id="end3" class="save"></textarea>
+  </div>
+  <div class="card" style="background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff">
+    <h3>📌 한 장 요약</h3>
+    <p style="font-size:16px">· 프롬프트 4요소: 역할 · 상황 · 요청 · 형식 → 결과 보고 다듬기<br>
+    · 스킬: 맞춤설정 → 스킬 → ＋ → 저장, 채팅에서 <b>/</b>(또는 <b>@</b>)로 불러오기<br>
+    · 노트북: 내 자료 안에서만 답 → 인용 번호 눌러 원문 대조<br>
+    · 문서: 독자·형식·말투 지정 → 사람이 최종 검토<br>
+    · 내담자 정보는 넣지 않기 · 위기 신호는 전문가 연계</p>
+  </div>
+  <div class="btnrow"><button class="btn primary" id="export">📋 내 실습 기록 전체 복사</button><button class="btn" id="reset">🗑️ 기록 지우기</button></div>
+  <p class="small" style="margin-top:8px">복사한 기록은 과제 제출란이나 메모 앱에 붙여 넣으세요. 입력한 내용은 이 기기 브라우저에만 임시 저장돼요.</p>
+  <p class="foot">하이디교육컨설팅연구소 · 강사 최선희 · 2026년 11월 기준 (메뉴·기능은 바뀔 수 있어요)</p>
+</section>
+
+</div>
+
+<div class="bottom"><button class="btn" id="top">⬆ 맨 위로</button><button class="btn primary" id="export2">📋 내 기록 복사</button></div>
+<div class="toast" id="toast">복사됐어요!</div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+/* storage (safe) */
+const KEY='hidi-coaching-handout-v1';let st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){st={};}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}updateProg();};
+const toast=(m)=>{const t=$('#toast');t.textContent=m||'복사됐어요!';t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1600);};
+function copyText(txt,btn){
+  const done=()=>{toast();if(btn){const o=btn.textContent;btn.classList.add('ok');btn.textContent='✓ 복사됨';setTimeout(()=>{btn.classList.remove('ok');btn.textContent=o;},1500);}};
+  const fb=()=>{const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){toast('길게 눌러 직접 복사해 주세요');}t.remove();};
+  try{navigator.clipboard.writeText(txt).then(done).catch(fb);}catch(e){fb();}
+}
+const boxText=id=>{const b=document.getElementById(id).cloneNode(true);$$('.cbtn,.lbl',b).forEach(x=>x.remove());return b.innerText.trim();};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b)copyText(boxText(b.dataset.copy),b);});
+
+/* text fields */
+$$('.save').forEach(el=>{if(st[el.id])el.value=st[el.id];el.addEventListener('input',()=>{st[el.id]=el.value;save();});});
+
+/* checklists */
+$$('.chk').forEach(c=>{const k='c_'+c.dataset.k;if(st[k])c.classList.add('on');c.onclick=()=>{c.classList.toggle('on');st[k]=c.classList.contains('on');save();};});
+
+/* ratings */
+const crit=['답변의 구조·가독성','공감 표현의 자연스러움','되묻기·맥락 확인','근거·주의사항 언급','한국어 표현'];
+const rate=$('#rate');
+crit.forEach((c,i)=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+c+'</td>'+['G','C'].map(k=>'<td class="stars" data-k="'+k+i+'">'+[1,2,3,4,5].map(n=>'<button data-n="'+n+'" aria-label="'+n+'점">★</button>').join('')+'</td>').join('');rate.appendChild(tr);});
+function paintStars(){$$('.stars').forEach(td=>{const v=st['s_'+td.dataset.k]||0;$$('button',td).forEach(b=>b.classList.toggle('on',+b.dataset.n<=v));});
+  const sum=k=>crit.reduce((a,_,i)=>a+(st['s_'+k+i]||0),0);
+  $('#tG').style.width=sum('G')/25*100+'%';$('#tC').style.width=sum('C')/25*100+'%';$('#nG').textContent=sum('G')+'점';$('#nC').textContent=sum('C')+'점';}
+$$('.stars button').forEach(b=>b.onclick=()=>{const k='s_'+b.parentElement.dataset.k,n=+b.dataset.n;st[k]=st[k]===n?0:n;save();paintStars();b.classList.add('pop');setTimeout(()=>b.classList.remove('pop'),250);});
+paintStars();
+
+/* prompt builder */
+const EX=['너는 대학 학생상담센터에서 일하는 진로 코치야.','진로 결정을 앞두고 불안하다는 20대 대학생(가상 사례)과 첫 회기를 준비하고 있어.','관계를 여는 열린 질문 5개를 만들어 줘. 유도 질문과 한 번에 두 가지를 묻는 질문은 피해 줘.','표(질문 | 의도 | 주의할 점)로 정리하고, 마지막에 내가 점검할 점 2가지를 덧붙여 줘.'];
+function buildP(){const v=['r1','r2','r3','r4'].map(id=>$('#'+id).value.trim());const n=v.filter(Boolean).length;
+  $('#pm').style.width=n/4*100+'%';$('#pmsg').textContent=n+' / 4 칸 완성'+(n===4?' 🎉 복사해서 Gemini에 넣어 보세요!':'');
+  $('#mine').textContent=n?v.filter(Boolean).join('\n'):'(칸을 채우면 여기에 나타나요)';}
+$$('.pf').forEach(t=>t.addEventListener('input',buildP));
+$('#fillEx').onclick=()=>{['r1','r2','r3','r4'].forEach((id,i)=>{const el=$('#'+id);if(!el.value.trim()){el.value=EX[i];st[id]=EX[i];}});save();buildP();};
+buildP();
+
+/* skill templates */
+const SK=[{n:'draft-coaching-questions',ko:'코칭질문-만들기',d:'상담·코칭 상황(가상 사례)을 받아 회기 단계별 열린 질문과 질문 의도를 표로 만든다. 첫 회기 준비, 질문 목록 점검, 역할극 연습을 할 때 사용.',
+ r:`[역할] 너는 상담·코칭 실습을 돕는 조교다. 최종 판단은 사용자가 한다.
+[입력 확인] 사례는 가상 또는 가명이어야 한다. 실명·연락처·학번 등 식별 정보가 보이면 작업을 멈추고 지워 달라고 요청한다.
+[할 일] 열린 질문 5~7개를 만든다.
+[형식] 표: 단계 | 질문 | 의도 | 주의할 점
+[정보가 부족하면] 추측하지 말고 먼저 2개 이내로 되묻는다.
+[흔한 실수] 진단·처방처럼 단정하지 않기 / 유도 질문 피하기 / 한 질문에 두 가지 묻지 않기
+[위기 신호] 자해·타해 등의 표현이 있으면 질문 대신 "전문가·기관 연계가 우선"이라고 안내한다.`,
+ t:'(가상 사례) 20대 대학생. 휴학 후 복학을 앞두고 동기들보다 뒤처졌다는 생각에 불안하다고 함. 첫 회기 질문을 준비해 줘.'},
+ {n:'organize-session-notes',ko:'역할극기록-정리하기',d:'가상·가명 상담 역할극 기록을 정해진 양식으로 정리한다. 역할극 후 기록 정리나 슈퍼비전 준비 자료를 만들 때 사용.',
+ r:`[역할] 너는 상담 실습 기록 정리를 돕는 조교다.
+[입력 확인] 식별 정보(실명·연락처·학번·소속 등)가 보이면 멈추고 지워 달라고 요청한다.
+[형식]
+1. 주호소 — 내담자 표현 그대로 1~2문장
+2. 관찰된 감정·패턴 — 사실과 해석을 나누고, 해석에는 (해석) 표시
+3. 상담자 개입과 내담자 반응
+4. 다음 회기에 확인할 점
+5. 상담자가 스스로 돌아볼 질문 2개
+[흔한 실수] 기록에 없는 내용을 지어내지 않는다 — 없으면 "기록 없음"
+[말투] 평가하거나 낙인찍는 표현 대신 관찰한 사실 중심으로 쓴다.`,
+ t:`(가상 역할극 기록) 내담자 A: "요즘 과제를 시작조차 못 하겠어요. 다들 잘하는데 저만 멈춰 있는 느낌이에요."
+상담자: "멈춰 있는 느낌이 들 때 주로 어떤 생각이 드세요?"
+내담자 A: "어차피 해도 안 될 거라는 생각이요." (한숨, 시선을 피함)`}];
+function renderSK(i){const s=SK[i];$('#skBody').innerHTML=
+ '<div class="pbox" id="sk_n"><span class="lbl">① 이름 칸</span>'+s.n+'<button class="cbtn" data-copy="sk_n">📋 복사</button></div>'+
+ '<p class="small">한글로 짓는다면: <b>'+s.ko+'</b></p>'+
+ '<div class="pbox" id="sk_d"><span class="lbl">② 설명 칸</span>'+s.d+'<button class="cbtn" data-copy="sk_d">📋 복사</button></div>'+
+ '<div class="pbox" id="sk_r"><span class="lbl">③ 요청 사항 칸</span>'+s.r.replace(/</g,'&lt;')+'<button class="cbtn" data-copy="sk_r">📋 복사</button></div>'+
+ '<div class="pbox" id="sk_t" style="background:#173a2f"><span class="lbl" style="color:#8fe0cf">④ 만든 뒤 테스트용 사례 (새 채팅에서 스킬 불러온 다음 붙여 넣기)</span>'+s.t+'<button class="cbtn" data-copy="sk_t">📋 복사</button></div>';}
+$$('#skTabs button').forEach(b=>b.onclick=()=>{$$('#skTabs button').forEach(x=>x.classList.toggle('on',x===b));renderSK(+b.dataset.t);});renderSK(0);
+
+/* name validator */
+const VERBS=['draft','write','make','create','organize','summarize','plan','check','review','build','turn','generate','analyze','convert','prepare','translate','compare','find','list','design','explain','track','format','rewrite','edit'];
+const nameIn=$('#nameIn'),nameRes=$('#nameRes');
+function vName(){const v=nameIn.value.trim();let why='',warn='',ok='';
+  if(!v){nameRes.textContent='';return;}
+  if(/[가-힣]/.test(v)){
+    if(/\s/.test(v))why='띄어쓰기 대신 하이픈(-)으로 (예: 코칭질문-만들기)';
+    else if(/[^가-힣a-z0-9-]/.test(v))why='한글·영문 소문자·숫자·하이픈만';
+    else if(/^-|-$|--/.test(v))why='하이픈은 단어 사이에 하나씩만';
+    else if(/도우미|도구|데이터|헬퍼/.test(v))warn='‘도우미·도구’ 대신 하는 일을 구체적으로 (예: 상담기록-정리하기)';
+    else if(!/(하기|기|정리|작성|요약|비교|점검)$/.test(v))warn='형식은 OK! ‘~하기’처럼 하는 일로 끝나면 더 분명해요';
+    else ok='좋은 한글 이름이에요 (파일 업로드 땐 영문 이름 필요)';
+  }else{
+    if(/[A-Z]/.test(v))why='대문자 → 모두 소문자로';
+    else if(/\s|_/.test(v))why='띄어쓰기·밑줄(_) 대신 하이픈(-)으로';
+    else if(/[^a-z0-9-]/.test(v))why='영문 소문자·숫자·하이픈만';
+    else if(/^-|-$|--/.test(v))why='하이픈은 단어 사이에 하나씩만';
+    else{const w=v.split('-');
+      if(w.some(x=>['helper','tool','tools','data','assistant'].includes(x)))warn='helper·tools·data 대신 하는 일을 구체적으로';
+      else if(!VERBS.includes(w[0]))warn='형식은 OK! 동사로 시작하면 더 좋아요 (예: draft-…)';
+      else ok='좋은 이름이에요';}
+  }
+  nameRes.style.color=why?'var(--red)':warn?'#b7791f':'var(--teal)';
+  nameRes.textContent=why?'❌ '+why:warn?'🟡 '+warn:'✅ '+ok+': '+v;}
+nameIn.addEventListener('input',vName);vName();
+
+/* verdict buttons (generic) */
+function bindV(wrap){$$('.vbtns',wrap).forEach(g=>{const k='v_'+g.dataset.k;const row=g.closest('.vrow');
+  const paint=()=>{$$('button',g).forEach(b=>b.classList.toggle('on',b.dataset.v===st[k]));if(row){row.classList.remove('ok','bad','none');if(st[k])row.classList.add(st[k]);}};
+  $$('button',g).forEach(b=>b.onclick=()=>{st[k]=st[k]===b.dataset.v?'':b.dataset.v;save();paint();});paint();});}
+function rows(id,prefix,n,ph){const w=$('#'+id);w.innerHTML=Array.from({length:n},(_,i)=>
+ '<div class="vrow"><input class="t save" id="'+prefix+i+'" placeholder="'+ph+' '+(i+1)+'"><input class="t save" id="'+prefix+'c'+i+'" placeholder="인용 번호 / 원문 메모" style="margin-top:6px">'+
+ '<div class="vbtns" data-k="'+prefix+i+'"><button data-v="ok">✅ 일치</button><button data-v="bad">❌ 불일치</button><button data-v="none">⚠️ 근거 없음</button></div></div>').join('');
+ $$('.save',w).forEach(el=>{if(st[el.id])el.value=st[el.id];el.addEventListener('input',()=>{st[el.id]=el.value;save();});});bindV(w);}
+rows('fcRows','fa',4,'AI 답 속 문장');rows('fcRows2','fb',3,'보고서 속 사실');
+bindV(document.getElementById('s3'));
+
+/* request builder */
+$$('#optb [data-g]').forEach(g=>{const k='o_'+g.dataset.g;$$('button',g).forEach((b,i)=>{if(st[k]!==undefined)b.classList.toggle('on',i===st[k]);b.onclick=()=>{$$('button',g).forEach(x=>x.classList.toggle('on',x===b));st[k]=i;save();req();};});});
+function req(){const g=k=>$('#optb [data-g="'+k+'"] button.on').textContent;
+ $('#reqTxt').textContent=`업로드한 소스만 근거로, ${g('who')}이(가) 읽을 ${g('what')}을(를) 만들어 줘.
+- 말투: ${g('tone')}
+- 문장마다 출처 번호를 달아 줘.
+- 소스에 없는 내용은 지어내지 말고 "자료 없음"으로 표시해 줘.
+- 맨 끝에 '사람이 직접 확인할 항목' 3가지를 따로 적어 줘.`;}
+req();
+
+/* progress + section reveal */
+const secs=$$('section.sec');
+function updateProg(){const map={s0:['c_p1','c_p2','c_p3','c_p4','c_p5','c_p6'],s1:crit.flatMap((_,i)=>['s_G'+i,'s_C'+i]).concat(['cmp_note']),s2:['r1','r2','r3','r4'],s3:['c_k1','c_k2','c_k3','c_k4','c_k5'],s4:['c_n1','c_n2','v_fa0','v_fa1','v_fa2'],s5:['c_d1','c_d2','c_d3','c_d4'],s6:['end1','end2']};
+  let tot=0,got=0;Object.entries(map).forEach(([s,ks])=>{const g=ks.filter(k=>st[k]).length;tot+=ks.length;got+=g;const a=$('#jump a[href="#'+s+'"]');if(a)a.classList.toggle('done',g===ks.length);});
+  $('#prog').style.width=(got/tot*100)+'%';}
+updateProg();
+try{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});secs.forEach(s=>io.observe(s));}catch(e){secs.forEach(s=>s.classList.add('in'));}
+
+/* export */
+function exportAll(){const v=id=>(st[id]||'').trim()||'-';const V={ok:'✅ 일치',bad:'❌ 불일치',none:'⚠️ 근거 없음'};
+ const stars=k=>crit.map((c,i)=>c+': '+(st['s_'+k+i]||0)+'점').join(' / ');
+ let t='[실습 기록] 생성형 AI로 상담·코칭 도구 체험하기\n이름/조: '+v('who')+'\n\n';
+ t+='① 비교\n- 제미나이: '+stars('G')+'\n- 챗GPT: '+stars('C')+'\n- 소감: '+v('cmp_note')+'\n\n';
+ t+='② 내 프롬프트\n'+['r1','r2','r3','r4'].map(v).join('\n')+'\n- 다듬기 1→2: '+v('ref1')+'\n- 다듬기 2→3: '+v('ref2')+'\n\n';
+ t+='③ 스킬\n- 내 스킬 이름: '+v('nameIn')+'\n- 개인정보 테스트: '+({ok:'멈췄다',bad:'그냥 진행했다'}[st.v_test]||'-')+'\n- 고칠 점: '+v('test_fix')+'\n\n';
+ t+='④ 팩트 체크\n- 소스: '+v('srcs')+'\n'+[0,1,2,3].map(i=>'  '+(i+1)+'. '+v('fa'+i)+' ['+(V[st['v_fa'+i]]||'-')+'] '+v('fac'+i)).join('\n')+'\n\n';
+ t+='⑤ 보고서 사실 대조\n'+[0,1,2].map(i=>'  '+(i+1)+'. '+v('fb'+i)+' ['+(V[st['v_fb'+i]]||'-')+'] '+v('fbc'+i)).join('\n')+'\n\n';
+ t+='마무리\n- 가장 쓸모 있던 것: '+v('end1')+'\n- 쓰고 싶은 스킬: '+v('end2')+'\n- 질문: '+v('end3');
+ copyText(t);toast('실습 기록을 복사했어요!');}
+$('#export').onclick=exportAll;$('#export2').onclick=exportAll;
+$('#top').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+let armed=false;$('#reset').onclick=e=>{const b=e.currentTarget;if(!armed){armed=true;b.textContent='정말 지울까요? 한 번 더 누르기';setTimeout(()=>{armed=false;b.textContent='🗑️ 기록 지우기';},3000);return;}
+ st={};try{localStorage.removeItem(KEY);}catch(e){}location.reload();};
+})();
+</script>
+</body>
+</html>
