@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실습지 — 나만의 보조작가 &amp; 편집자 만들기</title>
+<style>
+:root{--navy:#14284b;--navy2:#1f3d6e;--sky:#4aa8e0;--sky-l:#e6f3fb;--sky-m:#b9def4;--red:#d93a2f;--teal:#13917f;--purple:#7a52c7;--muted:#4a5a73;--bg:#f6f9fc;--ease:cubic-bezier(.22,.8,.3,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;background:var(--bg);color:var(--navy);font-size:22px;line-height:1.65;word-break:keep-all}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:26px 20px 24px}
+.hero .in,.wrap{max-width:760px;margin:0 auto}
+.hero small{display:inline-block;background:rgba(255,255,255,.16);padding:4px 14px;border-radius:999px;font-size:17px;font-weight:800}
+.hero h1{font-size:30px;line-height:1.35;margin:12px 0 6px}
+.hero p{font-size:19px;opacity:.9}
+.hero input{width:100%;margin-top:14px;min-height:58px;border-radius:14px;border:none;padding:0 16px;font-size:22px}
+.tabs{position:sticky;top:0;z-index:10;display:flex;background:#fff;border-bottom:2px solid #dde6f0}
+.tabs button{flex:1;min-height:64px;border:none;background:#fff;font-size:21px;font-weight:800;color:var(--muted);border-bottom:5px solid transparent;transition:all .4s}
+.tabs button.on{color:var(--navy);border-bottom-color:var(--sky)}
+.wrap{padding:6px 16px 120px}
+.pane{display:none}.pane.on{display:block;animation:fade .6s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h2{font-size:26px;margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+h2 .n{flex:0 0 46px;height:46px;border-radius:14px;color:#fff;display:grid;place-items:center;font-size:22px}
+.card{background:#fff;border-radius:20px;padding:20px;border:2px solid #dfe8f2;margin-bottom:14px}
+.small{font-size:18px;color:var(--muted)}
+/* check */
+.chk{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid #eef2f7;cursor:pointer}
+.chk:last-child{border-bottom:none}
+.chk .box{flex:0 0 42px;height:42px;border-radius:12px;border:4px solid var(--sky);display:grid;place-items:center;color:#fff;font-weight:900;font-size:24px;transition:all .4s}
+.chk.on .box{background:var(--teal);border-color:var(--teal)}
+.chk.on span{color:var(--muted)}
+/* rules */
+.rule{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #eef2f7}
+.rule:last-child{border-bottom:none}
+.dot{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;margin-top:3px}
+/* steps */
+.step{display:flex;align-items:center;gap:14px;padding:12px 0}
+.step .num{flex:0 0 48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:900;font-size:22px}
+.step.hl .num{background:var(--red)}
+.step .k{display:inline-block;background:var(--sky-l);border:2px solid var(--sky-m);border-radius:10px;padding:0 10px;font-weight:800}
+.step.hl .k{border-color:var(--red);background:#fdecea}
+/* prompt */
+.pbox{background:#0f1e38;color:#e3eefa;border-radius:18px;padding:18px 20px;font-size:19px;line-height:1.75;white-space:pre-wrap;max-height:300px;overflow:auto}
+.cbtn{display:block;width:100%;min-height:68px;margin-top:10px;border-radius:16px;border:none;background:var(--sky);color:#fff;font-size:23px;font-weight:900;transition:background .3s,transform .2s}
+.cbtn:active{transform:scale(.98)}
+.cbtn.ok{background:var(--teal)}
+/* say chips */
+.say{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--sky-l);border-radius:16px;padding:12px 12px 12px 18px;margin-bottom:10px;font-size:21px;font-weight:700}
+.say button{flex:0 0 auto;min-height:52px;padding:0 16px;border-radius:12px;border:none;background:var(--navy);color:#fff;font-size:18px;font-weight:800}
+.say button.ok{background:var(--teal)}
+/* topics */
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.topic{min-height:96px;border-radius:18px;border:3px solid #dfe8f2;background:#fff;font-size:21px;font-weight:800;color:var(--navy);transition:all .4s}
+.topic .e{display:block;font-size:34px}
+.topic.on{border-color:var(--sky);background:var(--sky-l)}
+.qshow{margin-top:12px;background:var(--navy);color:#fff;border-radius:18px;padding:18px 20px;font-size:21px;min-height:80px}
+textarea,input.t{width:100%;border:3px solid #d6e3f0;border-radius:16px;padding:14px 16px;font-size:22px;line-height:1.7;background:#fff}
+textarea:focus,input.t:focus{outline:none;border-color:var(--sky)}
+textarea{min-height:110px;resize:vertical}
+label.f{display:block;font-weight:800;margin:14px 0 6px}
+.mic{display:flex;align-items:center;gap:12px;background:#fff8eb;border:2px solid #f0c27a;border-radius:16px;padding:12px 16px;font-size:19px;margin-top:10px}
+.mic .mi{font-size:30px}
+.yn{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #eef2f7}
+.yn:last-child{border-bottom:none}
+.yn .tag{font-weight:900;color:#fff;border-radius:10px;padding:4px 12px;font-size:18px;text-align:center}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #dde6f0;padding:10px 12px;display:flex;gap:10px;justify-content:center;z-index:20}
+.bottom button{flex:1;max-width:340px;min-height:64px;border-radius:16px;font-size:21px;font-weight:900;border:3px solid var(--navy);background:#fff;color:var(--navy)}
+.bottom button.primary{background:var(--navy);color:#fff}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:14px 24px;border-radius:14px;font-weight:800;font-size:20px;opacity:0;pointer-events:none;transition:all .5s var(--ease);z-index:30;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{margin-top:24px;font-size:16px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+  <small>AI 글쓰기 교실 · 실습지</small>
+  <h1>제미나이 스킬로<br>나만의 보조작가 &amp; 편집자 만들기</h1>
+  <p>파란 버튼을 누르면 글이 복사돼요</p>
+  <input id="who" class="save" placeholder="성함을 적어 주세요">
+</div></header>
+<nav class="tabs"><button class="on" data-p="p1">1회차 · 보조작가</button><button data-p="p2">2회차 · 편집자</button></nav>
+
+<div class="wrap">
+<!-- ============ 1회차 ============ -->
+<div class="pane on" id="p1">
+
+  <h2><span class="n" style="background:var(--navy2)">✓</span>시작 전 확인</h2>
+  <div class="card">
+    <div class="chk" data-k="a1"><div class="box">✓</div><span>제미나이 앱이 있어요</span></div>
+    <div class="chk" data-k="a2"><div class="box">✓</div><span>구글 계정으로 로그인했어요</span></div>
+    <div class="chk" data-k="a3"><div class="box">✓</div><span>‘활동 기록 유지’가 켜져 있어요 <span class="small">(모르면 손 들기 ✋)</span></span></div>
+  </div>
+
+  <h2><span class="n" style="background:var(--red)">!</span>꼭 지켜 주세요</h2>
+  <div class="card">
+    <div class="rule"><span class="dot" style="background:var(--red)">✕</span><div>주민등록번호·통장 번호·비밀번호는 <b>절대</b> 말하지 않아요</div></div>
+    <div class="rule"><span class="dot" style="background:var(--red)">✕</span><div>지금 사는 집 주소·전화번호도 말하지 않아요</div></div>
+    <div class="rule"><span class="dot" style="background:#e7a93a">!</span><div>가족 이야기를 책으로 낼 때는 <b>먼저 허락</b>받아요</div></div>
+    <div class="rule"><span class="dot" style="background:var(--teal)">○</span><div>추억·고향·첫 월급 이야기는 마음껏!</div></div>
+  </div>
+
+  <h2><span class="n" style="background:var(--teal)">1</span>보조작가 스킬 만들기</h2>
+  <div class="card">
+    <div class="step"><span class="num">1</span><div>제미나이 왼쪽 위 <span class="k">☰</span> 누르기</div></div>
+    <div class="step"><span class="num">2</span><div><span class="k">맞춤설정</span> 누르기 <span class="small">(안 보이면 ‘더보기’)</span></div></div>
+    <div class="step"><span class="num">3</span><div><span class="k">스킬</span> 누르기</div></div>
+    <div class="step hl"><span class="num">4</span><div>‘스킬’ 글자 옆 <span class="k">＋</span> 누르기 👆</div></div>
+    <div class="step"><span class="num">5</span><div><span class="k">Gemini로 만들기</span> 고르기</div></div>
+    <div class="step"><span class="num">6</span><div>아래 <b>파란 버튼</b>으로 복사 → 입력창을 <b>길게 눌러 붙여넣기</b> → 보내기</div></div>
+  </div>
+  <div class="pbox" id="pWriter">아래 내용으로 스킬을 만들어 줘.
+
+스킬 이름: 이야기-꺼내기 (나의 보조작가)
+하는 일: 생활 에세이를 쓰려는 어르신이 자기 기억을 꺼내도록 질문으로 돕는다. 글감 찾기, 추억 떠올리기, 에세이 초안 준비를 할 때 사용한다.
+
+지켜야 할 것
+1. 질문은 한 번에 하나만, 짧고 쉬운 말로, 존댓말로 한다.
+2. 언제·어디서·누구와, 그리고 무엇을 보고 듣고 냄새 맡고 맛봤는지 물어본다.
+3. 내 대신 글을 지어 쓰지 않는다. 내가 한 말을 최대한 그대로 살린다.
+4. 내가 “정리해 줘”라고 하면, 내가 한 말만 모아 ‘이야기 조각’ 목록과 ‘받아쓰기 초안’으로 정리한다. 내가 말하지 않은 내용은 넣지 않는다.
+5. 주민번호·통장 번호·비밀번호·집 주소는 묻지 않는다. 내가 말하면 지우라고 알려 준다.
+6. 힘든 기억이 나오면 더 캐묻지 말고, 쉬어 갈지 먼저 물어본다.</div>
+  <button class="cbtn" data-copy="pWriter">📋 보조작가 글 복사하기</button>
+
+  <h2><span class="n" style="background:var(--teal)">2</span>보조작가 불러서 시작하기</h2>
+  <div class="card">
+    <p>새 채팅 입력창에 <b style="font-size:28px">/</b> 를 누르고 <b>이야기-꺼내기</b>를 고르세요.<br><span class="small">( / 대신 @ 인 경우도 있어요)</span></p>
+    <div class="mic"><span class="mi">🎤</span><div>글자 치기가 힘들면 입력창 옆 <b>마이크</b>를 누르고 말로 하세요</div></div>
+  </div>
+  <p class="small" style="margin-bottom:8px">이렇게 말해 보세요 — 버튼을 누르면 복사돼요</p>
+  <div class="say"><span>“이야기 꺼내기 스킬로 시작해 줘.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“오늘은 첫 월급 이야기를 하고 싶어요.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“조금 쉬었다 할게요.”</span><button data-say>복사</button></div>
+
+  <h2><span class="n" style="background:var(--teal)">3</span>글감 고르기</h2>
+  <div class="topics">
+    <button class="topic" data-t="첫 월급"><span class="e">💰</span>첫 월급</button>
+    <button class="topic" data-t="어머니의 밥상"><span class="e">🍚</span>어머니의 밥상</button>
+    <button class="topic" data-t="내 고향 골목"><span class="e">🏘️</span>내 고향 골목</button>
+    <button class="topic" data-t="이사하던 날"><span class="e">📦</span>이사하던 날</button>
+    <button class="topic" data-t="손주와 보낸 하루"><span class="e">👶</span>손주와 보낸 하루</button>
+    <button class="topic" data-t="처음 배운 기술"><span class="e">🧵</span>처음 배운 기술</button>
+  </div>
+  <div class="qshow" id="qshow">카드를 누르면 보조작가에게 할 말이 나와요</div>
+  <button class="cbtn" id="topicCopy" style="display:none">📋 이 말 복사하기</button>
+  <label class="f">또는 내가 정한 글감</label>
+  <input class="t save" id="myTopic" placeholder="예: 시장에서 국밥 팔던 시절">
+
+  <h2><span class="n" style="background:var(--teal)">4</span>떠오른 이야기 조각 적기</h2>
+  <div class="card">
+    <p class="small">보조작가와 이야기하며 떠오른 것을 짧게 적어 두세요. 마지막에 <b>“정리해 줘”</b>라고 하면 내 말을 모아 줘요.</p>
+    <label class="f">🗓️ 언제, 어디서?</label><input class="t save" id="f1" placeholder="예: 스물두 살 봄, 방직공장">
+    <label class="f">👀 무엇을 보고 들었나요?</label><input class="t save" id="f2" placeholder="예: 노란 월급봉투">
+    <label class="f">👃 어떤 냄새·맛이 났나요?</label><input class="t save" id="f3" placeholder="예: 어머니의 된장찌개">
+    <label class="f">💗 그때 마음은?</label><input class="t save" id="f4" placeholder="예: 손이 덜덜 떨렸다">
+  </div>
+  <div class="say"><span>“지금까지 이야기 정리해 줘.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“그건 제가 한 말이 아니에요. 빼 주세요.”</span><button data-say>복사</button></div>
+
+  <h2><span class="n" style="background:#e7a93a">🏠</span>숙제</h2>
+  <div class="card">
+    <p>받아쓰기 초안을 <b>내 손으로 고쳐</b> 짧은 글 한 편을 써 오세요. 아래에 써 두면 다음 시간에 바로 쓸 수 있어요.</p>
+    <textarea class="save" id="draft" placeholder="여기에 내 글을 적어요" style="min-height:220px"></textarea>
+  </div>
+</div>
+
+<!-- ============ 2회차 ============ -->
+<div class="pane" id="p2">
+  <h2><span class="n" style="background:var(--purple)">1</span>편집자 스킬 만들기</h2>
+  <div class="card">
+    <div class="step"><span class="num">1</span><div><span class="k">☰</span> → <span class="k">맞춤설정</span> → <span class="k">스킬</span></div></div>
+    <div class="step hl"><span class="num">2</span><div>‘스킬’ 옆 <span class="k">＋</span> → <span class="k">Gemini로 만들기</span></div></div>
+    <div class="step"><span class="num">3</span><div>파란 버튼으로 복사 → 붙여넣기 → 보내기</div></div>
+  </div>
+  <div class="pbox" id="pEditor">아래 내용으로 스킬을 만들어 줘.
+
+스킬 이름: 원고-다듬기 (나의 편집자)
+하는 일: 어르신이 쓴 생활 에세이 원고를 읽고 고칠 곳을 제안한다. 맞춤법 점검, 문장 다듬기, 제목 정하기를 할 때 사용한다.
+
+지켜야 할 것
+1. 먼저 무엇을 볼지 물어본다: ① 맞춤법·띄어쓰기 ② 문장 다듬기 ③ 글 구성과 제목
+2. 고친 곳은 표로 보여 준다: 원래 문장 | 고친 문장 | 이유(한 줄)
+3. 글쓴이의 말투·사투리·옛날 표현은 살린다. 틀린 맞춤법만 고친다.
+4. 원고에 없는 사실이나 사건, 감정을 지어 넣지 않는다.
+5. 마지막에 고친 글 전체를 다시 보여 주고, 제목 후보 3개를 제안한다.
+6. 무엇을 받아들일지는 글쓴이가 정한다.</div>
+  <button class="cbtn" data-copy="pEditor">📋 편집자 글 복사하기</button>
+
+  <h2><span class="n" style="background:var(--purple)">2</span>내 원고 보내기</h2>
+  <div class="card">
+    <p>입력창에 <b style="font-size:28px">/</b> → <b>원고-다듬기</b> 고르기 → 아래 버튼으로 <b>내 글을 복사</b>해서 붙여넣기</p>
+    <button class="cbtn" id="draftCopy" style="background:var(--purple)">📋 숙제로 쓴 내 글 복사하기</button>
+    <p class="small" style="margin-top:8px">1회차 탭 ‘숙제’ 칸에 적은 글이 복사돼요</p>
+  </div>
+
+  <h2><span class="n" style="background:var(--purple)">3</span>편집자에게 이렇게 말해요</h2>
+  <div class="say"><span>“① 맞춤법부터 봐 줘.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“긴 문장을 나눠 줘.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“사투리는 고치지 마.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“제목 3개 추천해 줘.”</span><button data-say>복사</button></div>
+  <div class="say"><span>“그 내용은 없던 일이에요. 빼 주세요.”</span><button data-say>복사</button></div>
+
+  <h2><span class="n" style="background:var(--purple)">4</span>받아들일까, 그대로 둘까?</h2>
+  <div class="card">
+    <div class="yn"><span class="tag" style="background:var(--teal)">받아들여요</span><div>틀린 맞춤법·띄어쓰기를 고친 것</div></div>
+    <div class="yn"><span class="tag" style="background:var(--teal)">받아들여요</span><div>너무 긴 문장을 둘로 나눈 것</div></div>
+    <div class="yn"><span class="tag" style="background:var(--red)">그대로 둬요</span><div>없던 일·없던 감정이 들어간 것</div></div>
+    <div class="yn"><span class="tag" style="background:var(--red)">그대로 둬요</span><div>내 말투가 남의 말투처럼 바뀐 것</div></div>
+    <p class="small" style="margin-top:10px">👑 결정은 언제나 <b>내가</b> 해요</p>
+  </div>
+
+  <h2><span class="n" style="background:var(--purple)">5</span>완성!</h2>
+  <div class="card">
+    <label class="f" style="margin-top:0">📖 내 글의 제목</label>
+    <input class="t save" id="title" placeholder="예: 노란 봉투">
+    <label class="f">✨ 완성한 글</label>
+    <textarea class="save" id="final" placeholder="편집자와 다듬은 최종 글을 붙여 넣어요" style="min-height:240px"></textarea>
+    <button class="cbtn" id="finalCopy" style="background:var(--teal)">📋 완성한 글 복사하기 (가족에게 보내기)</button>
+  </div>
+  <div class="card" style="background:var(--navy);color:#fff;border:none">
+    🎉 짝에게 <b>소리 내어 읽어 주세요.</b> 내 이야기는 내가 썼어요!
+  </div>
+</div>
+
+<p class="foot">하이디 교육컨설팅 · 강사 최선희 · 2026년 11월<br>메뉴 위치는 바뀔 수 있어요 · 적은 글은 이 휴대폰에만 저장돼요</p>
+</div>
+
+<div class="bottom"><button id="top">⬆ 맨 위로</button><button class="primary" id="help">✋ 도움이 필요해요</button></div>
+<div class="toast" id="toast">복사됐어요!</div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const KEY='hidi-senior-writer-v1';let st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){st={};}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}};
+function toast(m){const t=$('#toast');t.textContent=m||'복사됐어요!';t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1800);}
+function copy(text,btn,label){
+  const ok=()=>{toast('복사됐어요! 입력창을 길게 눌러 붙여넣기');if(btn){const o=btn.textContent;btn.classList.add('ok');btn.textContent='✓ 복사됐어요';setTimeout(()=>{btn.classList.remove('ok');btn.textContent=label||o;},2000);}};
+  const fb=()=>{const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){toast('글을 길게 눌러 복사해 주세요');}a.remove();};
+  try{navigator.clipboard.writeText(text).then(ok).catch(fb);}catch(e){fb();}}
+/* tabs */
+$$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.pane').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));st.tab=b.dataset.p;save();window.scrollTo({top:0,behavior:'smooth'});});
+if(st.tab){const b=$('.tabs button[data-p="'+st.tab+'"]');if(b)b.click();}
+/* fields */
+$$('.save').forEach(el=>{if(st[el.id])el.value=st[el.id];el.addEventListener('input',()=>{st[el.id]=el.value;save();});});
+/* checks */
+$$('.chk').forEach(c=>{if(st['c'+c.dataset.k])c.classList.add('on');c.onclick=()=>{c.classList.toggle('on');st['c'+c.dataset.k]=c.classList.contains('on');save();};});
+/* copy buttons */
+$$('[data-copy]').forEach(b=>{const l=b.textContent;b.onclick=()=>copy(document.getElementById(b.dataset.copy).innerText.trim(),b,l);});
+$$('[data-say]').forEach(b=>b.onclick=()=>copy(b.previousElementSibling.textContent.replace(/[“”]/g,''),b,'복사'));
+/* topics */
+let tsay='';
+$$('.topic').forEach(t=>t.onclick=()=>{$$('.topic').forEach(x=>x.classList.toggle('on',x===t));tsay='이야기 꺼내기 스킬로 시작해 줘. 오늘은 '+t.dataset.t+' 이야기를 하고 싶어요.';
+  $('#qshow').innerHTML='🎙️ “'+tsay+'”';$('#topicCopy').style.display='block';st.topic=t.dataset.t;save();});
+$('#topicCopy').onclick=e=>copy(tsay,e.currentTarget,'📋 이 말 복사하기');
+if(st.topic){const t=$('.topic[data-t="'+st.topic+'"]');if(t)t.click();}
+/* draft copies */
+$('#draftCopy').onclick=e=>{const d=(st.draft||'').trim();if(!d){toast('1회차 숙제 칸이 비어 있어요');return;}copy(d,e.currentTarget,'📋 숙제로 쓴 내 글 복사하기');};
+$('#finalCopy').onclick=e=>{const f=(st.final||'').trim();if(!f){toast('완성한 글 칸이 비어 있어요');return;}copy(((st.title||'').trim()?'《'+st.title.trim()+'》\n\n':'')+f+((st.who||'').trim()?'\n\n— '+st.who.trim():''),e.currentTarget,'📋 완성한 글 복사하기 (가족에게 보내기)');};
+$('#top').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+$('#help').onclick=()=>toast('✋ 손을 들어 주세요. 강사가 갈게요!');
+})();
+</script>
+</body>
+</html>
