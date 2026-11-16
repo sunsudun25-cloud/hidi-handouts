@@ -303,10 +303,26 @@ const KEY='hidi-coaching-handout-v1';let st={};
 try{st=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){st={};}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}updateProg();};
 const toast=(m)=>{const t=$('#toast');t.textContent=m||'복사됐어요!';t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1600);};
+
+function legacyCopy(text){const a=document.createElement('textarea');a.value=text;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px';document.body.appendChild(a);
+  let r=false;try{a.focus();a.select();a.setSelectionRange(0,text.length);r=document.execCommand('copy');}catch(e){r=false;}a.remove();return r;}
+function showManual(text){let m=document.getElementById('manualCopy');
+  if(!m){m=document.createElement('div');m.id='manualCopy';m.style.cssText='position:fixed;inset:0;background:rgba(10,20,40,.75);z-index:99;display:flex;align-items:center;justify-content:center;padding:16px';
+    m.innerHTML='<div style="background:#fff;border-radius:20px;padding:18px;width:100%;max-width:640px;font-family:inherit;color:#14284b">'+
+      '<div style="font-size:21px;font-weight:900;margin-bottom:6px">📋 이 휴대폰은 자동 복사가 막혀 있어요</div>'+
+      '<div style="font-size:18px;margin-bottom:10px">아래 글을 <b>길게 눌러</b> → <b>모두 선택</b> → <b>복사</b>를 눌러 주세요</div>'+
+      '<textarea readonly style="width:100%;height:46vh;font-size:18px;line-height:1.6;border:3px solid #4aa8e0;border-radius:14px;padding:12px;font-family:inherit"></textarea>'+
+      '<div style="display:flex;gap:10px;margin-top:10px"><button data-act="sel" style="flex:1;min-height:60px;border-radius:14px;border:3px solid #14284b;background:#fff;font-size:20px;font-weight:900;color:#14284b">전체 선택</button>'+
+      '<button data-act="close" style="flex:1;min-height:60px;border-radius:14px;border:none;background:#14284b;color:#fff;font-size:20px;font-weight:900">닫기</button></div></div>';
+    document.body.appendChild(m);
+    m.querySelector('[data-act=close]').onclick=()=>{m.style.display='none';};
+    m.querySelector('[data-act=sel]').onclick=()=>{const t=m.querySelector('textarea');t.focus();t.select();t.setSelectionRange(0,t.value.length);};}
+  const t=m.querySelector('textarea');t.value=text;m.style.display='flex';setTimeout(()=>{t.focus();t.select();t.setSelectionRange(0,t.value.length);},50);}
+function smartCopy(text,ok){const fail=()=>{if(legacyCopy(text))ok();else showManual(text);};
+  try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(fail);}else fail();}catch(e){fail();}}
 function copyText(txt,btn){
   const done=()=>{toast();if(btn){const o=btn.textContent;btn.classList.add('ok');btn.textContent='✓ 복사됨';setTimeout(()=>{btn.classList.remove('ok');btn.textContent=o;},1500);}};
-  const fb=()=>{const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){toast('길게 눌러 직접 복사해 주세요');}t.remove();};
-  try{navigator.clipboard.writeText(txt).then(done).catch(fb);}catch(e){fb();}
+  smartCopy(txt,done);
 }
 const boxText=id=>{const b=document.getElementById(id).cloneNode(true);$$('.cbtn,.lbl',b).forEach(x=>x.remove());return b.innerText.trim();};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b)copyText(boxText(b.dataset.copy),b);});
