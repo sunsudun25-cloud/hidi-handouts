@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제미나이 스킬로 나만의 보조작가 &amp; 편집자 만들기 — 하이디 교육컨설팅</title>
+<style>
+:root{--navy:#14284b;--navy2:#1f3d6e;--sky:#4aa8e0;--sky-l:#e6f3fb;--sky-m:#b9def4;--red:#d93a2f;--teal:#13917f;--amber:#c98512;--ink:#14284b;--muted:#4a5a73;--bg:#f6f9fc;--ease:cubic-bezier(.22,.8,.3,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink);font-size:24px;line-height:1.6;overflow:hidden;word-break:keep-all}
+button{font-family:inherit;cursor:pointer}
+header.top{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--navy);color:#fff;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
+.logo{width:36px;height:36px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;font-weight:900;font-size:13px;border:3px solid #18a596;letter-spacing:-1px}
+.logo b{color:#e2483d}
+.part{font-size:17px;font-weight:800;background:rgba(255,255,255,.16);padding:5px 14px;border-radius:999px;white-space:nowrap;margin-right:10px}
+.count{font-size:18px;white-space:nowrap}
+.progress{position:fixed;top:64px;left:0;height:6px;background:var(--sky);transition:width .7s var(--ease);z-index:20}
+main{position:absolute;top:70px;bottom:96px;left:0;right:0;overflow:hidden}
+section.slide{position:absolute;inset:0;padding:30px clamp(18px,5vw,70px);overflow-y:auto;opacity:0;transform:translateX(36px);pointer-events:none;transition:opacity .7s var(--ease),transform .7s var(--ease)}
+section.slide.active{opacity:1;transform:none;pointer-events:auto}
+section.slide.prev{transform:translateX(-36px)}
+.inner{max-width:1060px;margin:0 auto}
+nav.bottom{position:fixed;bottom:0;left:0;right:0;height:96px;display:flex;align-items:center;justify-content:center;gap:18px;background:#fff;border-top:2px solid #dde6f0;z-index:20}
+nav.bottom button{min-height:66px;min-width:170px;font-size:24px;font-weight:800;border-radius:16px;border:3px solid var(--navy);background:#fff;color:var(--navy)}
+nav.bottom button.next{background:var(--navy);color:#fff}
+nav.bottom button:disabled{opacity:.3;cursor:default}
+.kicker{display:inline-block;font-size:19px;font-weight:800;color:var(--navy2);background:var(--sky-l);padding:5px 16px;border-radius:999px;margin-bottom:12px}
+h1{font-size:clamp(38px,5.6vw,58px);line-height:1.25;letter-spacing:-1px}
+h2{font-size:clamp(30px,4.2vw,42px);line-height:1.3;letter-spacing:-.5px;margin-bottom:20px}
+h3{font-size:27px;margin-bottom:6px}
+.lead{font-size:25px;color:var(--muted);margin-bottom:18px}
+.small{font-size:20px;color:var(--muted)}
+.hl{background:linear-gradient(transparent 58%,var(--sky-m) 58%)}
+.note{display:inline-block;font-size:18px;background:#fff4e5;color:#8a5300;border:2px solid #f0c27a;padding:4px 12px;border-radius:10px;margin-top:12px}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.show{opacity:1;transform:none}
+.hint{font-size:19px;color:var(--navy2);margin-top:14px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:#fff;border-radius:22px;padding:24px;border:2px solid #dfe8f2;box-shadow:0 4px 16px rgba(20,40,75,.06)}
+.big-ico{font-size:46px;line-height:1;margin-bottom:10px}
+.num{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;font-weight:900;font-size:22px;margin-right:10px;flex:0 0 44px}
+.btn{min-height:64px;padding:0 24px;border-radius:16px;border:3px solid var(--navy);background:#fff;color:var(--navy);font-size:22px;font-weight:800;transition:background .4s,color .4s}
+.btn.primary{background:var(--navy);color:#fff}
+.btn.on{background:var(--navy);color:#fff}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+.cover{display:flex;flex-direction:column;justify-content:center;min-height:100%}
+.cover .tag{color:var(--navy2);font-weight:800;font-size:24px;margin-bottom:12px}
+.cover .meta{margin-top:30px;font-size:22px;color:var(--muted)}
+/* sessions */
+.sess{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:760px){.sess{grid-template-columns:1fr}}
+.sess .card{cursor:pointer;transition:transform .5s var(--ease),border-color .5s}
+.sess .card:hover{transform:translateY(-4px);border-color:var(--sky)}
+.sess .tagline{display:inline-block;color:#fff;font-weight:800;font-size:18px;padding:4px 14px;border-radius:10px;margin-bottom:10px}
+/* chat */
+.chat{background:#fff;border-radius:22px;border:2px solid #dfe8f2;padding:18px;min-height:280px}
+.bub{max-width:88%;padding:14px 18px;border-radius:20px;margin:10px 0;font-size:23px;line-height:1.5}
+.bub.ai{background:var(--sky-l);border-bottom-left-radius:6px}
+.bub.me{background:var(--navy);color:#fff;margin-left:auto;border-bottom-right-radius:6px}
+.bub.bad{background:#fdecea;border:2px dashed var(--red)}
+.bub .who{display:block;font-size:16px;font-weight:800;opacity:.75;margin-bottom:2px}
+.pop{animation:popin .7s var(--ease)}
+@keyframes popin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* compare toggle */
+.toggle{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+/* salon */
+.salon{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:760px){.salon{grid-template-columns:1fr}}
+.salon .card h3{display:flex;align-items:center;gap:8px}
+/* checklist */
+.chk{display:flex;align-items:center;gap:16px;background:#fff;border:3px solid #dfe8f2;border-radius:18px;padding:18px 20px;margin-bottom:14px;cursor:pointer;transition:border-color .5s,background .5s;font-size:25px}
+.chk .box{flex:0 0 44px;height:44px;border-radius:12px;border:4px solid var(--sky);display:grid;place-items:center;color:#fff;font-weight:900;font-size:26px;transition:background .5s}
+.chk.on{border-color:var(--teal);background:#effaf7}
+.chk.on .box{background:var(--teal);border-color:var(--teal)}
+.allok{font-size:24px;font-weight:800;color:var(--teal);opacity:0;transition:opacity .7s}
+.allok.show{opacity:1}
+/* traffic */
+.tl{display:grid;gap:12px}
+.ti{display:flex;align-items:center;gap:16px;background:#fff;border:3px solid #dfe8f2;border-radius:18px;padding:16px 20px;cursor:pointer;transition:border-color .5s,background .5s;font-size:24px}
+.ti .lamp{flex:0 0 46px;height:46px;border-radius:50%;background:#e2e8f0;display:grid;place-items:center;color:#fff;font-weight:900;font-size:20px;transition:background .5s}
+.ti .why{display:block;font-size:20px;color:var(--muted);max-height:0;overflow:hidden;transition:max-height .7s var(--ease)}
+.ti.g{border-color:var(--teal);background:#effaf7}.ti.g .lamp{background:var(--teal)}
+.ti.y{border-color:var(--amber);background:#fff8eb}.ti.y .lamp{background:#e7a93a}
+.ti.r{border-color:var(--red);background:#fdf0ef}.ti.r .lamp{background:var(--red)}
+.ti.g .why,.ti.y .why,.ti.r .why{max-height:90px}
+/* phone sim */
+.simwrap{display:grid;grid-template-columns:330px 1fr;gap:30px;align-items:start}
+@media(max-width:840px){.simwrap{grid-template-columns:1fr;justify-items:center}}
+.phone{width:310px;height:580px;border-radius:40px;background:#111;padding:12px;box-shadow:0 16px 36px rgba(0,0,0,.18)}
+.screen{width:100%;height:100%;border-radius:30px;background:#fff;overflow:hidden;position:relative;font-size:18px}
+.scr{position:absolute;inset:0;padding:18px 16px;opacity:0;transform:translateX(26px);transition:opacity .6s var(--ease),transform .6s var(--ease);pointer-events:none}
+.scr.on{opacity:1;transform:none;pointer-events:auto}
+.appbar{display:flex;align-items:center;justify-content:space-between;font-weight:800;margin-bottom:18px;font-size:19px}
+.tap{position:relative;border-radius:12px;padding:8px 10px;cursor:pointer}
+.tap.t::after{content:"";position:absolute;inset:-5px;border:4px solid var(--red);border-radius:14px;animation:pulse 1.8s ease-in-out infinite}
+.tap.round.t::after{border-radius:50%}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+.finger{position:absolute;right:-10px;top:30px;font-size:32px;animation:poke 1.6s ease-in-out infinite}
+@keyframes poke{0%,100%{transform:none}50%{transform:translate(-4px,-8px)}}
+.mi{padding:14px 10px;border-bottom:1px solid #eee}
+.chip{display:inline-block;background:var(--sky-l);border-radius:999px;padding:6px 14px;margin:4px;font-size:16px}
+.gin{position:absolute;left:14px;right:14px;bottom:18px;border:2px solid #cfd8e3;border-radius:26px;padding:12px 16px;color:#889;font-size:16px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.15);padding:16px;transform:translateY(100%);transition:transform .8s var(--ease) .2s}
+.scr.on .sheet{transform:none}
+.sheet div{padding:14px;border-radius:14px;margin-bottom:8px;background:#f4f8fc;font-weight:800}
+.sheet .pick{outline:4px solid var(--red)}
+.steps{background:#fff;border-radius:22px;padding:22px;border:2px solid #dfe8f2}
+.steps ol{list-style:none}
+.steps li{display:flex;align-items:center;padding:10px 0;color:#9aa8bb;transition:color .5s;font-size:24px}
+.steps li .num{background:#c8d4e2;transition:background .5s}
+.steps li.cur{color:var(--navy);font-weight:800}
+.steps li.cur .num{background:var(--red)}
+.steps li.done{color:var(--teal)}
+.steps li.done .num{background:var(--teal)}
+/* prompt box */
+.pbox{max-height:48vh;position:relative;background:#0f1e38;color:#e3eefa;border-radius:20px;padding:22px 24px;font-size:21px;line-height:1.75;white-space:pre-wrap;max-height:56vh;overflow:auto}
+.cbtn{min-height:64px;padding:0 22px;border-radius:14px;border:none;background:var(--sky);color:#fff;font-weight:800;font-size:21px}
+.cbtn.ok{background:var(--teal)}
+/* mic */
+.micbar{display:flex;align-items:center;gap:14px;background:#fff;border:3px solid #dfe8f2;border-radius:40px;padding:12px 14px 12px 24px;max-width:640px}
+.micbar .txt{flex:1;min-height:40px;font-size:24px;color:var(--ink)}
+.micbtn{position:relative;flex:0 0 70px;height:70px;border-radius:50%;border:none;background:var(--navy);color:#fff;font-size:32px}
+.micbtn.listen::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:5px solid var(--sky);animation:ring 1.6s ease-out infinite}
+@keyframes ring{from{opacity:1;transform:scale(.85)}to{opacity:0;transform:scale(1.25)}}
+.status{font-size:21px;color:var(--navy2);margin-top:10px;min-height:32px;font-weight:700}
+/* topic cards */
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.topic{min-height:110px;border-radius:20px;border:3px solid #dfe8f2;background:#fff;font-size:24px;font-weight:800;color:var(--navy);transition:all .5s var(--ease)}
+.topic .e{display:block;font-size:38px}
+.topic.on{border-color:var(--sky);background:var(--sky-l);transform:translateY(-4px)}
+.qshow{margin-top:18px;background:var(--navy);color:#fff;border-radius:20px;padding:22px 26px;font-size:24px;min-height:120px;transition:opacity .5s}
+/* stairs */
+.stairs{display:flex;align-items:flex-end;gap:14px;height:330px;margin:10px 0}
+.stair{flex:1;border-radius:18px 18px 0 0;color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:flex-start;transform-origin:bottom;transform:scaleY(0);transition:transform .8s var(--ease)}
+.stair.show{transform:scaleY(1)}
+.stair b{font-size:24px}.stair span{font-size:19px;opacity:.95}
+@media(max-width:700px){.stairs{flex-direction:column;align-items:stretch;height:auto}.stair{height:auto!important;border-radius:18px;transform:scaleX(0);transform-origin:left}.stair.show{transform:scaleX(1)}}
+/* accept sim */
+.sug{background:#fff;border:3px solid #dfe8f2;border-radius:18px;padding:16px 18px;margin-bottom:12px;transition:border-color .5s,background .5s}
+.sug.acc{border-color:var(--teal);background:#effaf7}
+.sug.rej{border-color:#c8d4e2;background:#f4f6f9;opacity:.75}
+.sug .what{font-size:22px;font-weight:800}
+.sug .why{font-size:19px;color:var(--muted)}
+.sug .ab{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.sug .ab button{min-height:54px;padding:0 18px;border-radius:14px;border:3px solid #cfd8e3;background:#fff;font-size:20px;font-weight:800;color:var(--navy)}
+.sug.acc .ab .a{background:var(--teal);border-color:var(--teal);color:#fff}
+.sug.rej .ab .r{background:var(--muted);border-color:var(--muted);color:#fff}
+.sug.warn{border-style:dashed}
+.draft{background:#fffdf5;border:2px solid #eadfb8;border-radius:18px;padding:20px 22px;font-size:23px;line-height:1.9;font-family:"Nanum Myeongjo","Batang",serif}
+.draft mark{background:#c8f0e6;border-radius:4px;padding:0 2px;transition:background 1s}
+.draft .badmark{background:#fbd5d1}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:stretch}
+@media(max-width:820px){.flow{grid-template-columns:1fr}}
+.fstep{background:#fff;border:3px solid #dfe8f2;border-radius:20px;padding:18px 14px;text-align:center;opacity:0;transform:translateY(16px);transition:all .7s var(--ease)}
+.fstep.show{opacity:1;transform:none}
+.fstep .big-ico{font-size:40px}
+.fstep b{display:block;font-size:22px}
+.fstep span{font-size:18px;color:var(--muted)}
+.fstep.me{border-color:var(--teal);background:#effaf7}
+/* flip */
+.flip{perspective:900px;min-height:230px;cursor:pointer}
+.flip .fi{position:relative;width:100%;height:100%;min-height:230px;transition:transform .8s var(--ease);transform-style:preserve-3d}
+.flip.on .fi{transform:rotateY(180deg)}
+.flip .ff,.flip .fb{position:absolute;inset:0;border-radius:22px;padding:22px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center}
+.flip .ff{background:#fff;border:3px solid #dfe8f2;text-align:center}
+.flip .ff .big-ico{font-size:50px}
+.flip .fb{background:var(--navy);color:#fff;transform:rotateY(180deg);font-size:21px}
+.flip .fb b{color:#ffd27a}
+/* quiz */
+.q{background:#fff;border-radius:22px;padding:26px;border:2px solid #dfe8f2}
+.opts{display:grid;gap:12px;margin-top:14px}
+.opts button{min-height:68px;text-align:left;padding:10px 22px;border-radius:16px;border:3px solid #dfe8f2;background:#fff;font-size:24px;color:var(--ink);transition:all .5s}
+.opts button.right{border-color:var(--teal);background:#effaf7}
+.opts button.wrong{border-color:var(--red);background:#fdf0ef}
+.qfb{margin-top:14px;min-height:36px;font-weight:800;font-size:23px}
+.sum{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:24px;padding:28px 32px}
+.sum li{margin:10px 0 10px 26px;font-size:24px}
+.src{margin-top:18px;font-size:17px;color:var(--muted);word-break:break-all}
+.src a{color:var(--navy2)}
+@media(max-width:600px){body{font-size:22px}.brand .t{display:none}nav.bottom button{min-width:130px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.reveal,.fstep{opacity:1;transform:none}.stair{transform:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo"><span>H<b>D</b></span></div><span class="t">하이디 교육컨설팅</span></div>
+  <div style="display:flex;align-items:center"><span class="part" id="part">시작</span><span class="count" id="count"></span></div>
+</header>
+<div class="progress" id="bar"></div>
+<main id="deck">
+
+<!-- 1 -->
+<section class="slide" data-part="시작">
+  <div class="inner cover">
+    <div class="tag">AI 글쓰기 교실 · 2회 과정</div>
+    <h1>제미나이 스킬로<br>나만의 <span class="hl">보조작가</span>와<br><span class="hl">편집자</span> 만들기</h1>
+    <p class="lead" style="margin-top:18px">내 이야기는 내가 쓰고, AI는 곁에서 묻고 다듬어 줍니다</p>
+    <div class="meta">하이디 교육컨설팅 · 강사 최선희<br><span class="small">‘다음 ▶’ 버튼을 눌러 넘겨요</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-part="시작">
+  <div class="inner">
+    <span class="kicker">두 번의 수업</span>
+    <h2>두 명의 도우미를 차례로 만들어요</h2>
+    <div class="sess">
+      <div class="card" data-jump="2"><span class="tagline" style="background:#13917f">1회차 · 120분</span><div class="big-ico">🎙️</div><h3>보조작가</h3><p>질문을 던져 <b>내 기억을 꺼내 주는</b> 이야기 친구</p></div>
+      <div class="card" data-jump="16"><span class="tagline" style="background:#7a52c7">2회차 · 120분</span><div class="big-ico">✏️</div><h3>편집자</h3><p>내 원고를 읽고 <b>고칠 곳을 알려 주는</b> 친절한 선생님</p></div>
+    </div>
+    <p class="hint">상자를 누르면 그 회차로 바로 갑니다</p>
+  </div>
+</section>
+
+<!-- 1회차 -->
+<!-- 3 -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">1회차 · 오늘 배울 것</span>
+    <h2>오늘은 이 세 가지를 해 봐요</h2>
+    <div class="grid">
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">1</span>‘스킬’이 무엇인지 알아보기</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">2</span>내 휴대폰에 <b>&nbsp;보조작가 스킬&nbsp;</b> 만들기</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">3</span>보조작가와 이야기 나누며 <b>&nbsp;글감 모으기</b></div>
+    </div>
+    <p class="hint">‘다음 ▶’을 누르면 하나씩 나타나요</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">왜 필요할까요?</span>
+    <h2>AI가 글을 ‘대신’ 써 주면 좋을까요?</h2>
+    <div class="toggle"><button class="btn on" data-ba="a">😕 대신 써 주는 AI</button><button class="btn" data-ba="b">😊 물어봐 주는 AI</button></div>
+    <div class="chat" id="baChat"></div>
+    <p class="card" id="baNote" style="margin-top:14px;font-size:22px"></p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">스킬이 뭐예요?</span>
+    <h2>스킬은 <span class="hl">‘늘 하던 대로’</span>를 기억하는 메모예요</h2>
+    <div class="salon">
+      <div class="card reveal"><h3>💈 처음 간 미용실</h3><p>“옆은 짧게, 앞머리는 조금만, 뒤는 다듬어만 주세요…”<br><span class="small">갈 때마다 처음부터 설명해야 해요</span></p></div>
+      <div class="card reveal" style="border-color:#13917f;background:#effaf7"><h3>✂️ 단골 미용실</h3><p>“<b>늘 하던 대로요.</b>”<br><span class="small">한마디면 알아서 해 줘요</span></p></div>
+    </div>
+    <div class="card reveal" style="margin-top:18px;background:var(--navy);color:#fff;border:none">
+      제미나이에게 한 번 설명해 두면, 다음부터는 <b style="color:#ffd27a">스킬 이름만 불러도</b> 그 방식대로 도와줘요.
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">시작 전 확인</span>
+    <h2>휴대폰을 확인해 볼까요?</h2>
+    <p class="small" style="margin-bottom:12px">해당하면 눌러서 ✓ 표시하세요</p>
+    <div class="chk"><div class="box">✓</div>제미나이 앱이 깔려 있어요</div>
+    <div class="chk"><div class="box">✓</div>구글 계정으로 로그인했어요</div>
+    <div class="chk"><div class="box">✓</div>‘활동 기록 유지’가 켜져 있어요 <span class="small">(강사가 도와드려요)</span></div>
+    <div class="allok" id="allok">🎉 준비 끝! 시작해 볼까요?</div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">꼭 지켜 주세요</span>
+    <h2>AI에게 말해도 될까요?</h2>
+    <p class="small" style="margin-bottom:12px">눌러서 신호를 확인하세요</p>
+    <div class="tl">
+      <div class="ti" data-l="g"><div class="lamp">○</div><div>어릴 적 고향 이야기, 첫 월급 날의 기억<span class="why">🟢 괜찮아요 — 글감이 되는 나의 추억이에요.</span></div></div>
+      <div class="ti" data-l="r"><div class="lamp">✕</div><div>주민등록번호, 통장 번호, 비밀번호<span class="why">🔴 절대 안 돼요 — 어떤 경우에도 입력하지 마세요.</span></div></div>
+      <div class="ti" data-l="r"><div class="lamp">✕</div><div>지금 사는 집 주소, 전화번호<span class="why">🔴 안 돼요 — 글에 필요 없는 개인정보예요.</span></div></div>
+      <div class="ti" data-l="y"><div class="lamp">!</div><div>가족의 실명과 사생활 이야기<span class="why">🟡 조심해요 — 책으로 낼 때는 가족에게 먼저 허락받아요.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 sim -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">따라 하기 ①</span>
+    <h2>스킬 만드는 곳 찾아가기</h2>
+    <div class="simwrap">
+      <div class="phone"><div class="screen">
+        <div class="scr on"><div class="appbar"><span class="tap t" data-go="1">☰</span><span>Gemini</span><span>👤</span></div>
+          <div style="margin-top:130px;text-align:center;font-size:22px;color:#556">무엇을 도와드릴까요?</div><div class="gin">Gemini에게 물어보기</div></div>
+        <div class="scr"><div class="appbar"><span>←</span><span>메뉴</span><span></span></div>
+          <div class="mi">💬 새 채팅</div><div class="mi">📓 노트북</div><div class="mi tap t" data-go="2">🎛️ 맞춤설정</div><div class="mi">⚙️ 설정</div>
+          <p style="font-size:14px;color:#889;margin-top:10px">안 보이면 ‘더보기’를 먼저 눌러요</p></div>
+        <div class="scr"><div class="appbar"><span>←</span><span>맞춤설정</span><span></span></div>
+          <div><span class="chip tap t" data-go="3">스킬</span><span class="chip">기타</span></div></div>
+        <div class="scr"><div class="appbar"><span>←</span><span>스킬</span><span class="tap round t" data-go="4" style="font-size:26px;color:var(--sky)">＋<span class="finger">👆</span></span></div>
+          <div style="text-align:right;color:var(--red);font-weight:800;font-size:15px;margin:0 14px 16px 0">‘스킬’ 옆 ＋ 를 눌러요 ↗</div>
+          <div style="font-weight:800">내 스킬</div><div class="chip">아직 없어요</div></div>
+        <div class="scr"><div class="appbar"><span>←</span><span>스킬</span><span style="background:var(--sky);color:#fff;border-radius:50%;width:36px;height:36px;display:grid;place-items:center">＋</span></div>
+          <div class="sheet"><div class="pick">🤖 Gemini로 만들기<br><span style="font-weight:400;font-size:14px">말로 설명하면 만들어 줘요 — 오늘은 이것!</span></div><div>✍️ 수동으로 만들기</div></div></div>
+      </div></div>
+      <div class="steps">
+        <ol class="simsteps">
+          <li class="cur"><span class="num">1</span>왼쪽 위 ☰ 누르기</li>
+          <li><span class="num">2</span>‘맞춤설정’ 누르기</li>
+          <li><span class="num">3</span>‘스킬’ 누르기</li>
+          <li><span class="num">4</span>‘스킬’ 옆 ＋ 누르기</li>
+          <li><span class="num">5</span>‘Gemini로 만들기’ 고르기</li>
+        </ol>
+        <div class="btnrow"><button class="btn primary simNext">다음 동작 ▶</button><button class="btn simReset">처음부터</button></div>
+        <span class="note">⚠ 메뉴 이름·위치는 바뀔 수 있어요</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 make writer -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">따라 하기 ② · 가장 쉬운 방법</span>
+    <h2>긴 글은 쓰지 마세요 — <span class="hl">복사해서 붙여 넣기</span></h2>
+    <p class="small" style="margin-bottom:10px">강사가 단체 대화방에 보내 드린 글을 <b>길게 눌러 복사</b> → 제미나이 입력창에 <b>붙여 넣기</b> → 보내기</p>
+    <div class="pbox" id="pWriter">아래 내용으로 스킬을 만들어 줘.
+
+스킬 이름: 이야기-꺼내기 (나의 보조작가)
+하는 일: 생활 에세이를 쓰려는 어르신이 자기 기억을 꺼내도록 질문으로 돕는다. 글감 찾기, 추억 떠올리기, 에세이 초안 준비를 할 때 사용한다.
+
+지켜야 할 것
+1. 질문은 한 번에 하나만, 짧고 쉬운 말로, 존댓말로 한다.
+2. 언제·어디서·누구와, 그리고 무엇을 보고 듣고 냄새 맡고 맛봤는지 물어본다.
+3. 내 대신 글을 지어 쓰지 않는다. 내가 한 말을 최대한 그대로 살린다.
+4. 내가 “정리해 줘”라고 하면, 내가 한 말만 모아 ‘이야기 조각’ 목록과 ‘받아쓰기 초안’으로 정리한다. 내가 말하지 않은 내용은 넣지 않는다.
+5. 주민번호·통장 번호·비밀번호·집 주소는 묻지 않는다. 내가 말하면 지우라고 알려 준다.
+6. 힘든 기억이 나오면 더 캐묻지 말고, 쉬어 갈지 먼저 물어본다.</div><div class="btnrow"><button class="cbtn" data-copy="pWriter">📋 복사하기</button></div>
+  </div>
+</section>
+
+<!-- 10 promises -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">보조작가의 약속</span>
+    <h2>내 보조작가는 이렇게 도와줘요</h2>
+    <div class="grid g2">
+      <div class="card reveal"><div class="big-ico">☝️</div><h3>질문은 하나씩</h3><p>한꺼번에 묻지 않아요. 천천히 대답하시면 돼요.</p></div>
+      <div class="card reveal"><div class="big-ico">👃</div><h3>오감으로 묻기</h3><p>“그때 무슨 냄새가 났어요?” 기억이 생생해져요.</p></div>
+      <div class="card reveal"><div class="big-ico">🙊</div><h3>대신 쓰지 않기</h3><p>내 말을 그대로 모아요. 글의 주인은 나예요.</p></div>
+      <div class="card reveal"><div class="big-ico">🤝</div><h3>힘들면 쉬어 가기</h3><p>아픈 기억은 더 묻지 않고 먼저 물어봐요.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 call -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">따라 하기 ③</span>
+    <h2>만든 스킬 불러오기</h2>
+    <div class="grid g2" style="align-items:start">
+      <div>
+        <p style="margin-bottom:10px">새 채팅 입력창에 <b style="font-size:30px">/</b> 를 누르면 내 스킬이 나와요</p>
+        <div class="micbar"><div class="txt" id="callTxt"></div><button class="micbtn" aria-label="마이크">🎤</button></div>
+        <div class="card" id="callPop" style="margin-top:10px;opacity:0;transition:opacity .6s;padding:14px 18px">🎙️ <b>이야기-꺼내기</b> <span class="small">나의 보조작가</span></div>
+        <div class="btnrow"><button class="btn primary" id="callGo">▶ 보여 주세요</button></div>
+      </div>
+      <div class="card">
+        <h3>🗣️ 말로 불러도 돼요</h3>
+        <p>“<b>이야기 꺼내기 스킬로 시작해 줘.</b> 오늘은 첫 월급 이야기를 하고 싶어요.”</p>
+        <p class="small" style="margin-top:10px">/ 대신 @ 로 바뀐 경우도 있어요</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 mic -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">손가락이 힘들면</span>
+    <h2>🎤 <span class="hl">마이크</span>를 누르고 말로 대답하세요</h2>
+    <div class="micbar"><div class="txt" id="micTxt"></div><button class="micbtn" id="micBtn" aria-label="마이크 누르기">🎤</button></div>
+    <div class="status" id="micStatus">마이크 버튼을 눌러 보세요</div>
+    <div class="grid g3" style="margin-top:16px">
+      <div class="card"><h3>① 누르기</h3><p>입력창 옆 🎤</p></div>
+      <div class="card"><h3>② 천천히 말하기</h3><p>평소 말투 그대로</p></div>
+      <div class="card"><h3>③ 확인 후 보내기</h3><p>틀린 글자는 고쳐요</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 topics -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">실습 · 글감 고르기</span>
+    <h2>오늘 어떤 이야기를 꺼내 볼까요?</h2>
+    <div class="topics" id="topics">
+      <button class="topic" data-q="그 첫 월급을 받은 날, 몇 살이셨고 어디서 일하셨어요?"><span class="e">💰</span>첫 월급</button>
+      <button class="topic" data-q="어머니 밥상에서 가장 자주 올라오던 반찬은 무엇이었어요? 그 냄새가 기억나세요?"><span class="e">🍚</span>어머니의 밥상</button>
+      <button class="topic" data-q="고향 골목에서 제일 먼저 떠오르는 소리는 무엇인가요?"><span class="e">🏘️</span>내 고향 골목</button>
+      <button class="topic" data-q="이사하던 날, 짐을 무엇에 실어 옮기셨어요? 누가 함께했나요?"><span class="e">📦</span>이사하던 날</button>
+      <button class="topic" data-q="손주와 보낸 하루 중 가장 웃음이 났던 순간은 언제였어요?"><span class="e">👶</span>손주와 보낸 하루</button>
+      <button class="topic" data-q="처음 배운 기술은 무엇이었고, 누구에게 배우셨어요?"><span class="e">🧵</span>처음 배운 기술</button>
+    </div>
+    <div class="qshow" id="qshow">카드를 누르면 보조작가의 <b>첫 질문</b>을 보여 드려요</div>
+  </div>
+</section>
+
+<!-- 14 conversation -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">대화 미리 보기</span>
+    <h2>이렇게 주고받아요</h2>
+    <div class="chat" id="conv"></div>
+    <div class="btnrow"><button class="btn primary" id="convNext">다음 대화 ▶</button><button class="btn" id="convReset">처음부터</button></div>
+  </div>
+</section>
+
+<!-- 15 fragments -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">이야기 모으기</span>
+    <h2>“정리해 줘” 하면 내 말을 모아 줘요</h2>
+    <div class="grid g2" style="align-items:start">
+      <div class="card reveal"><h3>🧩 이야기 조각</h3>
+        <p>· 스물두 살, 방직공장<br>· 노란 월급봉투<br>· 손이 덜덜 떨림<br>· 버스에서 봉투를 가슴에 안음<br>· 어머니의 된장찌개 냄새</p></div>
+      <div class="card reveal"><h3>📝 받아쓰기 초안</h3>
+        <p class="draft" style="font-size:21px">스물두 살 봄, 방직공장에서 처음 월급을 받았다. 노란 봉투를 받는데 손이 덜덜 떨렸다. 버스에서 내내 봉투를 가슴에 안고 왔다…</p></div>
+    </div>
+    <div class="card reveal" style="margin-top:16px;border-color:var(--amber);background:#fff8eb">
+      🔍 <b>꼭 확인하세요!</b> 내가 하지 않은 말이 들어 있으면 지워 달라고 하세요. “그건 제가 한 말이 아니에요. 빼 주세요.”
+    </div>
+  </div>
+</section>
+
+<!-- 16 wrap 1 -->
+<section class="slide" data-part="1회차 · 보조작가">
+  <div class="inner">
+    <span class="kicker">1회차 정리 · 집에서 다시 보기</span>
+    <h2>오늘 한 일</h2>
+    <div class="sum"><ul>
+      <li>스킬 = ‘늘 하던 대로’를 기억하는 메모</li>
+      <li>☰ → 맞춤설정 → 스킬 → ＋ → Gemini로 만들기</li>
+      <li>입력창에 <b>/</b> → ‘이야기-꺼내기’ 고르기 (말로 불러도 OK)</li>
+      <li>대답이 힘들면 🎤 마이크로 말하기</li>
+      <li>“정리해 줘” → 이야기 조각 + 받아쓰기 초안</li>
+    </ul></div>
+    <div class="card" style="margin-top:16px"><h3>🏠 숙제 · 다음 시간 예고</h3><p>보조작가와 이야기 <b>한 가지</b>를 나누고, 받아쓰기 초안을 <b>내 손으로 고쳐</b> 짧은 글(원고지 3~5장 정도)로 써 오세요. 다음 시간엔 <b>편집자</b>가 다듬어 드려요!</p></div>
+  </div>
+</section>
+
+<!-- 2회차 -->
+<!-- 17 -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">2회차 · 오늘 배울 것</span>
+    <h2>써 온 글을 함께 다듬어요</h2>
+    <div class="grid">
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">1</span>편집자가 하는 일 알아보기</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">2</span>내 휴대폰에 <b>&nbsp;편집자 스킬&nbsp;</b> 만들기</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">3</span>고칠 곳을 <b>&nbsp;내가 골라서&nbsp;</b> 원고 완성하기</div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 stairs -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">편집자란?</span>
+    <h2>편집은 계단처럼 한 칸씩 올라가요</h2>
+    <div class="stairs">
+      <div class="stair" style="height:45%;background:#2f6fb5"><b>1. 맞춤법·띄어쓰기</b><span>받앗다 → 받았다</span></div>
+      <div class="stair" style="height:72%;background:#13917f"><b>2. 문장 다듬기</b><span>긴 문장은 둘로 나누기</span></div>
+      <div class="stair" style="height:100%;background:#7a52c7"><b>3. 구성과 제목</b><span>처음·중간·끝, 제목 정하기</span></div>
+    </div>
+    <p class="hint">‘다음 ▶’을 누르면 한 칸씩 올라가요</p>
+  </div>
+</section>
+
+<!-- 19 good vs over -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">좋은 편집 vs 지나친 편집</span>
+    <h2>내 목소리가 남아 있나요?</h2>
+    <div class="toggle"><button class="btn on" data-ed="0">📄 내 원고</button><button class="btn" data-ed="1">😟 지나친 편집</button><button class="btn" data-ed="2">😊 좋은 편집</button></div>
+    <div class="draft" id="edText"></div>
+    <p class="card" id="edNote" style="margin-top:14px;font-size:22px"></p>
+  </div>
+</section>
+
+<!-- 20 make editor -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">따라 하기 · 편집자 스킬 만들기</span>
+    <h2>지난번처럼 <span class="hl">복사해서 붙여 넣기</span></h2>
+    <p class="small" style="margin-bottom:10px">☰ → 맞춤설정 → 스킬 → ＋ → Gemini로 만들기 (또는 채팅창에 바로 붙여 넣기)</p>
+    <div class="pbox" id="pEditor">아래 내용으로 스킬을 만들어 줘.
+
+스킬 이름: 원고-다듬기 (나의 편집자)
+하는 일: 어르신이 쓴 생활 에세이 원고를 읽고 고칠 곳을 제안한다. 맞춤법 점검, 문장 다듬기, 제목 정하기를 할 때 사용한다.
+
+지켜야 할 것
+1. 먼저 무엇을 볼지 물어본다: ① 맞춤법·띄어쓰기 ② 문장 다듬기 ③ 글 구성과 제목
+2. 고친 곳은 표로 보여 준다: 원래 문장 | 고친 문장 | 이유(한 줄)
+3. 글쓴이의 말투·사투리·옛날 표현은 살린다. 틀린 맞춤법만 고친다.
+4. 원고에 없는 사실이나 사건, 감정을 지어 넣지 않는다.
+5. 마지막에 고친 글 전체를 다시 보여 주고, 제목 후보 3개를 제안한다.
+6. 무엇을 받아들일지는 글쓴이가 정한다.</div><div class="btnrow"><button class="cbtn" data-copy="pEditor">📋 복사하기</button></div>
+  </div>
+</section>
+
+<!-- 21 editor promises -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">편집자의 약속</span>
+    <h2>내 편집자는 이렇게 도와줘요</h2>
+    <div class="grid g2">
+      <div class="card reveal"><div class="big-ico">📋</div><h3>고친 곳을 표로</h3><p>원래 문장과 고친 문장을 나란히 보여 줘요.</p></div>
+      <div class="card reveal"><div class="big-ico">🗣️</div><h3>내 말투 지키기</h3><p>사투리와 옛날 표현은 그대로 살려요.</p></div>
+      <div class="card reveal"><div class="big-ico">🚫</div><h3>지어내지 않기</h3><p>없던 사건·감정을 넣지 않아요.</p></div>
+      <div class="card reveal"><div class="big-ico">👑</div><h3>결정은 내가</h3><p>받아들일지 말지는 글쓴이가 정해요.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 accept sim -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">체험 · 받아들일까, 그대로 둘까?</span>
+    <h2>편집자의 제안을 하나씩 골라 보세요</h2>
+    <div class="grid g2" style="align-items:start">
+      <div id="sugs"></div>
+      <div><h3 style="margin-bottom:8px">📄 내 원고 <span class="small">(고른 대로 바뀌어요)</span></h3><div class="draft" id="liveDraft"></div>
+        <div class="card" id="sugMsg" style="margin-top:12px;font-size:21px;display:none"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 flow -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">두 도우미 함께 쓰기</span>
+    <h2>한 편의 글이 완성되기까지</h2>
+    <div class="flow">
+      <div class="fstep"><div class="big-ico">🎙️</div><b>보조작가</b><span>질문으로 기억 꺼내기</span></div>
+      <div class="fstep me"><div class="big-ico">✍️</div><b>내가 쓰기</b><span>초안을 내 말로</span></div>
+      <div class="fstep"><div class="big-ico">✏️</div><b>편집자</b><span>고칠 곳 제안</span></div>
+      <div class="fstep me"><div class="big-ico">👑</div><b>내가 고르기</b><span>받아들일지 결정</span></div>
+      <div class="fstep me"><div class="big-ico">📖</div><b>완성!</b><span>소리 내어 읽어 보기</span></div>
+    </div>
+    <p class="hint">초록색 칸은 <b>내가</b> 하는 일이에요</p>
+  </div>
+</section>
+
+<!-- 24 manage -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">스킬 손보기</span>
+    <h2>마음에 안 들면 이렇게 고쳐요</h2>
+    <p class="small" style="margin-bottom:12px">카드를 눌러 보세요 · 모두 ☰ → 맞춤설정 → 스킬 → 해당 스킬 → 더보기에서</p>
+    <div class="grid g3">
+      <div class="flip"><div class="fi"><div class="ff"><div class="big-ico">💬</div><h3>Gemini로 수정</h3></div><div class="fb">말로 부탁해요<br><b>“질문을 더 짧게 해 줘”</b><br><b>“사투리는 고치지 마”</b></div></div></div>
+      <div class="flip"><div class="fi"><div class="ff"><div class="big-ico">⏸️</div><h3>잠시 끄기</h3></div><div class="fb"><b>비활성화</b>를 누르면 자동으로 쓰지 않아요. 다시 쓰려면 ‘활성화’.</div></div></div>
+      <div class="flip"><div class="fi"><div class="ff"><div class="big-ico">🗑️</div><h3>삭제</h3></div><div class="fb">⚠️ <b>지우면 되살릴 수 없어요.</b> 지우기 전에 한 번 더 생각해요.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 practice -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">실습 · 내 원고 완성하기</span>
+    <h2>오늘의 실습 순서</h2>
+    <div class="grid">
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">1</span>입력창에 <b>&nbsp;/&nbsp;</b> → ‘원고-다듬기’ → 써 온 글 붙여 넣기 (또는 말로 읽기)</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">2</span>“① 맞춤법부터 봐 줘” → 표를 보며 하나씩 고르기</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">3</span>제목 후보 3개 중 고르거나 내가 새로 짓기</div>
+      <div class="card reveal" style="display:flex;align-items:center"><span class="num">4</span>완성한 글을 짝에게 <b>&nbsp;소리 내어 읽어 주기</b> 🎉</div>
+    </div>
+  </div>
+</section>
+
+<!-- 26 quiz -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">확인 퀴즈</span>
+    <h2>네 문제만 풀어 볼까요?</h2>
+    <div class="q" id="quiz"></div>
+  </div>
+</section>
+
+<!-- 27 summary -->
+<section class="slide" data-part="2회차 · 편집자">
+  <div class="inner">
+    <span class="kicker">두 번의 수업 정리</span>
+    <h2>내 글의 주인은 언제나 나</h2>
+    <div class="sum"><ul>
+      <li>🎙️ <b>보조작가</b>: 질문으로 기억을 꺼내고, 내 말을 그대로 모아 줘요</li>
+      <li>✏️ <b>편집자</b>: 고칠 곳을 표로 보여 주고, 내 말투는 지켜요</li>
+      <li>👑 받아들일지는 <b>내가</b> 정해요 · 지어낸 내용은 빼 달라고 해요</li>
+      <li>🔒 주민번호·통장·비밀번호·주소는 절대 말하지 않아요</li>
+      <li>📖 책으로 낼 때는 가족 이야기에 허락을 받고, AI 도움을 받았다고 밝히면 좋아요</li>
+    </ul></div>
+    <div class="src">
+      참고: Google Gemini 고객센터 「Gemini 앱에서 스킬 만들기 및 관리하기」 ·
+      <a href="https://support.google.com/gemini/answer/17094296?hl=ko" target="_blank" rel="noopener">support.google.com/gemini/answer/17094296</a><br>
+      ※ 2026년 11월 기준. 메뉴 이름과 위치는 바뀔 수 있으니 수업 전 최신 화면을 확인하세요.<br>
+      하이디 교육컨설팅 · 강사 최선희
+    </div>
+  </div>
+</section>
+
+</main>
+<nav class="bottom"><button id="prevBtn">◀ 이전</button><button id="nextBtn" class="next">다음 ▶</button></nav>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const slides=$$('section.slide');let cur=0;
+slides.forEach(s=>{s._steps=$$('.reveal,.stair,.fstep',s).map(e=>[e]);});
+const pending=s=>s._steps.find(g=>!g[0].classList.contains('show'));
+function show(i){slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.classList.toggle('prev',k<i);});
+  cur=i;$('#count').textContent=(i+1)+' / '+slides.length;$('#part').textContent=slides[i].dataset.part;
+  $('#bar').style.width=((i+1)/slides.length*100)+'%';$('#prevBtn').disabled=i===0;
+  $('#nextBtn').textContent=i===slides.length-1?'처음으로 ↺':'다음 ▶';slides[i].scrollTop=0;}
+function next(){const g=pending(slides[cur]);if(g){g.forEach(e=>e.classList.add('show'));return;}
+  if(cur<slides.length-1)show(cur+1);else{slides.forEach(s=>s._steps.flat().forEach(e=>e.classList.remove('show')));show(0);}}
+function prev(){if(cur>0)show(cur-1);}
+$('#nextBtn').onclick=next;$('#prevBtn').onclick=prev;
+document.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next();}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev();}});
+let sx=null,sy=null;const deck=$('#deck');
+deck.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+deck.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?next():prev();}sx=null;});
+$$('[data-jump]').forEach(c=>c.onclick=()=>show(+c.dataset.jump));
+show(0);
+
+/* copy */
+$$('[data-copy]').forEach(b=>b.onclick=()=>{const el=document.getElementById(b.dataset.copy).cloneNode(true);const cb=el.querySelector('.cbtn');if(cb)cb.remove();const t=el.innerText.trim();
+  const ok=()=>{b.classList.add('ok');b.textContent='✓ 복사됐어요';setTimeout(()=>{b.classList.remove('ok');b.textContent='📋 복사하기';},2000);};
+  const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok();}catch(e){}a.remove();};
+  try{navigator.clipboard.writeText(t).then(ok).catch(fb);}catch(e){fb();}});
+
+/* chat helper */
+function bubble(box,who,text,cls){const d=document.createElement('div');d.className='bub pop '+cls;d.innerHTML='<span class="who">'+who+'</span>'+text;box.appendChild(d);d.scrollIntoView({block:'nearest',behavior:'smooth'});}
+
+/* before-after */
+const BA={a:{c:[['me','나','첫 월급 이야기로 에세이 써 줘.'],['bad','AI','“1970년대, 나는 서울의 한 공장에서 첫 월급을 받았다. 그날 하늘은 유난히 푸르렀고…”']],n:'😕 그럴듯하지만 <b>내 기억이 아니에요.</b> 서울도, 푸른 하늘도 AI가 지어낸 거예요.'},
+ b:{c:[['me','나','첫 월급 이야기를 쓰고 싶어요.'],['ai','보조작가','좋아요! 그날 월급봉투는 어떤 모양이었어요?'],['me','나','노란 봉투였어요. 손이 덜덜 떨렸지요.']],n:'😊 질문에 답하다 보면 <b>나만의 이야기</b>가 나와요. 글의 주인은 나예요.'}};
+let baT=[];
+function renderBA(k){baT.forEach(clearTimeout);baT=[];const box=$('#baChat');box.innerHTML='';$('#baNote').innerHTML='';
+  BA[k].c.forEach((m,i)=>baT.push(setTimeout(()=>bubble(box,m[1],m[2],m[0]),300+i*1100)));
+  baT.push(setTimeout(()=>{$('#baNote').innerHTML=BA[k].n;},300+BA[k].c.length*1100));}
+$$('[data-ba]').forEach(b=>b.onclick=()=>{$$('[data-ba]').forEach(x=>x.classList.toggle('on',x===b));renderBA(b.dataset.ba);});
+renderBA('a');
+
+/* checklist */
+const chks=$$('.chk');chks.forEach(c=>c.onclick=()=>{c.classList.toggle('on');$('#allok').classList.toggle('show',chks.every(x=>x.classList.contains('on')));});
+/* traffic */
+$$('.ti').forEach(t=>t.onclick=()=>t.classList.add(t.dataset.l));
+
+/* phone sim */
+const scrs=$$('.scr'),lis=$$('.simsteps li');let ss=0;
+function sim(n){ss=n;scrs.forEach((s,i)=>s.classList.toggle('on',i===n));lis.forEach((l,i)=>{l.classList.toggle('done',i<n);l.classList.toggle('cur',i===n);});$('.simNext').disabled=n>=4;}
+$$('[data-go]').forEach(t=>t.onclick=()=>sim(+t.dataset.go));$('.simNext').onclick=()=>{if(ss<4)sim(ss+1);};$('.simReset').onclick=()=>sim(0);
+
+/* typing helper */
+function typeIn(el,text,speed,done){let i=0;el.textContent='';const t=setInterval(()=>{el.textContent=text.slice(0,++i);if(i>=text.length){clearInterval(t);done&&done();}},speed);return t;}
+/* call sim */
+let callT=null;$('#callGo').onclick=()=>{clearInterval(callT);$('#callPop').style.opacity=0;$('#callTxt').textContent='/';
+  setTimeout(()=>{$('#callPop').style.opacity=1;},700);
+  setTimeout(()=>{$('#callPop').style.opacity=0;callT=typeIn($('#callTxt'),'🎙️ 이야기-꺼내기  오늘은 첫 월급 이야기를 하고 싶어요',90);},2200);};
+/* mic sim */
+let micT=null;$('#micBtn').onclick=()=>{const b=$('#micBtn');clearInterval(micT);b.classList.add('listen');$('#micStatus').textContent='🔊 듣고 있어요… 천천히 말씀하세요';$('#micTxt').textContent='';
+  setTimeout(()=>{micT=typeIn($('#micTxt'),'노란 봉투였어요. 손이 덜덜 떨렸지요.',110,()=>{b.classList.remove('listen');$('#micStatus').textContent='✅ 글자로 바뀌었어요. 확인하고 보내기!';});},1200);};
+
+/* topics */
+$$('.topic').forEach(t=>t.onclick=()=>{$$('.topic').forEach(x=>x.classList.toggle('on',x===t));const q=$('#qshow');q.style.opacity=0;
+  setTimeout(()=>{q.innerHTML='🎙️ <b>보조작가:</b> “'+t.dataset.q+'”';q.style.opacity=1;},350);});
+
+/* conversation */
+const CV=[['ai','보조작가','첫 월급 이야기, 좋습니다. 그때가 몇 살 무렵이셨어요?'],['me','나','스물두 살이었어요. 방직공장에 다녔지요.'],['ai','보조작가','월급봉투를 처음 손에 쥐었을 때, 어떤 느낌이셨어요?'],['me','나','손이 덜덜 떨렸어요. 노란 봉투였어요.'],['ai','보조작가','그날 집에 가는 길은 어땠어요? 무엇을 타고 가셨어요?'],['me','나','버스에서 봉투를 가슴에 꼭 안고 왔어요. 누가 가져갈까 봐.'],['ai','보조작가','집에 들어섰을 때, 어떤 냄새가 났는지 기억나세요?']];
+let ci=0;function convReset(){ci=0;$('#conv').innerHTML='';$('#convNext').disabled=false;convStep();}
+function convStep(){if(ci<CV.length){const m=CV[ci++];bubble($('#conv'),m[1],m[2],m[0]);}if(ci>=CV.length)$('#convNext').disabled=true;}
+$('#convNext').onclick=convStep;$('#convReset').onclick=convReset;convReset();
+
+/* edit compare */
+const ED=[{t:'1974년 봄에 나는 처음으로 월급을 받앗다. 노란 봉투에 든 돈은 얼마 안됫지만 손이 떨렷다. 버스를 타고 집에 가는 내내 봉투를 가슴에 꼭 안고 있엇는데 혹시 누가 훔쳐갈까봐 그랫다.',n:'📄 맞춤법이 조금 틀렸지만 <b>그날의 마음</b>이 생생한 글이에요.'},
+ {t:'<span class="badmark">찬란한 1974년의 봄</span>, 나는 <span class="badmark">인생 최초의 급여</span>를 수령하였다. <span class="badmark">황금빛 봉투 속 희망</span>에 가슴이 벅차올랐다. 귀갓길 버스 안에서 나는 <span class="badmark">세상을 다 가진 듯</span> 봉투를 끌어안았다.',n:'😟 문장은 매끄럽지만 <b>내 말투가 사라지고</b>, 하지 않은 말(희망, 세상을 다 가진 듯)이 들어갔어요.'},
+ {t:'1974년 봄에 나는 처음으로 월급을 <mark>받았다</mark>. 노란 봉투에 든 돈은 얼마 <mark>안 됐지만</mark> 손이 <mark>떨렸다</mark>. 버스를 타고 집에 가는 내내 봉투를 가슴에 꼭 안고 <mark>있었다</mark>. 혹시 누가 <mark>훔쳐 갈까 봐</mark> <mark>그랬다</mark>.',n:'😊 틀린 글자만 고치고 긴 문장을 둘로 나눴어요. <b>내 목소리가 그대로</b> 남아 있어요.'}];
+$$('[data-ed]').forEach(b=>b.onclick=()=>{$$('[data-ed]').forEach(x=>x.classList.toggle('on',x===b));const e=ED[+b.dataset.ed];const d=$('#edText');d.style.opacity=0;setTimeout(()=>{d.innerHTML=e.t;$('#edNote').innerHTML=e.n;d.style.opacity=1;},300);});
+$('#edText').style.transition='opacity .5s';$('#edText').innerHTML=ED[0].t;$('#edNote').innerHTML=ED[0].n;
+
+/* accept sim */
+const ORIG='1974년 봄에 나는 처음으로 월급을 받앗다. 노란 봉투에 든 돈은 얼마 안됫지만 손이 떨렷다. 버스를 타고 집에 가는 내내 봉투를 가슴에 꼭 안고 있엇는데 혹시 누가 훔쳐갈까봐 그랫다. 집에 가니 어머니가 부엌에서 된장찌개를 끓이고 계셧고 나는 봉투를 어머니께 드렸다 어머니는 아무말도 안하시고 앞치마에 손을 닦으셧다.';
+const SUG=[{w:'① 맞춤법 7곳',y:'받앗다 → 받았다, 떨렷다 → 떨렸다 등 받침 고치기',r:[['받앗다','받았다'],['안됫지만','안됐지만'],['떨렷다','떨렸다'],['있엇는데','있었는데'],['그랫다','그랬다'],['계셧고','계셨고'],['닦으셧다','닦으셨다']]},
+ {w:'② 띄어쓰기 4곳',y:'안됐지만 → 안 됐지만, 훔쳐갈까봐 → 훔쳐 갈까 봐 등',r:[['안됫지만','안 됫지만'],['안됐지만','안 됐지만'],['훔쳐갈까봐','훔쳐 갈까 봐'],['아무말도','아무 말도'],['안하시고','안 하시고']]},
+ {w:'③ 문장 나누기',y:'“드렸다 어머니는” 사이에 마침표 넣기',r:[['드렸다 어머니는','드렸다. 어머니는']]},
+ {w:'④ 감동적으로 바꾸기',y:'“앞치마에 손을 닦으셨다” → “눈물을 글썽이며 나를 꼭 안아 주셨다”',warn:true,r:[['앞치마에 손을 닦으셧다','눈물을 글썽이며 나를 꼭 안아 주셨다'],['앞치마에 손을 닦으셨다','눈물을 글썽이며 나를 꼭 안아 주셨다']]}];
+const st=SUG.map(()=>null);
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+// apply sequentially on plain text (simpler, robust)
+function renderDraft2(){let t=ORIG;SUG.forEach((s,i)=>{if(st[i]!=='a')return;s.r.forEach(([f,to])=>{t=t.split(f).join('\u0001'+(s.warn?'!':'')+to+'\u0002');});});
+  let h=esc(t).replace(/\u0001(!?)([^\u0002]*)\u0002/g,(m,b,x)=>'<mark'+(b?' class="badmark"':'')+'>'+x.replace(/[\u0001\u0002]/g,'')+'</mark>');
+  h=h.replace(/[\u0001\u0002]/g,'');$('#liveDraft').innerHTML=h;
+  const m=$('#sugMsg');
+  if(st[3]==='a'){m.style.display='block';m.style.border='3px solid var(--red)';m.innerHTML='🚨 잠깐! 어머니가 정말 우셨나요? <b>하지 않은 일을 지어낸 제안</b>이에요. 내 기억과 다르면 ‘그대로 두기’!';}
+  else if(st.every(x=>x)){m.style.display='block';m.style.border='3px solid var(--teal)';m.innerHTML='👑 잘하셨어요! 고칠 곳은 받아들이고, 지어낸 내용은 그대로 두었어요.';}
+  else m.style.display='none';}
+const box=$('#sugs');
+SUG.forEach((s,i)=>{const d=document.createElement('div');d.className='sug'+(s.warn?' warn':'');d.innerHTML='<div class="what">'+s.w+'</div><div class="why">'+s.y+'</div><div class="ab"><button class="a">✅ 받아들이기</button><button class="r">↩ 그대로 두기</button></div>';
+  d.querySelector('.a').onclick=()=>{st[i]='a';d.classList.add('acc');d.classList.remove('rej');renderDraft2();};
+  d.querySelector('.r').onclick=()=>{st[i]='r';d.classList.add('rej');d.classList.remove('acc');renderDraft2();};box.appendChild(d);});
+renderDraft2();
+
+/* flip */
+$$('.flip').forEach(f=>f.onclick=()=>f.classList.toggle('on'));
+
+/* quiz */
+const QZ=[{q:'스킬은 무엇과 비슷할까요?',o:['단골 미용실의 “늘 하던 대로”','새 휴대폰 사기','비밀번호 바꾸기'],a:0,e:'한 번 설명해 두면 이름만 불러도 그 방식대로 도와줘요.'},
+ {q:'보조작가가 하지 말아야 할 일은?',o:['질문을 하나씩 하기','내 대신 이야기를 지어 쓰기','내 말을 모아 정리하기'],a:1,e:'글의 주인은 나! 보조작가는 묻고 모으기만 해요.'},
+ {q:'편집자가 “어머니가 눈물을 흘리셨다”를 넣자고 하는데, 그런 일은 없었어요.',o:['감동적이니 받아들인다','그대로 두기(거절)','편집자를 지운다'],a:1,e:'지어낸 내용은 거절해요. 결정은 내가 해요.'},
+ {q:'AI에게 절대 말하면 안 되는 것은?',o:['고향 골목 이야기','어머니 밥상 반찬','통장 번호와 비밀번호'],a:2,e:'주민번호·통장·비밀번호·주소는 어떤 경우에도 말하지 않아요.'}];
+let qi=0,score=0,ans=false;const quiz=$('#quiz');
+function rq(){if(qi>=QZ.length){quiz.innerHTML='<h3>🎉 다 푸셨어요!</h3><p style="font-size:32px;margin:10px 0"><b>'+score+' / '+QZ.length+'</b></p><div class="btnrow"><button class="btn primary" id="qre">다시 풀기</button></div>';$('#qre').onclick=()=>{qi=0;score=0;rq();};return;}
+  const Q=QZ[qi];ans=false;quiz.innerHTML='<div class="small">문제 '+(qi+1)+' / '+QZ.length+'</div><h3 style="font-size:28px">'+Q.q+'</h3><div class="opts">'+Q.o.map((o,k)=>'<button data-k="'+k+'">'+o+'</button>').join('')+'</div><div class="qfb" id="qfb"></div><div class="btnrow"><button class="btn primary" id="qn" style="visibility:hidden">다음 문제 ▶</button></div>';
+  $$('.opts button',quiz).forEach(b=>b.onclick=()=>{if(ans)return;ans=true;const k=+b.dataset.k;$$('.opts button',quiz)[Q.a].classList.add('right');
+    if(k===Q.a){score++;$('#qfb').innerHTML='<span style="color:var(--teal)">⭕ 맞았어요!</span> '+Q.e;}else{b.classList.add('wrong');$('#qfb').innerHTML='<span style="color:var(--red)">다시 볼까요?</span> '+Q.e;}
+    $('#qn').style.visibility='visible';});$('#qn').onclick=()=>{qi++;rq();};}
+rq();
+})();
+</script>
+</body>
+</html>
