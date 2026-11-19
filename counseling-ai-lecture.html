@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>생성형 AI로 상담·코칭 도구 체험하기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14284b;--navy2:#1f3d6e;--sky:#4aa8e0;--skybg:#eef7fd;--red:#d93a2f;--teal:#13917f;--orange:#e7a93a;--purple:#7a52c7;--muted:#4a5a73;--line:#c8d6e5;--warm:#fff4e5}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;color:var(--navy);background:#f3f6fa;font-size:23px;line-height:1.55;word-break:keep-all;overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.deck{position:fixed;inset:0 0 88px 0;overflow:hidden}
+.slide{position:absolute;inset:0;padding:30px 52px 20px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(40px);transition:opacity .6s ease,transform .6s ease,visibility .6s}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.slide.left{transform:translateX(-40px)}
+.inner{max-width:1180px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+.kicker{display:inline-flex;gap:8px;align-items:center;background:var(--navy);color:#fff;font-weight:900;font-size:17px;padding:4px 14px;border-radius:999px;margin-bottom:8px;align-self:flex-start}
+.kicker .t{background:rgba(255,255,255,.2);border-radius:99px;padding:0 8px}
+h1{font-size:52px;line-height:1.25;font-weight:900}
+h2{font-size:38px;line-height:1.3;font-weight:900;margin-bottom:12px}
+h3{font-size:26px;margin-bottom:6px}
+.lead{font-size:24px;color:var(--muted);margin-bottom:14px}
+.muted{color:var(--muted);font-size:19px}
+.src{color:#7a879a;font-size:15px;margin-top:auto;padding-top:12px}
+b.r{color:var(--red)}
+.navbar{position:fixed;left:0;right:0;bottom:0;height:88px;background:#fff;border-top:2px solid #dde6f0;display:flex;align-items:center;justify-content:space-between;padding:0 22px;gap:14px;z-index:20}
+.nbtn{min-height:58px;min-width:140px;font-size:23px;font-weight:900;border-radius:16px;border:3px solid var(--navy);background:#fff;color:var(--navy)}
+.nbtn.next{background:var(--navy);color:#fff}.nbtn:disabled{opacity:.3;cursor:default}
+.prog{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.prog .txt{font-weight:900;font-size:21px}
+.prog .bar{width:min(520px,90%);height:10px;background:#e3e9f1;border-radius:99px;overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--sky);width:0;transition:width .6s ease}
+.more{font-size:15px;color:var(--red);font-weight:700;min-height:19px}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.rv.show{opacity:1;transform:none}
+.card{background:#fff;border:3px solid var(--line);border-radius:20px;padding:18px 22px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.say{border-left:10px solid var(--sky);background:var(--skybg);border-radius:14px;padding:12px 18px;font-size:24px;font-weight:700;margin:8px 0}
+.note{background:var(--warm);border:3px solid #f0c27a;border-radius:16px;padding:10px 18px;font-size:20px;color:#8a5300;margin-top:10px}
+.act{display:inline-flex;align-items:center;gap:8px;min-height:56px;padding:8px 22px;font-size:22px;font-weight:900;border-radius:16px;border:none;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0c6b5d}
+.act:active{transform:translateY(3px);box-shadow:0 1px 0 #0c6b5d}
+.act.navy{background:var(--navy);box-shadow:0 4px 0 #0b1a33}
+.act.ghost{background:#fff;color:var(--navy);border:3px solid var(--navy);box-shadow:none}
+.pill{display:inline-block;border-radius:10px;padding:2px 10px;font-weight:900;font-size:.9em}
+.big{font-size:56px;line-height:1}
+@keyframes floatIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(217,58,47,.5)}70%{box-shadow:0 0 0 12px rgba(217,58,47,0)}100%{box-shadow:0 0 0 0 rgba(217,58,47,0)}}
+
+/* 표지 */
+.cover{justify-content:center;align-items:center;text-align:center;gap:14px}
+.cover .icons span{display:inline-block;font-size:76px;margin:0 8px}
+.slide.on .cover .icons span{animation:floatIn .8s ease both}
+.cover .icons span:nth-child(2){animation-delay:.25s}.cover .icons span:nth-child(3){animation-delay:.5s}
+
+/* 흐름 막대 */
+.flow{display:flex;flex-direction:column;gap:9px}
+.frow{display:grid;grid-template-columns:250px 1fr;align-items:center;gap:14px}
+.frow .lab{font-weight:900;font-size:21px}
+.frow .bar{height:44px;border-radius:12px;display:flex;align-items:center;padding:0 14px;color:#fff;font-weight:700;font-size:18px;width:0;transition:width 1s cubic-bezier(.3,.7,.3,1);white-space:nowrap;overflow:hidden}
+.slide.on .frow .bar{width:var(--w)}
+
+/* 신호등 */
+.lights{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.light{background:#fff;border:3px solid var(--line);border-radius:18px;padding:14px;cursor:pointer;min-height:150px;display:flex;flex-direction:column;gap:8px;transition:all .4s}
+.light .q{font-size:20px;font-weight:700}
+.light .a{opacity:0;max-height:0;overflow:hidden;transition:all .5s;font-size:18px}
+.light.open .a{opacity:1;max-height:200px}
+.light.ok.open{border-color:var(--teal);background:#effaf6}
+.light.no.open{border-color:var(--red);background:#fff4f3}
+.light.warn.open{border-color:var(--orange);background:#fff8ec}
+.light .tap{font-size:15px;color:var(--muted)}
+.light.open .tap{display:none}
+
+/* 비교 */
+.bubble{border-radius:18px;padding:14px 18px;font-size:21px;line-height:1.6;margin-top:8px}
+.b-client{background:#f1f3f7;border:3px solid #d6dce6}
+.b-ai{background:#eef7fd;border:3px solid var(--sky)}
+.b-human{background:#effaf6;border:3px solid var(--teal)}
+.hidebox{opacity:0;transform:translateY(12px);transition:all .6s}
+.hidebox.on{opacity:1;transform:none}
+.vs{display:grid;grid-template-columns:1fr 70px 70px;gap:6px;align-items:center;font-size:20px}
+.vs .h{font-weight:900;text-align:center;font-size:17px}
+.vs .c{text-align:center;font-size:26px;cursor:pointer;border-radius:10px;border:2px dashed var(--line);min-height:44px;display:grid;place-items:center}
+.vs .c.on{border-style:solid;background:#fff}
+.vs .lab{padding:6px 0;border-bottom:1px solid #e3e8ef}
+
+/* 사례 */
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
+.stp{background:#fff;border:3px solid var(--line);border-radius:18px;padding:16px;position:relative}
+.stp .no{position:absolute;top:-16px;left:16px;background:var(--navy);color:#fff;font-weight:900;border-radius:99px;padding:2px 12px;font-size:17px}
+.stp .ic{font-size:44px}
+.arrowline{height:6px;background:var(--line);border-radius:3px;margin:16px 0 4px;position:relative;overflow:hidden}
+.arrowline i{position:absolute;inset:0;background:var(--sky);transform:scaleX(0);transform-origin:left;transition:transform 1.4s ease .3s}
+.slide.on .arrowline i{transform:scaleX(1)}
+.hbar{display:grid;grid-template-columns:220px 1fr 70px;align-items:center;gap:12px;margin:5px 0;font-size:20px}
+.hbar .track{height:30px;background:#e9eef4;border-radius:8px;overflow:hidden}
+.hbar .fill{height:100%;width:0;background:var(--sky);border-radius:8px;transition:width 1.2s ease}
+.slide.on .hbar .fill{width:var(--w)}
+.hbar .v{font-weight:900}
+.ox{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.oxc{display:flex;gap:14px;align-items:center;background:#fff;border:3px solid var(--line);border-radius:16px;padding:12px 16px;font-size:21px}
+.oxc .m{flex:0 0 50px;height:50px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:24px}
+
+/* 스킬 카드 */
+.skillcard{background:#fff;border:4px solid var(--purple);border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(122,82,199,.12)}
+.slot{border:3px dashed #cbbdf0;border-radius:12px;padding:8px 12px;margin:8px 0;min-height:48px;transition:all .5s;cursor:pointer;font-size:19px}
+.slot .k{font-weight:900;color:var(--purple);font-size:17px;display:block}
+.slot .v{opacity:0;transition:opacity .6s}
+.slot.fill{border-style:solid;border-color:var(--purple);background:#f6f2ff}
+.slot.fill .v{opacity:1}
+.chat{display:flex;flex-direction:column;gap:8px;min-height:300px}
+#chatsim{max-height:330px;min-height:330px;overflow-y:auto}
+.msg{max-width:88%;border-radius:16px;padding:10px 14px;font-size:19px;line-height:1.5;animation:floatIn .5s ease both}
+.msg.me{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:#fff;border:2px solid var(--line);border-bottom-left-radius:4px}
+.opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.opt{min-height:48px;padding:6px 14px;border-radius:12px;border:3px solid var(--purple);background:#fff;color:var(--purple);font-weight:900;font-size:18px}
+.opt.rec{background:var(--purple);color:#fff}
+.ways{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.way{background:#fff;border:3px solid var(--line);border-radius:18px;padding:10px 14px}
+.way h3{font-size:22px;margin:0}
+.way.main{border-color:var(--purple);background:#f8f5ff}
+.way .tag{display:inline-block;background:var(--purple);color:#fff;font-size:15px;font-weight:900;border-radius:99px;padding:1px 10px;margin-bottom:4px}
+
+/* 웹 만들기 */
+.pieces{display:flex;flex-direction:column;gap:8px}
+.pc{border-radius:14px;padding:10px 14px;font-size:20px;font-weight:700;border:3px solid rgba(0,0,0,.06)}
+.p1{background:#ffe1dc}.p2{background:#fff1c9}.p3{background:#dff3e8}.p4{background:#dcecfb}
+.phone{width:280px;height:430px;border:10px solid #222;border-radius:36px;background:#fff;margin:0 auto;position:relative;overflow:hidden;padding:16px 12px}
+.phone .ph-part{opacity:0;transform:translateY(10px);transition:all .6s}
+.phone .ph-part.on,.phone .ph-part.show{opacity:1;transform:none}
+.ph-tabs{display:flex;gap:4px;margin-bottom:8px}
+.ph-tabs span{flex:1;text-align:center;font-size:12px;font-weight:900;border-radius:8px;padding:6px 2px;background:#eef3f9}
+.ph-tabs span.a{background:var(--navy);color:#fff}
+.ph-box{border:2px solid var(--line);border-radius:10px;padding:6px 8px;font-size:13px;margin-bottom:6px;line-height:1.4}
+.ph-btn{background:var(--teal);color:#fff;border-radius:10px;text-align:center;font-weight:900;font-size:14px;padding:8px}
+
+/* 연습실 탭 */
+.tabs{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.tab{min-height:56px;padding:6px 18px;font-size:21px;font-weight:900;border-radius:14px;border:3px solid var(--line);background:#fff;color:var(--navy)}
+.tab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.pane{display:none;animation:floatIn .5s ease both}
+.pane.on{display:block}
+.qbadge{display:inline-block;font-size:15px;font-weight:900;border-radius:99px;padding:1px 10px;margin-left:8px;color:#fff}
+.qo{background:var(--teal)}.qc{background:var(--orange)}
+.ratio{height:22px;border-radius:99px;background:#fde7c3;overflow:hidden;margin:6px 0 10px}
+.ratio i{display:block;height:100%;width:0;background:var(--teal);transition:width 1.2s ease}
+.pane.on .ratio i{width:60%}
+
+/* 타이머 */
+.timer{font-size:120px;font-weight:900;text-align:center;font-variant-numeric:tabular-nums;line-height:1.1}
+.ring{width:240px;height:240px;margin:0 auto;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .tnum{position:absolute;inset:0;display:grid;place-items:center;font-size:56px;font-weight:900}
+
+/* 고치기 */
+.fix{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.fixc{background:#fff;border:3px solid var(--line);border-radius:18px;padding:14px}
+.fixc .ic{font-size:40px}
+.code{background:#14284b;color:#fff;border-radius:12px;padding:8px 12px;font-size:16px;line-height:1.5;margin-top:6px}
+.sum{background:var(--navy);color:#fff;border-radius:20px;padding:18px 24px;font-size:28px;font-weight:900;text-align:center;margin-top:14px}
+.srclist{font-size:17px;line-height:1.7}
+.srclist li{margin-bottom:6px}
+.srclist a{color:var(--navy2)}
+
+
+.bots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.bot{background:#fff;border:3px solid var(--line);border-radius:18px;padding:12px 14px;cursor:pointer;transition:all .4s;min-height:150px}
+.bot .hd{display:flex;align-items:center;gap:10px}
+.bot .ic{font-size:36px}
+.bot .nm{font-weight:900;font-size:21px;line-height:1.25}
+.bot .rl{display:inline-block;font-size:14px;font-weight:900;border-radius:99px;padding:1px 10px;color:#fff;margin-top:4px}
+.bot .dt{font-size:16.5px;line-height:1.5;margin-top:6px;max-height:0;opacity:0;overflow:hidden;transition:all .5s}
+.bot.open .dt{max-height:220px;opacity:1}
+.bot .tap{font-size:14px;color:var(--muted);margin-top:4px}
+.bot.open .tap{display:none}
+.bot.open{border-color:var(--navy2);background:#f8fbff}
+
+
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.role{background:#fff;border:3px solid var(--line);border-radius:18px;padding:14px 16px}
+.role .ic{font-size:44px;display:inline-block}
+.slide.on .role .ic{animation:floatIn .8s ease both}
+.role .row{font-size:17.5px;line-height:1.5;margin-top:6px}
+.role .row b.k{display:inline-block;font-size:14px;color:#fff;border-radius:99px;padding:0 9px;margin-right:4px}
+.idea{background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 14px;margin-bottom:10px;cursor:pointer;transition:all .4s}
+.idea .t{font-weight:900;font-size:21px}
+.idea .d{font-size:17px;max-height:0;opacity:0;overflow:hidden;transition:all .5s}
+.idea.open{border-color:var(--teal);background:#f3fbf8}
+.idea.open .d{max-height:200px;opacity:1;margin-top:4px}
+.dir{display:flex;gap:10px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 12px;margin-bottom:8px;font-size:19px}
+.dir .n{flex:0 0 36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;font-weight:900;display:grid;place-items:center}
+
+
+.qrbox{display:inline-flex;align-items:center;gap:16px;background:#fff;border:3px solid var(--teal);border-radius:20px;padding:12px 18px;text-align:left}
+.qrbox img{width:150px;height:150px;border-radius:8px}
+.qrbox .t{font-weight:900;font-size:22px}
+.qrbox .u{font-size:14px;color:var(--muted);word-break:break-all;max-width:260px}
+.slide.on .qrbox{animation:floatIn .8s ease .6s both}
+
+
+.mob{display:grid;grid-template-columns:330px 1fr;gap:30px;align-items:start}
+.ph2{width:300px;height:450px;border:10px solid #222;border-radius:38px;background:#fafafa;margin:0 auto;position:relative;overflow:hidden;padding:16px 14px;font-size:15px}
+.ph2 .tb{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:18px;font-weight:700}
+.ph2 .mi{padding:9px 6px;border-radius:10px;font-size:16px}
+.ph2 .tabs3{display:flex;gap:6px;margin-bottom:10px}
+.ph2 .tabs3 span{padding:5px 10px;border-radius:99px;font-size:14px}
+.ph2 .tabs3 .a{background:#ececec;font-weight:900}
+.ph2 .it{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #eee;font-size:14px}
+.ph2 .fld{border:1.5px solid #ddd;border-radius:14px;padding:8px 10px;color:#888;font-size:13px;margin:4px 0 10px;background:#fff}
+.ph2 .lbl{font-size:13px;color:#555}
+.ph2 .inp{position:absolute;left:12px;right:12px;bottom:14px;border-radius:99px;background:#fff;border:1.5px solid #e3e3e3;padding:9px 14px;display:flex;gap:10px;align-items:center;color:#888}
+.ring2{outline:4px solid var(--red);outline-offset:3px;border-radius:10px;animation:ringPulse2 1.6s ease-out infinite}
+@keyframes ringPulse2{0%{box-shadow:0 0 0 0 rgba(217,58,47,.5)}70%{box-shadow:0 0 0 12px rgba(217,58,47,0)}100%{box-shadow:0 0 0 0 rgba(217,58,47,0)}}
+.ph2 .scr{animation:floatIn .5s ease both;height:100%;position:relative}
+.ph2 .scr .inp{left:0;right:0;bottom:0}
+.slist{list-style:none;display:flex;flex-direction:column;gap:8px}
+.slist li{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:14px;border:3px solid transparent;font-size:21px;color:#9aa6b8;transition:all .4s;cursor:pointer}
+.slist li .n{flex:0 0 40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#c9d3e0;color:#fff;font-weight:900;transition:background .4s}
+.slist li.done{color:var(--navy)}.slist li.done .n{background:var(--teal)}
+.slist li.now{color:var(--navy);font-weight:900;border-color:var(--red);background:#fff5f4}.slist li.now .n{background:var(--red)}
+
+@media (max-width:820px){
+ body{font-size:20px}.slide{padding:20px 16px 16px}
+ h1{font-size:34px}h2{font-size:28px}
+ .grid2,.grid3,.lights,.steps3,.ox,.ways,.fix,.bots,.roles,.mob{grid-template-columns:1fr}
+ .frow{grid-template-columns:1fr}.hbar{grid-template-columns:120px 1fr 56px;font-size:16px}
+ .nbtn{min-width:100px;font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv,.hidebox,.ph-part{opacity:1!important;transform:none!important}.slide.on .frow .bar{width:var(--w)}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- 1 표지 -->
+<section class="slide"><div class="inner cover">
+ <div class="icons"><span>🤖</span><span>🤝</span><span>🧑‍💼</span></div>
+ <div class="muted">AI 기반 상담·코칭기법 · 120분 체험 수업</div>
+ <h1>생성형 AI로<br>상담·코칭 도구 체험하기</h1>
+ <div class="lead" style="margin:0">제미나이 <b>스킬</b>과 <b>캔버스</b>로 나만의 상담 도우미 만들기</div>
+ <div style="font-weight:700;font-size:21px;margin-top:10px">하이디교육컨설팅연구소 · 강사 최선희</div>
+ <div class="qrbox"><img src="data:image/png;base64,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" alt="학생용 실습지 QR 코드"><div><div class="t">📱 학생용 실습지</div><div style="font-size:18px">휴대폰 카메라로 찍으세요</div><div class="u">sunsudun25-cloud.github.io/hidi-handouts/counseling-ai.html</div></div></div>
+</div></section>
+
+<!-- 2 흐름 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">오늘의 흐름</span>
+ <h2>120분, 대부분이 직접 해 보는 시간이에요</h2>
+ <div class="flow">
+  <div class="frow"><span class="lab">① 시작하기</span><span class="bar" style="--w:10%;background:#9aa6b8">5분</span></div>
+  <div class="frow"><span class="lab">② 생각하기</span><span class="bar" style="--w:40%;background:var(--purple)">20분 · AI vs 사람, 실제 사례</span></div>
+  <div class="frow"><span class="lab">③ 스킬 만드는 법</span><span class="bar" style="--w:30%;background:var(--navy2)">15분 · 설명</span></div>
+  <div class="frow"><span class="lab">④ 실습 1</span><span class="bar" style="--w:30%;background:var(--teal)">15분 · 열린 질문</span></div>
+  <div class="frow"><span class="lab">⑤ 웹 만드는 법</span><span class="bar" style="--w:20%;background:var(--navy2)">10분</span></div>
+  <div class="frow"><span class="lab">⑥ 실습 2</span><span class="bar" style="--w:90%;background:var(--teal)">45분 · 상담 연습실 웹앱</span></div>
+  <div class="frow"><span class="lab">⑦ 마무리</span><span class="bar" style="--w:20%;background:#9aa6b8">10분</span></div>
+ </div>
+ <p class="muted" style="margin-top:12px">막대 길이 = 시간. 초록 막대가 직접 해 보는 시간이에요.</p>
+</div></section>
+
+<!-- 3 약속 + 신호등 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">① 시작하기 <span class="t">5분</span></span>
+ <h2>오늘의 약속 — AI에 넣어도 될까?</h2>
+ <p class="lead">카드를 눌러 판정해 보세요.</p>
+ <div class="lights">
+  <div class="light ok" onclick="this.classList.add('open')"><div class="q">“진로로 불안한 22세 대학생” 가상 인물 설정</div><div class="tap">👆 눌러서 판정</div><div class="a">🟢 <b>가능</b> — 누구인지 알 수 없는 가상 인물</div></div>
+  <div class="light no" onclick="this.classList.add('open')"><div class="q">“내담자 김○○(010-…) 3회기 내용 정리해 줘”</div><div class="tap">👆 눌러서 판정</div><div class="a">🔴 <b>금지</b> — 이름·연락처 + 실제 상담 내용</div></div>
+  <div class="light no" onclick="this.classList.add('open')"><div class="q">실제 상담 녹음 파일 올리기</div><div class="tap">👆 눌러서 판정</div><div class="a">🔴 <b>금지</b> — 동의·보관 규정 밖으로 정보가 나가요</div></div>
+  <div class="light warn" onclick="this.classList.add('open')"><div class="q">가명으로 바꾼 역할극 기록 정리</div><div class="tap">👆 눌러서 판정</div><div class="a">🟡 <b>주의</b> — 알아볼 단서를 모두 지운 뒤, 기관 지침 확인</div></div>
+  <div class="light ok" onclick="this.classList.add('open')"><div class="q">오늘 만든 가상 내담자와 연습한 대화</div><div class="tap">👆 눌러서 판정</div><div class="a">🟢 <b>가능</b> — 처음부터 가상으로 만든 대화</div></div>
+  <div class="light no" onclick="this.classList.add('open')"><div class="q">위기 신호가 보이는 사례를 AI에게만 묻기</div><div class="tap">👆 눌러서 판정</div><div class="a">🔴 <b>금지</b> — 슈퍼바이저·전문기관과 바로 연계</div></div>
+ </div>
+</div></section>
+
+<!-- 4 같은 말 두 가지 답 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">② 생각하기 <span class="t">20분</span></span>
+ <h2>같은 말, 두 가지 답</h2>
+ <div class="bubble b-client">🧑 내담자: “요즘 아무것도 하기 싫고, 제가 뭘 원하는지도 모르겠어요.”</div>
+ <div class="grid2" style="margin-top:6px">
+  <div><button class="act navy" onclick="document.getElementById('ansAI').classList.add('on')">🤖 AI 코치의 답 보기</button>
+   <div class="bubble b-ai hidebox" id="ansAI">많이 지치셨겠어요. 무기력할 때는 작은 목표부터 세우는 게 도움이 돼요. ① 하루 10분 산책 ② 좋아했던 일 목록 쓰기 ③ 수면 시간 일정하게 하기를 해 보세요. 원하는 것을 찾는 질문도 드릴게요: 어릴 때 즐거웠던 일은 무엇인가요?</div></div>
+  <div><button class="act" onclick="document.getElementById('ansH').classList.add('on')">🧑‍💼 사람 코치의 답 보기</button>
+   <div class="bubble b-human hidebox" id="ansH">(잠시 기다리며 표정을 살핀 뒤) 아무것도 하기 싫다는 마음이… 꽤 오래 이어진 것 같네요. 그 ‘모르겠다’는 느낌이 요즘 어떤 순간에 가장 크게 느껴지세요?</div></div>
+ </div>
+ <p class="muted" style="margin-top:8px">※ 두 답은 수업용으로 강사가 만든 예시예요.</p>
+ <div class="note">💬 이야기해 봐요: 어느 쪽이 더 <b>빨리</b> 도움이 되나요? 어느 쪽이 더 <b>내 이야기를 듣는</b> 느낌인가요?</div>
+</div></section>
+
+<!-- 5 역할 비교 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">② 생각하기</span>
+ <h2>AI와 사람은 잘하는 게 달라요</h2>
+ <p class="lead">칸을 눌러 어느 쪽이 더 강한지 표시해 보세요.</p>
+ <div class="card">
+  <div class="vs"><span></span><span class="h">🤖 AI</span><span class="h">🧑‍💼 사람</span></div>
+  <div class="vs"><span class="lab">언제든 바로 대답하기</span><span class="c" data-a="ai"></span><span class="c" data-a=""></span></div>
+  <div class="vs"><span class="lab">질문·정리를 많이, 빠르게</span><span class="c" data-a="ai"></span><span class="c" data-a=""></span></div>
+  <div class="vs"><span class="lab">표정·목소리·침묵 읽기</span><span class="c" data-a=""></span><span class="c" data-a="h"></span></div>
+  <div class="vs"><span class="lab">이 사람의 삶과 맥락 기억하기</span><span class="c" data-a=""></span><span class="c" data-a="h"></span></div>
+  <div class="vs"><span class="lab">위기 상황 책임지고 대응하기</span><span class="c" data-a=""></span><span class="c" data-a="h"></span></div>
+  <div class="vs"><span class="lab">믿을 수 있는 관계 만들기</span><span class="c" data-a=""></span><span class="c" data-a="h"></span></div>
+ </div>
+ <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap"><button class="act ghost" onclick="showVS()">✅ 정답 보기</button></div>
+ <div class="sum rv">AI는 나쁘다 ✕ → <span style="color:#9fe1cb">역할이 다르다 ○</span></div>
+</div></section>
+
+<!-- 6 사례 서울시 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">실제 사례 ① 국내</span>
+ <h2>서울시: “AI로 먼저 응답하고, 사람이 이어 가요”</h2>
+ <p class="lead">2026년 2월, 서울시 정신건강위기상담전화(1577-0199)에 AI 챗봇 ‘마음이’를 넣고 3단계 상담체계를 만들었어요.</p>
+ <div class="arrowline"><i></i></div>
+ <div class="steps3">
+  <div class="stp rv"><span class="no">1단계</span><div class="ic">🤖</div><h3>AI 챗봇 ‘마음이’</h3><p>상담의 <b>문을 여는</b> 역할. 공감형 대화로 기본 정서 지원, 몇 번 대화 뒤 실시간 상담으로 연결</p></div>
+  <div class="stp rv"><span class="no">2단계</span><div class="ic">🤝</div><h3>시민상담사</h3><p>교육·실습을 거친 시민이 <b>공감 기반</b> 상담 (2026년 하반기 투입 예정)</p></div>
+  <div class="stp rv"><span class="no">3단계</span><div class="ic">🧑‍⚕️</div><h3>전문상담사</h3><p>자·타해 위험이 높은 중증 사례와 <b>긴급 개입</b>을 책임</p></div>
+ </div>
+ <div class="note rv">💡 AI는 <b>입구</b>, 위기 대응은 <b>사람</b> — 앞에서 본 ‘역할이 다르다’와 같은 생각이에요.</div>
+ <p class="src">출처: 서울시 복지분야 누리집, 「AI로 먼저 응답하고, 시민의 공감으로 이어간다…서울시, 정신건강 안전망 강화」 (2026.2.2)</p>
+</div></section>
+
+<!-- 7 사례 상담자 활용 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">실제 사례 ② 해외</span>
+ <h2>상담자들은 AI를 이렇게 쓰고 있어요</h2>
+ <p class="lead">미국심리학회(APA) 2025년 조사 · 심리학자 1,742명 응답</p>
+ <div class="card">
+  <div class="hbar"><span>AI를 써 본 비율 2024</span><span class="track"><span class="fill" style="--w:29%;background:#9aa6b8;display:block"></span></span><span class="v">29%</span></div>
+  <div class="hbar"><span><b>AI를 써 본 비율 2025</b></span><span class="track"><span class="fill" style="--w:56%;display:block"></span></span><span class="v">56%</span></div>
+ </div>
+ <h3 style="margin-top:14px">AI를 쓰는 사람들은 주로 어디에 쓰나요?</h3>
+ <div class="card">
+  <div class="hbar"><span>이메일·문서 쓰기</span><span class="track"><span class="fill" style="--w:52%;background:var(--teal);display:block"></span></span><span class="v">52%</span></div>
+  <div class="hbar"><span>자료·콘텐츠 만들기</span><span class="track"><span class="fill" style="--w:33%;background:var(--teal);display:block"></span></span><span class="v">33%</span></div>
+  <div class="hbar"><span>상담 기록·논문 요약</span><span class="track"><span class="fill" style="--w:32%;background:var(--teal);display:block"></span></span><span class="v">32%</span></div>
+  <div class="hbar"><span>진단 보조</span><span class="track"><span class="fill" style="--w:8%;background:var(--orange);display:block"></span></span><span class="v">8%</span></div>
+  <div class="hbar"><span>내담자용 챗봇</span><span class="track"><span class="fill" style="--w:5%;background:var(--red);display:block"></span></span><span class="v">5%</span></div>
+ </div>
+ <div class="note">💡 상담자는 AI를 주로 <b>정리·문서 같은 일</b>에 쓰고, 상담 자체에는 아주 조금만 써요.</div>
+ <p class="src">출처: American Psychological Association, 「Among psychologists, AI use is up, but so are concerns」 (2025.12.9), 2025 Practitioner Pulse Survey</p>
+</div></section>
+
+<!-- 대표 상담봇 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">실제 사례 · 대표 상담봇</span>
+ <h2>지금 나와 있는 대표 상담봇 — 맡은 역할이 달라요</h2>
+ <p class="lead" style="margin-bottom:10px">카드를 눌러 자세히 보세요.</p>
+ <div class="bots">
+  <div class="bot" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🏛️</span><div><div class="nm">마음이 (서울시)</div><span class="rl" style="background:var(--sky)">🚪 입구</span></div></div><div class="tap">👆 눌러서 보기</div>
+   <div class="dt">정신건강위기상담전화에 들어간 AI 챗봇. 공감형 대화로 기본 정서 지원 → 몇 번 대화 뒤 실시간 상담(사람)으로 연결. 회원가입 없이 서울시 자살예방센터 누리집에서 이용.</div></div>
+  <div class="bot" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">💬</span><div><div class="nm">티티 (트로스트)</div><span class="rl" style="background:var(--teal)">🌱 셀프케어</span></div></div><div class="tap">👆 눌러서 보기</div>
+   <div class="dt">국내 심리상담 앱 안의 AI 챗봇. 감정일기, 마음정리보고서, 감정스캐너로 내 마음을 정리하고, 필요하면 같은 앱에서 전문 상담사와 1:1 상담 예약.</div></div>
+  <div class="bot" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🐧</span><div><div class="nm">Wysa (영국·인도)</div><span class="rl" style="background:var(--teal)">🌱 셀프케어</span> <span class="rl" style="background:var(--purple)">🤝 상담자 보조</span></div></div><div class="tap">👆 눌러서 보기</div>
+   <div class="dt">인지행동치료(CBT) 기법을 쓰는 AI 챗봇. ‘Copilot’은 내담자가 동의하면 챗봇 대화를 상담자와 공유, ‘Gateway’는 상담 전 접수·선별 질문을 자동화.</div></div>
+  <div class="bot" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🇬🇧</span><div><div class="nm">Limbic Access (영국 NHS)</div><span class="rl" style="background:var(--sky)">🚪 입구</span></div></div><div class="tap">👆 눌러서 보기</div>
+   <div class="dt">국가 심리치료 서비스의 자가 신청·선별을 돕는 챗봇. 연구에서 도입 서비스의 신청이 늘었고, 특히 도움을 덜 찾던 소수 집단의 신청이 늘었어요. 평가는 사람이 해요.</div></div>
+  <div class="bot" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🔬</span><div><div class="nm">Therabot (미국 다트머스대)</div><span class="rl" style="background:var(--orange)">🧪 연구 단계</span></div></div><div class="tap">👆 눌러서 보기</div>
+   <div class="dt">생성형 AI 상담봇의 첫 임상시험(2025년 3월, NEJM AI). 우울 증상이 평균 51% 줄었지만, 연구진은 AI가 혼자 운영할 준비는 아직 안 됐고 전문가 감독이 필요하다고 강조.</div></div>
+  <div class="bot" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🌙</span><div><div class="nm">Woebot (미국)</div><span class="rl" style="background:#9aa6b8">🚫 서비스 종료</span></div></div><div class="tap">👆 눌러서 보기</div>
+   <div class="dt">대표적인 CBT 챗봇이었지만 2025년 6월 30일 일반인용 앱을 종료. 창업자는 FDA 승인 요건을 맞추는 비용과 어려움을 큰 이유로 들었어요.</div></div>
+ </div>
+ <div class="note">💡 상담봇은 대부분 <b>입구·셀프케어·상담자 보조</b> 역할. 상담 자체를 맡기기엔 아직 <b>검증과 규제</b>가 따라가는 중이에요.</div>
+ <p class="src">출처: 서울시 복지분야 누리집(2026.2.2); 트로스트 앱스토어 설명; Wysa 공식 누리집·보도자료(2025.6); MIT Technology Review(2024.2.5)·Limbic; Dartmouth(2025.3); STAT News(2025.7.2). 서비스 내용은 바뀔 수 있어요.</p>
+</div></section>
+
+<!-- 감지와 돌봄 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">실제 사례 · AI의 또 다른 역할</span>
+ <h2>말로 상담하지 않아요 — <span style="color:var(--teal)">신호를 찾고, 살피고, 연결해요</span></h2>
+ <div class="roles">
+  <div class="role rv"><span class="ic">🚨</span><h3>위험 신호 찾기</h3><div class="muted" style="font-size:16px">Crisis Text Line (미국 문자 위기상담)</div>
+   <div class="row"><b class="k" style="background:var(--sky)">AI</b>첫 메시지의 표현으로 위험이 높은 사람을 가려 대기 줄 맨 앞으로</div>
+   <div class="row"><b class="k" style="background:var(--teal)">사람</b>위기상담사가 바로 응답, 긴급 구조는 임상 슈퍼바이저가 판단</div></div>
+  <div class="role rv"><span class="ic">📞</span><h3>안부·생활 살피기</h3><div class="muted" style="font-size:16px">네이버 클로바 케어콜 (국내 지자체)</div>
+   <div class="row"><b class="k" style="background:var(--sky)">AI</b>독거 어르신·1인 가구에 전화로 안부, 식사·수면·외출 같은 생활을 대화로 확인</div>
+   <div class="row"><b class="k" style="background:var(--teal)">사람</b>담당 공무원이 모니터링 화면을 보고 도시락·돌봄 같은 지원으로 연결</div></div>
+  <div class="role rv"><span class="ic">📱</span><h3>생활 패턴으로 알아차리기</h3><div class="muted" style="font-size:16px">디지털 표현형 연구 (연구 단계)</div>
+   <div class="row"><b class="k" style="background:var(--sky)">AI</b>스마트폰·워치의 활동량·수면·이동 같은 패턴 변화를 분석</div>
+   <div class="row"><b class="k" style="background:var(--teal)">사람</b>재발 조짐을 미리 알고 치료진이 예방 조치 (국내 연구도 진행 중)</div></div>
+ </div>
+ <div class="note rv">⚠️ 도움이 큰 만큼 <b>동의·사생활·오경보</b> 문제도 커요. 미국 일리노이주는 상담 전문가가 AI로 내담자의 정서 상태를 감지하는 것까지 막았어요.</div>
+ <div class="sum rv" style="font-size:24px">AI는 <span style="color:#9fe1cb">신호</span>를 찾고, 판단과 도움은 <span style="color:#ffd27a">사람</span>이 해요</div>
+ <p class="src">출처: Crisis Text Line 「Detecting Crisis: An AI Solution」·「Understanding Suicide Prevention and Active Rescues」(2020); 쿠키뉴스(2024.9)·네이버 보도자료·강남구청 보도자료(클로바 케어콜); 한국심리학회지: 건강 26(4) 「우울 증상과 수준에 따른 패시브 센싱의 패턴 조사」; 코메디닷컴(고려대 안암병원 연구 보도); The Batch(일리노이주 법).</p>
+</div></section>
+
+<!-- 8 사례 선 긋기 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">실제 사례 ③ 선을 긋는 곳</span>
+ <h2>어디까지 괜찮을까? 법과 권고</h2>
+ <p class="lead">미국 일리노이주 법 (2025년 8월 서명) — 상담자가 AI를 쓸 때</p>
+ <div class="ox">
+  <div class="oxc rv"><span class="m" style="background:var(--teal)">O</span>일정·기록 같은 <b>행정 업무</b>에 쓰기</div>
+  <div class="oxc rv"><span class="m" style="background:var(--red)">X</span>AI가 <b>치료 결정</b>을 내리게 하기</div>
+  <div class="oxc rv"><span class="m" style="background:var(--red)">X</span>AI가 내담자와 <b>직접 치료 대화</b>하기</div>
+  <div class="oxc rv"><span class="m" style="background:var(--orange)">!</span>녹음·녹취한 상담에 쓰면 <b>내담자 동의</b> 받기</div>
+ </div>
+ <div class="card rv" style="margin-top:14px"><b>미국심리학회(APA) 권고 (2025년 11월)</b>
+  <p style="margin-top:4px">AI 챗봇과 웰니스 앱을 <b>전문가 상담의 대신</b>으로 쓰지 말 것. 위기 상황에서 안전하게 이끄는 능력은 <b>제한적이고 예측하기 어렵다</b>는 경고.</p></div>
+ <p class="src">출처: Illinois IDFPR 보도자료 「Gov Pritzker Signs Legislation Prohibiting AI Therapy in Illinois」 (2025.8.4); The Batch(DeepLearning.AI) 해설; APA 「Health Advisory on the Use of Generative AI Chatbots and Wellness Applications for Mental Health」 (2025.11.13). 우리나라 법·지침과는 다를 수 있어요.</p>
+</div></section>
+
+<!-- 9 이런 상황이라면 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">② 생각하기 · 이런 상황이라면?</span>
+ <h2>“사실 요즘 밤마다 AI한테 털어놨어요.”</h2>
+ <p class="lead">AI와 먼저 상담하고 온 내담자. 상담자인 우리는 무엇을 할까요?</p>
+ <div class="grid2">
+  <div>
+   <div class="say rv">① <b>존중하며 묻기</b> — 왜 AI에게 먼저 말했는지, 어땠는지</div>
+   <div class="say rv">② <b>AI가 한 말 점검</b> — 진단처럼 단정한 말, 맞지 않는 조언은 없는지</div>
+   <div class="say rv">③ <b>놓친 위기 신호 확인</b> — AI가 넘어간 위험한 표현은 없는지</div>
+  </div>
+  <div>
+   <div class="say rv">④ <b>동의받고 정보 지우기</b> — 그 기록을 자료로 써도 되는지</div>
+   <div class="say rv">⑤ <b>관계는 사람이</b> — AI 대화는 참고, 상담은 여기서 다시 시작</div>
+   <div class="note rv">➡️ 그래서 상담자도 AI를 <b>잘 알고, 잘 다뤄야</b> 해요. 오늘은 직접 만들어 봐요!</div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 10 스킬이란 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">③ 스킬 만드는 법 <span class="t">15분</span></span>
+ <h2>스킬 = 자주 하는 부탁을 저장한 ‘레시피 카드’</h2>
+ <div class="grid2">
+  <div>
+   <p class="lead">한 번 만들어 두면 채팅창에서 <b class="r" style="font-size:30px">@</b> 또는 <b class="r" style="font-size:30px">/</b> 를 누르고 골라서 바로 써요.</p>
+   <p class="muted" style="margin:-6px 0 10px">📱 휴대폰은 아직 기기·버전마다 달라요. <b>@</b>가 안 되면 <b>/</b>를 눌러 보세요.</p>
+   <p style="font-size:21px">스킬은 <b>세 칸</b>으로 되어 있어요. 오른쪽 칸을 눌러 채워 보세요.</p>
+   <div class="note">💡 제미나이는 <b>이름과 설명</b>을 보고 언제 이 스킬을 쓸지 판단해요.</div>
+  </div>
+  <div class="skillcard">
+   <div style="font-weight:900;font-size:20px">📄 스킬 카드</div>
+   <div class="slot" onclick="this.classList.add('fill')"><span class="k">이름 — 무엇을 하는지 드러나게</span><span class="v">make-open-questions</span></div>
+   <div class="slot" onclick="this.classList.add('fill')"><span class="k">설명 — 무엇을 + 언제 쓰는지</span><span class="v">상담 질문을 열린 질문으로 바꿔 준다. 질문을 바꾸고 싶을 때 사용.</span></div>
+   <div class="slot" onclick="this.classList.add('fill')"><span class="k">요청 사항 — 할 일·순서·형식·안전 규칙</span><span class="v">① 열린/닫힌 판정 ② 열린 질문 3개 ③ 실명이 보이면 멈추기</span></div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 11 대화로 만들기 -->
+<section class="slide" data-init="chatsim"><div class="inner">
+ <span class="kicker">③ 스킬 만드는 법</span>
+ <h2>오늘의 방법: 제미나이와 <span style="color:var(--purple)">대화로</span> 만들기</h2>
+ <div class="ways" style="margin-bottom:10px">
+  <div class="way main"><span class="tag">오늘 이거!</span><h3>💬 대화로 만들기</h3><p class="muted">새 채팅에 시작 문장 → 번호만 고르면 스킬이 바로 저장</p></div>
+  <div class="way"><h3>📱 스킬 화면 ＋</h3><p class="muted">☰ → 맞춤설정 → 스킬 탭 → ＋ (다음 장)</p></div>
+  <div class="way"><h3>✍️ 칸 채워 만들기</h3><p class="muted">이름·설명·요청 사항 붙여 넣기 (막힐 때 예비)</p></div>
+ </div>
+ <div class="grid2">
+  <div class="card chat" id="chatsim"></div>
+  <div>
+   <div class="note" style="margin-top:0">🔑 핵심 한 줄<br><b>“바로 만들지 말고, 보기를 주면서 질문을 하나씩 해 줘.”</b></div>
+   <p style="margin-top:10px;font-size:20px">나는 <b>번호만</b> 고르면 돼요. 모르겠으면 “몰라” → 추천으로!</p>
+   <p class="muted" style="margin-top:8px">왼쪽 대화에서 보기를 눌러 보세요.</p>
+  </div>
+ </div>
+</div></section>
+
+<!-- 휴대폰 스킬 화면 찾기 -->
+<section class="slide" data-init="mob"><div class="inner">
+ <span class="kicker">③ 스킬 만드는 법 · 휴대폰 화면</span>
+ <h2>📱 스킬 화면 찾아가기 — 오른쪽 단계를 눌러 보세요</h2>
+ <div class="mob">
+  <div><div class="ph2" id="mobScr"></div><p class="muted" style="text-align:center;margin-top:6px">※ 2026년 11월 제미나이 앱 기준 · 바뀔 수 있어요</p></div>
+  <div>
+   <ol class="slist" id="mobList">
+    <li data-i="0"><span class="n">1</span>왼쪽 위 <b>☰</b> 누르기</li>
+    <li data-i="1"><span class="n">2</span><b>맞춤설정</b> 누르기</li>
+    <li data-i="2"><span class="n">3</span>위쪽 <b>‘스킬’ 탭</b> 누르기</li>
+    <li data-i="3"><span class="n">4</span>오른쪽 위 <b>＋</b> 누르기</li>
+    <li data-i="4"><span class="n">5</span>이름·설명·요청 사항 채우고 <b>만들기</b></li>
+   </ol>
+   <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap"><button class="act" onclick="mobStep(1)">다음 단계 ▶</button><button class="act ghost" onclick="mobStep(-1)">◀ 앞 단계</button></div>
+   <div class="note">💡 만든 스킬은 같은 화면 <b>‘설치됨’</b>에 보여요. 스킬 옆 <b>⋯</b> 을 누르면 <b>지금 사용 · Gemini로 수정 · 직접 수정</b>이 나와요.<br>💬 <b>대화로 만들기</b>는 이 화면 없이 새 채팅에서 바로 돼요!</div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 12 실습 1 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">④ 실습 1 <span class="t">15분</span></span>
+ <div style="position:absolute;right:52px;top:26px;text-align:center"><img src="data:image/png;base64,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" alt="학생용 실습지 QR" style="width:110px;height:110px;border:3px solid var(--teal);border-radius:12px;background:#fff"><div style="font-size:14px;font-weight:900">학생용 7장</div></div>
+ <h2>가벼운 스킬: ❓ 열린 질문 만들기</h2>
+ <div class="grid2">
+  <div>
+   <div class="say rv">1. 실습지에서 <b>시작 문장</b> 복사 → 새 채팅에 보내기</div>
+   <div class="say rv">2. 제미나이 질문 3개에 <b>번호로</b> 답하기</div>
+   <div class="say rv">3. 스킬이 생기면 <b>@</b> 또는 <b>/</b> 로 불러서 시험!</div>
+  </div>
+  <div class="card rv">
+   <b>시험해 볼 질문</b>
+   <div class="bubble b-client" style="font-size:20px">@make-open-questions 잠은 잘 자요?</div>
+   <div class="bubble b-ai hidebox on" style="font-size:18px">판정: <b>닫힌 질문</b> — 예/아니오로 답할 수 있어요.<br>① 요즘 잠은 어떻게 자고 있어요?<br>② 밤에 잠들기 전에는 주로 어떤 생각이 드세요?<br>③ 잠과 관련해서 요즘 달라진 게 있다면 이야기해 줄래요?</div>
+   <p class="muted">※ 결과 예시예요. 실제 답은 조금씩 달라요.</p>
+  </div>
+ </div>
+</div></section>
+
+<!-- 13 웹 만드는 법 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑤ 웹 만드는 법 <span class="t">10분</span></span>
+ <h2>캔버스 = 제미나이가 ‘눌러서 쓰는 화면’을 만드는 곳</h2>
+ <p class="lead">휴대폰: 제미나이 앱에서 <b>＋(추가) → Canvas</b>. 부탁 문장은 4조각이면 돼요. ‘다음 ▶’으로 쌓아 보세요.</p>
+ <div class="grid2">
+  <div class="pieces">
+   <div class="pc p1 rv" data-g="w1">① 누가 쓰나 — 상담학과 학생이 연습할 때</div>
+   <div class="pc p2 rv" data-g="w2">② 무엇을 하나 — 가상 내담자와 상담 연습</div>
+   <div class="pc p3 rv" data-g="w3">③ 화면·버튼 — 위에 버튼 3개로 화면 바꾸기</div>
+   <div class="pc p4 rv" data-g="w4">④ 결과 보여 주기 — 정리 카드와 조언</div>
+  </div>
+  <div class="phone">
+   <div class="ph-part rv" data-g="w1" style="font-weight:900;font-size:15px;margin-bottom:6px">🏠 상담 연습실 <span style="font-weight:400;font-size:11px">· 학생용</span></div>
+   <div class="ph-part rv" data-g="w2"><div class="ph-box">🧑 내담자: 안녕하세요… 사실 잘 모르겠어요.</div><div class="ph-box" style="text-align:right">상담자: 편하게 이야기해 주세요.</div></div>
+   <div class="ph-part rv" data-g="w3"><div class="ph-tabs"><span class="a">① 내담자</span><span>② 연습</span><span>③ 정리</span></div></div>
+   <div class="ph-part rv" data-g="w4"><div class="ph-box">✅ 다음 회기 확인점<br>💡 조언: 열린 질문 60%</div><div class="ph-btn">새 내담자로 다시</div></div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 14 스킬+캔버스 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑤ 웹 만드는 법</span>
+ <h2>스킬 + 캔버스 = <span style="color:var(--teal)">@ 또는 / 한 번</span>에 언제든 같은 웹앱</h2>
+ <div class="grid3" style="align-items:center;margin-top:10px">
+  <div class="card rv" style="text-align:center"><div class="big">📄</div><h3>스킬</h3><p class="muted">웹앱 부탁 문장 4조각을 요청 사항에 저장</p></div>
+  <div class="card rv" style="text-align:center"><div class="big">@</div><h3>부르기</h3><p class="muted">@counseling-practice-room<br>+ 내담자 설정</p></div>
+  <div class="card rv" style="text-align:center"><div class="big">📱</div><h3>캔버스 웹앱</h3><p class="muted">매번 같은 틀, 내용은 새로</p></div>
+ </div>
+ <div class="note rv">🔁 고치고 싶으면 말로: “버튼을 더 크게”, “조언을 3개로 늘려 줘”</div>
+</div></section>
+
+<!-- 15 실습 2 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑥ 실습 2 <span class="t">45분</span></span>
+ <h2>🏠 상담 연습실 — 세 화면을 눌러 보세요</h2>
+ <div class="tabs">
+  <button class="tab on" data-p="p1">① 내담자 정하기</button>
+  <button class="tab" data-p="p2">② 상담 연습</button>
+  <button class="tab" data-p="p3">③ 정리와 조언</button>
+ </div>
+ <div class="card">
+  <div class="pane on" id="p1">
+   <div class="grid2">
+    <div><div class="say" style="font-size:20px">이름(가명): 민지</div><div class="say" style="font-size:20px">나이와 상황: 22세, 대학교 3학년</div><div class="say" style="font-size:20px">요즘 고민: 진로를 못 정해서 불안함</div></div>
+    <div><div class="say" style="font-size:20px">성격·말투: 조용하고 말끝을 흐림</div><div class="say" style="font-size:20px">마음 여는 정도: 많이 망설임</div><p class="muted">[알아서 정하기] 버튼도 있어요. 실제 인물은 ✕</p></div>
+   </div>
+  </div>
+  <div class="pane" id="p2">
+   <div class="chat" style="min-height:0">
+    <div class="msg me">요즘 어떻게 지내세요? 편하게 이야기해 주세요.</div>
+    <div class="msg ai">음… 그냥, 별로예요. 졸업은 다가오는데 뭘 해야 할지 모르겠어서요…</div>
+    <div class="msg me">취업 준비는 하고 있어요?</div>
+    <div class="msg ai">네… 조금요.</div>
+    <div class="msg me">‘모르겠다’는 마음이 들 때, 어떤 생각이 가장 먼저 떠올라요?</div>
+    <div class="msg ai">다들 뭔가 하고 있는데 저만 멈춰 있는 것 같다는 생각이요. 그게 제일 무서워요.</div>
+   </div>
+  </div>
+  <div class="pane" id="p3">
+   <div class="grid2">
+    <div><b>❓ 내가 한 질문</b> <span class="muted">열린 질문 비율</span><div class="ratio"><i></i></div>
+     <div style="font-size:18px">요즘 어떻게 지내세요?<span class="qbadge qo">열린</span></div>
+     <div style="font-size:18px">취업 준비는 하고 있어요?<span class="qbadge qc">닫힌</span></div>
+     <div style="font-size:18px">어떤 생각이 가장 먼저…?<span class="qbadge qo">열린</span></div></div>
+    <div><b>💡 조언</b><div style="font-size:18px;margin-top:4px">👍 ‘모르겠다’는 말을 그대로 받아 물어본 점이 좋았어요.<br>🔁 “취업 준비는 하고 있어요?” → “요즘 준비는 어떻게 하고 있어요?”</div></div>
+   </div>
+  </div>
+ </div>
+ <p class="muted" style="margin-top:8px">※ 화면 예시예요. 실제 결과는 학생마다 달라요. 화면 맨 아래: “가상 연습용 · 조언은 참고용”</p>
+</div></section>
+
+<!-- 16 기다리는 5분 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑥ 실습 2 · 캔버스가 만들어지는 동안</span>
+ <h2>⏳ 기다리는 5분 — 유인물에 상담 준비하기</h2>
+ <div class="grid2" style="align-items:center">
+  <div>
+   <div class="say">① 가상 내담자 정하기</div>
+   <div class="say">② 첫 인사 써 보기</div>
+   <div class="say">③ 내담자 첫 대답 예상하고, 나의 응대 쓰기</div>
+   <div class="say">④ 오늘 연습 목표 하나 고르기</div>
+  </div>
+  <div>
+   <div class="ring"><svg width="240" height="240"><circle cx="120" cy="120" r="104" stroke="#e3e9f1" stroke-width="16" fill="none"/><circle id="tArc" cx="120" cy="120" r="104" stroke="#13917f" stroke-width="16" fill="none" stroke-linecap="round" stroke-dasharray="653.5" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear"/></svg><div class="tnum" id="tNum">5:00</div></div>
+   <div style="display:flex;gap:10px;justify-content:center;margin-top:10px"><button class="act" onclick="timerStart()">▶ 시작</button><button class="act ghost" onclick="timerReset()">↺</button></div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 17 고치고 더하기 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑦ 마무리 · 수업이 끝난 뒤에도</span>
+ <h2>스킬을 고치고, 더하는 방법</h2>
+ <div class="fix">
+  <div class="fixc rv"><div class="ic">💬</div><h3>Gemini로 수정</h3><p style="font-size:19px">내 스킬 옆 <b>⋯</b> → <b>Gemini로 수정</b> → 고칠 점을 말로 부탁</p><div class="code">내담자가 너무 빨리 마음을 열어.<br>처음엔 더 망설이게 고쳐 줘.</div></div>
+  <div class="fixc rv"><div class="ic">✍️</div><h3>직접 수정</h3><p style="font-size:19px">내 스킬 옆 <b>⋯</b> → <b>직접 수정</b> → 요청 사항 <b>맨 아래에 한 줄 추가</b> → 저장</p><div class="code">[추가] 조언은 3가지로 해 줘.</div></div>
+  <div class="fixc rv"><div class="ic">📤</div><h3>파일로 올리기</h3><p style="font-size:19px"><b>PC 웹·맥 앱</b>에서 설정 → 스킬 → 올리기. SKILL.md 파일과 <b>참고 파일</b>을 함께 올리면 스킬이 매번 참고해요.</p><p class="muted">예: 상담 기록 양식, 기관 안내문</p></div>
+ </div>
+ <div class="note rv">📋 <b>⋯ 메뉴</b>: 지금 사용 · <b>Gemini로 수정</b> · <b>직접 수정</b> · 제거 · 삭제 &nbsp;|&nbsp; ⚠️ <b>삭제</b>는 스킬이 지워지니 조심!<br>💡 좋은 스킬은 한 번에 완성되지 않아요. <b>써 보고 → 고치고 → 다시 써 보기</b></div>
+ <p class="src">출처: Google Gemini 안내 페이지(gemini.google), Gemini Apps 고객센터 「About the transition from Gems to skills」. 메뉴 이름과 위치는 바뀔 수 있어요.</p>
+</div></section>
+
+<!-- 우리가 만든다면 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑦ 마무리 · 생각해 보기</span>
+ <h2>우리가 이런 도구를 <span style="color:var(--teal)">스킬+캔버스</span>로 만든다면?</h2>
+ <div class="grid2">
+  <div>
+   <p style="font-size:20px;font-weight:700;margin-bottom:8px">아이디어 예시 — 눌러 보세요</p>
+   <div class="idea" onclick="this.classList.toggle('open')"><div class="t">😊 오늘의 마음 체크인</div><div class="d">내가 직접 기분과 한 줄 메모를 고르는 웹앱. 몰래 감지하지 않고 <b>스스로 기록</b>해요.</div></div>
+   <div class="idea" onclick="this.classList.toggle('open')"><div class="t">🌙 생활 리듬 기록장</div><div class="d">잠·식사·움직임을 기록하고, 변화가 크면 <b>나에게</b> 먼저 알려 줘요. 진단은 하지 않아요.</div></div>
+   <div class="idea" onclick="this.classList.toggle('open')"><div class="t">🆘 도움 연결 버튼</div><div class="d">힘든 기록이 이어지면 학교 상담센터·상담전화 정보를 보여 주고 <b>사람에게 연결</b>해요.</div></div>
+   <div class="code rv" style="font-size:15px">스킬로 부탁한다면: “오늘의 마음 체크인 웹앱을 만들어 줘. 내가 직접 기분을 고르고, 진단은 하지 말고, 힘든 기록이 이어지면 상담센터 정보를 보여 줘.”</div>
+  </div>
+  <div>
+   <p style="font-size:20px;font-weight:700;margin-bottom:8px">만들 때 지킬 방향 5가지</p>
+   <div class="dir rv"><span class="n">1</span>본인이 <b>알고 동의</b>하는 도구</div>
+   <div class="dir rv"><span class="n">2</span><b>꼭 필요한 정보만</b> 모으기</div>
+   <div class="dir rv"><span class="n">3</span>AI는 <b>알림까지</b>, 판단은 사람이</div>
+   <div class="dir rv"><span class="n">4</span>위기에는 <b>바로 사람·기관</b>으로</div>
+   <div class="dir rv"><span class="n">5</span><b>틀릴 수 있다</b>고 화면에 알리기</div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 18 정리 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">⑦ 마무리 <span class="t">10분</span></span>
+ <h2>오늘 한 장 요약</h2>
+ <div class="grid3">
+  <div class="card rv"><div class="big">🤝</div><h3>역할이 달라요</h3><p class="muted">AI는 빠르고 언제든, 사람은 관계·맥락·위기 책임</p></div>
+  <div class="card rv"><div class="big">💬</div><h3>스킬은 대화로</h3><p class="muted">“보기 주면서 질문해 줘” → 번호 고르기 → 저장 → @ 또는 /로 부르기</p></div>
+  <div class="card rv"><div class="big">📱</div><h3>캔버스로 도구까지</h3><p class="muted">스킬 + 캔버스 = 나만의 상담 연습실</p></div>
+ </div>
+ <div class="sum rv">AI는 상담의 <span style="color:#9fe1cb">도구</span>, 상담은 <span style="color:#ffd27a">사람</span>이 해요</div>
+ <p class="muted" style="text-align:center;margin-top:10px">하이디교육컨설팅연구소 · 강사 최선희 · Q&amp;A</p>
+</div></section>
+
+<!-- 19 출처 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">참고 자료</span>
+ <h2>출처</h2>
+ <ol class="srclist">
+  <li>서울특별시 복지분야 누리집, 「AI로 먼저 응답하고, 시민의 공감으로 이어간다…서울시, 정신건강 안전망 강화」, 2026.2.2. <a href="https://news.seoul.go.kr/welfare/archives/576572">news.seoul.go.kr/welfare/archives/576572</a></li>
+  <li>American Psychological Association, 「Among psychologists, AI use is up, but so are concerns」, 2025.12.9. <a href="https://www.apa.org/news/press/releases/2025/12/psychologists-ai-use-concerns">apa.org</a></li>
+  <li>American Psychological Association, 「Health Advisory on the Use of Generative AI Chatbots and Wellness Applications for Mental Health」, 2025.11. <a href="https://www.apa.org/topics/artificial-intelligence-machine-learning/health-advisory-chatbots-wellness-apps">apa.org</a></li>
+  <li>Illinois IDFPR, 「Gov Pritzker Signs Legislation Prohibiting AI Therapy in Illinois」, 2025.8.4. <a href="https://idfpr.illinois.gov/news/2025/gov-pritzker-signs-state-leg-prohibiting-ai-therapy-in-il.html">idfpr.illinois.gov</a></li>
+  <li>DeepLearning.AI The Batch, 「Illinois follows Nevada, prohibiting certain uses of chatbots…」 <a href="https://www.deeplearning.ai/the-batch/illinois-follows-nevada-prohibiting-certain-uses-of-chatbots-unless-used-by-licensed-therapists">deeplearning.ai</a></li>
+  <li>트로스트(Humart Company) 앱스토어 설명. Wysa 공식 누리집(wysa.com) 및 「Wysa Launches AI-Powered Chatbot to Streamline Mental Health Patient Intake in the US」(2025.6)</li>
+  <li>MIT Technology Review, 「A chatbot helped more people access mental-health services」, 2024.2.5 (Nature Medicine 연구, Limbic Access)</li>
+  <li>Dartmouth, 「First Therapy Chatbot Trial Yields Mental Health Benefits」, 2025.3 (NEJM AI 게재)</li>
+  <li>STAT News, 「Woebot Health shuts down pioneering therapy chatbot」, 2025.7.2</li>
+  <li>Crisis Text Line, 「Detecting Crisis: An AI Solution」; 「Understanding Suicide Prevention and Active Rescues at Crisis Text Line」, 2020.1.3</li>
+  <li>쿠키뉴스, 클로바 케어콜 전국 시군구 절반 이상 도입 보도(2024.9); 네이버 보도자료; 강남구청 보도자료</li>
+  <li>한국심리학회지: 건강 26(4), 「우울 증상과 수준에 따른 패시브 센싱의 패턴 조사」; 코메디닷컴, 고려대 안암병원 기분장애 재발 예측 연구 보도</li>
+  <li>Google, Gemini Apps 고객센터 「About the transition from Gems to skills」; gemini.google 안내 페이지</li>
+ </ol>
+ <p class="muted" style="margin-top:10px">2026년 11월 기준. 메뉴·기능·제도는 바뀔 수 있어요.</p>
+</div></section>
+
+</div>
+
+<div class="navbar">
+ <button class="nbtn" id="prev">◀ 이전</button>
+ <div class="prog"><span class="txt" id="ptxt"></span><span class="bar"><i id="pbar"></i></span><span class="more" id="more"></span></div>
+ <button class="nbtn next" id="next">다음 ▶</button>
+</div>
+
+<script>
+(function(){
+ var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0;
+ var prevB=document.getElementById('prev'),nextB=document.getElementById('next');
+ function hidden(s){return s.querySelectorAll('.rv:not(.show)');}
+ function count(s){var seen={},n=0;[].forEach.call(hidden(s),function(e){var g=e.getAttribute('data-g');if(!g||!seen[g]){n++;if(g)seen[g]=1;}});return n;}
+ function render(){
+  slides.forEach(function(s,i){s.classList.toggle('on',i===cur);s.classList.toggle('left',i<cur);});
+  document.getElementById('ptxt').textContent=(cur+1)+' / '+slides.length;
+  document.getElementById('pbar').style.width=((cur+1)/slides.length*100)+'%';
+  var n=count(slides[cur]);
+  document.getElementById('more').textContent=n?'‘다음 ▶’을 누르면 '+n+'개 더 나와요':'';
+  prevB.disabled=cur===0; nextB.disabled=cur===slides.length-1&&n===0;
+  if(slides[cur].getAttribute('data-init')==='chatsim') chatStart();
+  if(slides[cur].getAttribute('data-init')==='mob') mobDraw();
+  try{history.replaceState(null,'','#s'+(cur+1));}catch(e){}
+ }
+ function next(){var h=hidden(slides[cur]);
+  if(h.length){var g=h[0].getAttribute('data-g');
+   if(g)slides[cur].querySelectorAll('.rv[data-g="'+g+'"]').forEach(function(e){e.classList.add('show');});else h[0].classList.add('show');
+   render();return;}
+  if(cur<slides.length-1){cur++;render();}}
+ function prev(){if(cur>0){cur--;render();}}
+ nextB.onclick=next;prevB.onclick=prev;
+ document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();next();}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}});
+ var sx=null,sy=null,deck=document.getElementById('deck');
+ deck.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+ deck.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}sx=null;});
+ var m=/^#s(\d+)$/.exec(location.hash);if(m){var k=+m[1]-1;if(k>=0&&k<slides.length)cur=k;}
+
+ /* 역할 비교 */
+ document.querySelectorAll('.vs .c').forEach(function(c){c.addEventListener('click',function(){var on=c.classList.toggle('on');c.textContent=on?'✓':'';});});
+ window.showVS=function(){document.querySelectorAll('.vs').forEach(function(r){var cs=r.querySelectorAll('.c');cs.forEach(function(c){var a=c.getAttribute('data-a');var right=!!a;c.classList.toggle('on',right);c.textContent=right?'✓':'';c.style.background=right?(a==='ai'?'#eef7fd':'#effaf6'):'';});});};
+
+ /* 대화로 만들기 시뮬레이션 */
+ var chatQ=[
+  {q:'내담자는 누구로 할까요?',o:['진로가 불안한 대학생','친구 관계가 힘든 신입생','무기력한 졸업생'],r:0},
+  {q:'처음에 마음을 얼마나 열까요?',o:['많이 망설임','보통','바로 이야기함'],r:0},
+  {q:'연습이 끝나면 무엇을 줄까요?',o:['잘한 점 + 해 볼 것','질문 점수','아무것도 안 줌'],r:0}
+ ],ci=0;
+ function addMsg(cls,html){var box=document.getElementById('chatsim');var d=document.createElement('div');d.className='msg '+cls;d.innerHTML=html;box.appendChild(d);box.scrollTop=box.scrollHeight;return d;}
+ function ask(){var q=chatQ[ci];var d=addMsg('ai','<b>질문 '+(ci+1)+'/3</b> '+q.q);var os=document.createElement('div');os.className='opts';
+  q.o.forEach(function(t,i){var b=document.createElement('button');b.className='opt'+(i===q.r?' rec':'');b.textContent=(['①','②','③'][i])+' '+t+(i===q.r?' (추천)':'');
+   b.onclick=function(){os.remove();addMsg('me',['1','2','3'][i]);ci++;if(ci<chatQ.length)setTimeout(ask,450);else setTimeout(function(){addMsg('ai','✅ 스킬을 만들었어요! <b>virtual-client-practice</b><br>이제 <b>@</b> 또는 <b>/</b> 로 불러서 써 보세요.');var r=document.createElement('button');r.className='opt';r.textContent='↺ 다시 해 보기';r.onclick=chatStart;document.getElementById('chatsim').appendChild(r);},500);};os.appendChild(b);});
+  d.appendChild(os);var bx=document.getElementById('chatsim');bx.scrollTop=bx.scrollHeight;}
+ window.chatStart=function(){var box=document.getElementById('chatsim');box.innerHTML='';ci=0;addMsg('me','가상 내담자 스킬을 만들고 싶어. 바로 만들지 말고, 보기를 주면서 질문을 하나씩 해 줘.');setTimeout(ask,500);};
+
+
+ /* 휴대폰 스킬 화면 */
+ var mi=0;
+ var mobS=[
+  '<div class="scr"><div class="tb"><span class="ring2" style="padding:0 6px">☰</span><span>Gemini ⌄</span><span>✎</span></div><div style="text-align:center;margin-top:120px;font-size:19px;font-weight:700">궁금한 점이 있다면<br>편히 물어보세요</div><div class="inp">＋ <span>Gemini…</span></div></div>',
+  '<div class="scr"><div class="tb"><span>Gemini</span><span>✕</span></div><div class="mi">✎ 새 채팅</div><div class="mi">▦ 라이브러리</div><div class="mi">🖼 이미지</div><div class="mi">🕒 예약</div><div class="mi ring2" style="font-weight:900">⚙ 맞춤설정</div><div class="mi">⋯ 더보기</div><div class="mi" style="color:#888;font-size:14px;margin-top:6px">Notebooks</div></div>',
+  '<div class="scr"><div class="tb"><span>☰</span><span></span></div><div class="tabs3"><span class="a">디스커버</span><span>커넥터</span><span class="ring2" style="font-weight:900">스킬</span></div><div style="font-size:19px;font-weight:900">채팅 맞춤설정하기</div><div class="it">✍️ 글쓰기 스타일 맞추기</div><div class="it">🌱 다양한 관점 살펴보기</div></div>',
+  '<div class="scr"><div class="tb"><span>☰</span><span class="ring2" style="padding:0 8px;font-size:22px">＋</span></div><div class="tabs3"><span>디스커버</span><span>커넥터</span><span class="a">스킬</span></div><div style="font-size:19px;font-weight:900">스킬</div><div class="muted" style="font-size:13px">설치됨 ›</div><div class="it">📄 상담 연습실 <span style="margin-left:auto">⋯</span></div><div class="it">📄 make-open-questions <span style="margin-left:auto">⋯</span></div></div>',
+  '<div class="scr"><div class="tb"><span>←</span><span class="ring2" style="padding:2px 12px;background:#e6e6e6;border-radius:99px;font-size:15px">만들기</span></div><div class="lbl">이름</div><div class="fld">스킬의 이름을 입력하세요</div><div class="lbl">설명</div><div class="fld">스킬에 대한 설명을 입력하세요</div><div class="lbl">요청 사항</div><div class="fld" style="height:110px">Gemini가 수행할 작업을 설명하세요</div></div>'
+ ];
+ window.mobDraw=function(){document.getElementById('mobScr').innerHTML=mobS[mi];document.querySelectorAll('#mobList li').forEach(function(li,i){li.classList.toggle('done',i<mi);li.classList.toggle('now',i===mi);});};
+ window.mobStep=function(d){mi=Math.max(0,Math.min(mobS.length-1,mi+d));mobDraw();};
+ document.querySelectorAll('#mobList li').forEach(function(li){li.addEventListener('click',function(){mi=+li.getAttribute('data-i');mobDraw();});});
+ /* 연습실 탭 */
+ document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===t);});document.querySelectorAll('.pane').forEach(function(p){p.classList.toggle('on',p.id===t.getAttribute('data-p'));});});});
+
+ /* 5분 타이머 */
+ var total=300,left=300,tid=null,C=653.5;
+ function draw(){var mm=Math.floor(left/60),ss=left%60;document.getElementById('tNum').textContent=mm+':'+(ss<10?'0':'')+ss;document.getElementById('tArc').setAttribute('stroke-dashoffset',String(C*(1-left/total)));}
+ window.timerStart=function(){if(tid)return;tid=setInterval(function(){left--;draw();if(left<=0){clearInterval(tid);tid=null;document.getElementById('tNum').textContent='완료!';}},1000);};
+ window.timerReset=function(){clearInterval(tid);tid=null;left=total;draw();};
+
+ render();
+})();
+</script>
+</body>
+</html>
