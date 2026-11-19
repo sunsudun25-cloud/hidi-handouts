@@ -608,25 +608,13 @@ b.r{color:var(--red)}
  </div>
 </div></section>
 
-<!-- 14 스킬+캔버스 -->
-<section class="slide"><div class="inner">
- <span class="kicker">⑤ 웹 만드는 법</span>
- <h2>스킬 + 캔버스 = <span style="color:var(--teal)">@ 또는 / 한 번</span>에 언제든 같은 웹앱</h2>
- <div class="grid3" style="align-items:center;margin-top:10px">
-  <div class="card rv" style="text-align:center"><div class="big">📄</div><h3>스킬</h3><p class="muted">웹앱 부탁 문장 4조각을 요청 사항에 저장</p></div>
-  <div class="card rv" style="text-align:center"><div class="big">@</div><h3>부르기</h3><p class="muted">@ 또는 / → 내 스킬 고르기<br>+ 내담자 설정</p></div>
-  <div class="card rv" style="text-align:center"><div class="big">📱</div><h3>캔버스 웹앱</h3><p class="muted">매번 같은 틀, 내용은 새로</p></div>
- </div>
- <div class="note rv">🔁 고치고 싶으면 말로: “버튼을 더 크게”, “조언을 3개로 늘려 줘”</div>
-</div></section>
-
 <!-- 상담 연습실 스킬 구조 -->
 <section class="slide"><div class="inner">
  <span class="kicker">⑥ 실습 2 · 이렇게 만들었어요</span>
- <h2>🏠 상담 연습실 스킬, 속을 열어 보면</h2>
+ <h2>🏠 상담 연습실 프롬프트, 속을 열어 보면</h2>
  <div class="grid2" style="grid-template-columns:1.25fr 1fr">
   <div>
-   <p class="muted" style="margin-bottom:6px">요청 사항은 다섯 덩어리예요. 눌러서 열어 보세요.</p>
+   <p class="muted" style="margin-bottom:6px">웹앱 부탁 문장(프롬프트)은 다섯 덩어리예요. 눌러서 열어 보세요.</p>
    <div class="acc" onclick="var o=this.classList.contains('open');this.parentNode.querySelectorAll('.acc').forEach(function(x){x.classList.remove('open')});if(!o)this.classList.add('open')"><div class="h"><span class="k" style="background:#dff3e8">화면·버튼</span>① 화면 구성</div><div class="b">휴대폰용 한 페이지, 큰 글씨. 위쪽 버튼 3개로 <b>① 내담자 정하기 → ② 상담 연습 → ③ 정리와 조언</b>. 링크 대신 버튼으로 화면 바꾸기.</div></div>
    <div class="acc" onclick="var o=this.classList.contains('open');this.parentNode.querySelectorAll('.acc').forEach(function(x){x.classList.remove('open')});if(!o)this.classList.add('open')"><div class="h"><span class="k" style="background:#fff1c9">무엇을</span>② 내담자 말하기 규칙</div><div class="b">내담자로만 말하고 조언하지 않기. 한 번에 2~4문장. 처음엔 망설이다가, <b>공감과 열린 질문</b>에는 조금씩 더 이야기하기.</div></div>
    <div class="acc" onclick="var o=this.classList.contains('open');this.parentNode.querySelectorAll('.acc').forEach(function(x){x.classList.remove('open')});if(!o)this.classList.add('open')"><div class="h"><span class="k" style="background:#dcecfb">결과</span>③ 정리와 조언</div><div class="b">주호소 · 감정 흐름 · 내가 한 질문(열린/닫힌) · 다음 회기 확인점 · 조언(잘한 점, 해 볼 것, 바꿔 볼 질문).</div></div>
@@ -638,31 +626,29 @@ b.r{color:var(--red)}
    <div style="text-align:center;font-size:34px;font-weight:900" class="rv">＋</div>
    <div class="card rv" style="text-align:center"><b style="font-size:21px">상담 규칙 ＋ 안전 규칙</b></div>
    <div style="text-align:center;font-size:34px;font-weight:900" class="rv">＝</div>
-   <div class="sum rv" style="margin-top:0;font-size:24px">📄 상담 연습실 스킬</div>
+   <div class="sum rv" style="margin-top:0;font-size:24px">📄 상담 연습실 프롬프트</div>
   </div>
  </div>
 </div></section>
 
-<!-- 실습2 스킬 넣기 -->
+<!-- 실습2 프롬프트 붙여넣기 -->
 <section class="slide"><div class="inner">
- <span class="kicker">⑥ 실습 2-1 · 스킬 넣기</span>
- <h2>상담 연습실 스킬을 내 제미나이에 넣어요</h2>
+ <span class="kicker">⑥ 실습 2-1 · 웹앱 만들기</span>
+ <h2>프롬프트를 <span style="color:var(--teal)">새 채팅에 통째로</span> 붙여 넣어요</h2>
  <div style="position:absolute;right:52px;top:20px;text-align:center"><img src="data:image/png;base64,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" alt="학생용 12장 QR" style="width:112px;border:3px solid var(--teal);border-radius:12px;background:#fff"><div style="font-size:14px;font-weight:900">학생용 12장</div></div>
- <div class="say rv">1. 학생용 실습지 <b>12장</b> → “스킬 만들기 부탁(전체)” <b>복사</b></div>
- <div class="say rv">2. ☰ → 맞춤설정 → 스킬 탭 → <b>Gemini로 자동 만들기</b></div>
- <div class="say rv">3. <b>붙여 넣고 보내기</b> → 스킬 탭 <b>‘설치됨’</b>에 생겼는지 확인</div>
- <div class="note rv">💡 실습 1과 같은 방법이에요. 이번엔 질문에 답할 필요 없이 <b>완성본을 그대로</b> 넣어요.<br>🔁 안 되면: 학생용 12장 아래 <b>‘칸별로 붙여 넣기’</b> (스킬 탭 → ＋)</div>
+ <div class="say rv">1. 학생용 실습지 <b>12장</b> → “상담 연습실 프롬프트” <b>복사</b></div>
+ <div class="say rv">2. 제미나이 <b>새 채팅</b> 열기</div>
+ <div class="say rv">3. <b>통째로 붙여 넣고 보내기</b></div>
+ <div class="note rv">💡 실습 2는 스킬을 만들지 않아요. <b>긴 프롬프트 하나로 웹앱만</b> 만들어요.<br>⚠️ 캔버스 안에서는 스킬을 부를 수 없어서, 프롬프트를 직접 붙여 넣는 방식이에요.</div>
 </div></section>
 
-<!-- 실습2 부르기 -->
+<!-- 실습2 결과 갈림 -->
 <section class="slide"><div class="inner">
- <span class="kicker">⑥ 실습 2-2 · 상담 연습실 열기</span>
- <h2>새 채팅에서 불러요 — 여기서 <span style="color:var(--red)">유료·무료가 갈려요</span></h2>
- <div class="say rv">1. <b>새 채팅</b> 열기 → <b>@</b> 또는 <b>/</b> → <b>내 상담 연습실 스킬</b> 고르기</div>
- <div class="say rv">2. “<b>상담 연습실 만들어 줘</b>” 보내기 <span class="muted">(내담자 설정은 앱 안에서 채워도 돼요)</span></div>
+ <span class="kicker">⑥ 실습 2-2 · 보내고 나면</span>
+ <h2>보내고 나면 — 여기서 <span style="color:var(--red)">유료·무료가 갈려요</span></h2>
  <div class="fork">
-  <div class="fc paid rv"><h3>💳 유료 계정</h3><p style="font-size:20px">캔버스에 <b>앱이 바로</b> 만들어져요.<br>→ 만들어지는 동안 <b>기다리는 5분</b> 활동</p></div>
-  <div class="fc free rv"><h3>🆓 무료 계정</h3><p style="font-size:20px">앱 대신 <b>코드</b>가 나와요.<br>→ <b>코드 복사 → 새 채팅 캔버스에 붙여 넣기</b> (5분 활동 다음 장)</p></div>
+  <div class="fc paid rv"><h3>💳 유료 계정</h3><p style="font-size:21px">캔버스에 <b>앱이 바로</b> 만들어져요.<br>→ 만들어지는 동안 <b>기다리는 5분</b> 활동<br>→ 완성되면 <b>① 내담자 정하기</b>부터</p></div>
+  <div class="fc free rv"><h3>🆓 무료 계정</h3><p style="font-size:21px">앱 대신 <b>코드</b>가 나와요.<br>→ 기다리는 5분 활동<br>→ <b>코드 복사 → 새 채팅 캔버스에 붙여 넣기</b> (다음 다음 장)</p></div>
  </div>
 </div></section>
 
@@ -703,13 +689,13 @@ b.r{color:var(--red)}
   <div>
    <div class="plan-tabs"><button class="on" data-plan="free">🆓 무료</button><button data-plan="paid">💳 유료</button></div>
    <div class="plan on" id="plan-free">
-    <div class="pstep"><span class="n">1</span>앞 장처럼 불러서 보내면 → <b>코드</b>가 나와요</div>
+    <div class="pstep"><span class="n">1</span>프롬프트를 보내면 → <b>코드</b>가 나와요</div>
     <div class="pstep key"><span class="n">2</span>코드 상자의 <b>복사</b> 버튼 누르기<br><span class="muted" style="font-size:15px">설명만 나오면 “HTML 코드로 전체를 줘”</span></div>
     <div class="pstep key"><span class="n">3</span><b>새 채팅</b> → <b>＋</b> → <b>Canvas</b> 켜기</div>
     <div class="pstep"><span class="n">4</span>코드 <b>붙여 넣고 보내기</b> → 캔버스에 앱 완성!</div>
    </div>
    <div class="plan" id="plan-paid">
-    <div class="pstep"><span class="n">1</span>앞 장처럼 불러서 보내면 → <b>캔버스에 앱이 바로</b> 나와요</div>
+    <div class="pstep"><span class="n">1</span>프롬프트를 보내면 → <b>캔버스에 앱이 바로</b> 나와요</div>
     <div class="pstep"><span class="n">2</span>그대로 ① 내담자 정하기부터 시작!</div>
    </div>
   </div>
@@ -784,14 +770,14 @@ b.r{color:var(--red)}
 <!-- 우리가 만든다면 -->
 <section class="slide"><div class="inner">
  <span class="kicker">⑦ 마무리 · 생각해 보기</span>
- <h2>우리가 이런 도구를 <span style="color:var(--teal)">스킬+캔버스</span>로 만든다면?</h2>
+ <h2>우리가 이런 도구를 <span style="color:var(--teal)">프롬프트+캔버스</span>로 만든다면?</h2>
  <div class="grid2">
   <div>
    <p style="font-size:20px;font-weight:700;margin-bottom:8px">아이디어 예시 — 눌러 보세요</p>
    <div class="idea" onclick="this.classList.toggle('open')"><div class="t">😊 오늘의 마음 체크인</div><div class="d">내가 직접 기분과 한 줄 메모를 고르는 웹앱. 몰래 감지하지 않고 <b>스스로 기록</b>해요.</div></div>
    <div class="idea" onclick="this.classList.toggle('open')"><div class="t">🌙 생활 리듬 기록장</div><div class="d">잠·식사·움직임을 기록하고, 변화가 크면 <b>나에게</b> 먼저 알려 줘요. 진단은 하지 않아요.</div></div>
    <div class="idea" onclick="this.classList.toggle('open')"><div class="t">🆘 도움 연결 버튼</div><div class="d">힘든 기록이 이어지면 학교 상담센터·상담전화 정보를 보여 주고 <b>사람에게 연결</b>해요.</div></div>
-   <div class="code rv" style="font-size:15px">스킬로 부탁한다면: “오늘의 마음 체크인 웹앱을 만들어 줘. 내가 직접 기분을 고르고, 진단은 하지 말고, 힘든 기록이 이어지면 상담센터 정보를 보여 줘.”</div>
+   <div class="code rv" style="font-size:15px">프롬프트로 부탁한다면: “오늘의 마음 체크인 웹앱을 만들어 줘. 내가 직접 기분을 고르고, 진단은 하지 말고, 힘든 기록이 이어지면 상담센터 정보를 보여 줘.”</div>
   </div>
   <div>
    <p style="font-size:20px;font-weight:700;margin-bottom:8px">만들 때 지킬 방향 5가지</p>
@@ -811,7 +797,7 @@ b.r{color:var(--red)}
  <div class="grid3">
   <div class="card rv"><div class="big">🤝</div><h3>역할이 달라요</h3><p class="muted">AI는 빠르고 언제든, 사람은 관계·맥락·위기 책임</p></div>
   <div class="card rv"><div class="big">💬</div><h3>스킬은 대화로</h3><p class="muted">“보기 주면서 질문해 줘” → 번호 고르기 → 저장 → @ 또는 /로 부르기</p></div>
-  <div class="card rv"><div class="big">📱</div><h3>캔버스로 도구까지</h3><p class="muted">스킬 + 캔버스 = 나만의 상담 연습실</p></div>
+  <div class="card rv"><div class="big">📱</div><h3>캔버스로 도구까지</h3><p class="muted">프롬프트 + 캔버스 = 나만의 상담 연습실</p></div>
  </div>
  <div class="sum rv">AI는 상담의 <span style="color:#9fe1cb">도구</span>, 상담은 <span style="color:#ffd27a">사람</span>이 해요</div>
  <p class="muted" style="text-align:center;margin-top:10px">하이디교육컨설팅연구소 · 강사 최선희 · Q&amp;A</p>
