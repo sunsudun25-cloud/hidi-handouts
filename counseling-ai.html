@@ -401,30 +401,22 @@ summary{font-weight:900;min-height:44px;display:flex;align-items:center;cursor:p
  <div class="note">📄 이 부탁 문장을 <b>스킬</b>에 저장하면 → <b>@</b> 또는 <b>/</b> 한 번에 언제든 같은 웹앱!</div>
 </div></section>
 
-<!-- 무료 사용자 -->
-<section class="slide" data-t="무료 계정은 이렇게"><div class="inner">
- <span class="kicker">⑤ 웹 만드는 법 · 무료 계정</span>
- <h2>🆓 무료 계정은 <span style="color:var(--red)">코드로 받아서 → 캔버스에 붙여 넣기</span></h2>
- <table class="ftab">
-  <tr><th></th><th>💳 유료</th><th>🆓 무료</th></tr>
-  <tr><td><b>스킬</b></td><td>○</td><td>○ 똑같이 돼요</td></tr>
-  <tr><td><b>웹앱</b></td><td>바로 미리보기</td><td>코드로 받아 <b style="color:var(--red)">새 창 캔버스</b>에</td></tr>
-  <tr><td><b>사용량</b></td><td>넉넉</td><td>적어요 · 몇 시간 뒤 다시 채워짐</td></tr>
- </table>
- <p style="font-weight:900;margin:6px 0">🆓 무료 계정 순서</p>
- <div class="pstep rv"><span class="n">1</span><b>@</b> 또는 <b>/</b> → 내 스킬 고르기 → 설정 붙여 보내기</div>
- <div class="pstep key rv"><span class="n">2</span>미리보기가 안 나오면 아래 문장 보내기</div>
- <div class="copybox"><div class="fh"><span>② 코드 달라고 하기</span><button class="copybtn" data-c="fr1">복사</button></div><textarea id="fr1" class="ro" rows="2" readonly>방금 만든 웹앱을 HTML 코드 한 파일로 전체를 줘.</textarea></div>
- <div class="pstep rv"><span class="n">3</span>코드 상자의 <b>복사</b> 버튼 누르기</div>
- <div class="pstep key rv"><span class="n">4</span><b>새 채팅</b> → 입력창 <b>＋</b> → <b>Canvas</b> 켜기</div>
- <div class="pstep rv"><span class="n">5</span>코드 <b>붙여 넣고 보내기</b> → 캔버스에 웹앱 완성!</div>
- <div class="note">💡 코드가 길어도 걱정 마세요. 코드 상자 오른쪽 위 <b>복사</b> 버튼 한 번이면 돼요.<br>⏳ 사용량이 끝났다고 나오면 → 짝의 휴대폰으로 같이, 또는 채팅으로 역할극 → 정리만 받기</div>
- <p class="src">출처: 강사 실습 확인(2026.11); PCWorld(2026.9.30); 9to5Google(2026.5). 화면은 바뀔 수 있어요.</p>
+<!-- 상담 연습실 스킬 구조 -->
+<section class="slide" data-t="상담 연습실은 이렇게 만들었어요"><div class="inner">
+ <span class="kicker">⑥ 실습 2 · 이렇게 만들었어요</span>
+ <h2>🏠 상담 연습실 스킬, 속을 열어 보면</h2>
+ <p class="muted">요청 사항은 다섯 덩어리예요. 눌러서 열어 보세요.</p>
+ <div class="case" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">📱</span><div class="nm">① 화면 구성</div></div><div class="dt">휴대폰용 한 페이지, 버튼 3개로 ① 내담자 정하기 → ② 상담 연습 → ③ 정리와 조언.</div></div>
+ <div class="case" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🧑</span><div class="nm">② 내담자 말하기 규칙</div></div><div class="dt">내담자로만, 한 번에 2~4문장. 처음엔 망설이다가 공감·열린 질문에 조금씩 더 이야기.</div></div>
+ <div class="case" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">📝</span><div class="nm">③ 정리와 조언</div></div><div class="dt">주호소 · 감정 흐름 · 내 질문(열린/닫힌) · 다음 회기 확인점 · 조언.</div></div>
+ <div class="case" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🛟</span><div class="nm">④ 안 될 때</div></div><div class="dt">앱 안에서 AI가 답하지 못하면 채팅으로 역할극 → “연습 끝” → 정리만 받기.</div></div>
+ <div class="case" onclick="this.classList.toggle('open')"><div class="hd"><span class="ic">🔒</span><div class="nm">⑤ 안전 규칙</div></div><div class="dt">위기 주제 ✕ · 실명이 보이면 멈추기 · 실제 고민이면 상담센터 안내.</div></div>
+ <div class="sum">웹 4조각 ＋ 상담 규칙 ＋ 안전 규칙 ＝ 📄 스킬</div>
 </div></section>
 
 <!-- 9 실습 2 스킬 넣기 -->
 <section class="slide" data-t="실습 2 · 상담 연습실 스킬 넣기"><div class="inner">
- <span class="kicker">⑥ 실습 2-1</span>
+ <span class="kicker">⑥ 실습 2-1 · 스킬 넣기</span>
  <h2>🏠 상담 연습실 스킬 넣기</h2>
  <div class="illus" style="max-width:240px;margin:0 auto 8px"><svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="휴대폰으로 가상 내담자와 상담 연습을 하는 학생 그림"><style>
 .hd-glow{animation:hdGlow 2.6s ease-in-out infinite}
@@ -438,7 +430,7 @@ summary{font-weight:900;min-height:44px;display:flex;align-items:center;cursor:p
 @keyframes hdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @media (prefers-reduced-motion:reduce){.hd-glow,.hd-b1,.hd-b2,.hd-b3,.hd-tw,.hd-float{animation:none;opacity:1}}
 </style><rect width="300" height="260" rx="22" fill="#effaf6"/><ellipse class="hd-glow" cx="150.0" cy="198.0" rx="57.6" ry="66.0" fill="#bfe6ff"/><rect x="132" y="168" width="36" height="60" rx="7" fill="#222"/><rect x="135" y="173" width="30" height="48" rx="3" fill="#dff2ff"/><path d="M150.0,184 l3,7 7,3 -7,3 -3,7 -3,-7 -7,-3 7,-3 Z" fill="#4aa8e0"/><g transform="translate(150,112) scale(0.95)"><path d="M-52,118 Q-52,52 -18,46 L18,46 Q52,52 52,118 Z" fill="#4aa8e0"/><path d="M-10,40 L10,40 L10,52 Q0,58 -10,52 Z" fill="#e8b58f"/><path d="M-14,46 Q0,60 14,46" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/><ellipse cx="0" cy="0" rx="28" ry="31" fill="#f2c7a5"/><ellipse cx="-28" cy="4" rx="5" ry="7" fill="#e8b58f"/><ellipse cx="28" cy="4" rx="5" ry="7" fill="#e8b58f"/><path d="M-30,-2 Q-32,-36 0,-36 Q32,-36 30,-2 Q22,-18 2,-20 Q-14,-12 -30,-2 Z" fill="#3b2a24"/><circle cx="-10" cy="2" r="3" fill="#14284b"/><circle cx="10" cy="2" r="3" fill="#14284b"/><path d="M-8,14 Q0,21 8,14" fill="none" stroke="#14284b" stroke-width="2.5" stroke-linecap="round"/><circle cx="-17" cy="11" r="4" fill="#f59a8b" opacity=".35"/><circle cx="17" cy="11" r="4" fill="#f59a8b" opacity=".35"/></g><rect x="132" y="170" width="36" height="60" rx="7" fill="#222"/><rect x="135" y="175" width="30" height="48" rx="3" fill="#dff2ff"/><path d="M150.0,186 l3,7 7,3 -7,3 -3,7 -3,-7 -7,-3 7,-3 Z" fill="#4aa8e0"/><ellipse cx="136" cy="198" rx="10" ry="8" fill="#f2c7a5"/><ellipse cx="164" cy="198" rx="10" ry="8" fill="#f2c7a5"/><g class="hd-b1"><rect x="14" y="20" width="122" height="36" rx="14" fill="#ffffff"/><path d="M122,56 l6,12 l-16,-12 Z" fill="#ffffff"/><text x="75.0" y="43.0" text-anchor="middle" font-size="13" font-weight="700" fill="#14284b" font-family="Noto Sans KR,Malgun Gothic,sans-serif">🧑 사실 잘…</text></g><g class="hd-b2"><rect x="164" y="50" width="122" height="36" rx="14" fill="#13917f"/><path d="M178,86 l-6,12 l16,-12 Z" fill="#13917f"/><text x="225.0" y="73.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Noto Sans KR,Malgun Gothic,sans-serif">어떤 마음이에요?</text></g></svg></div>
- <div class="card"><b>방법 A · 한 번에 (추천)</b><p style="font-size:15.5px">아래 전체를 복사 → <b>새 채팅</b>에 붙여 넣기 → 보내기. 제미나이가 스킬로 저장해요.</p></div>
+ <div class="card"><b>방법 A · 한 번에 (추천)</b><p style="font-size:15.5px">아래 전체를 복사 → ☰ → 맞춤설정 → 스킬 탭 → <b>Gemini로 자동 만들기</b> → 붙여 넣고 보내기. 스킬 탭 ‘설치됨’에서 확인해요.</p></div>
  <div class="copybox"><div class="fh"><span>스킬 만들기 부탁 (전체)</span><button class="copybtn" data-c="r0">복사</button></div><textarea id="r0" class="ro" rows="9" readonly>아래 내용 그대로 제미나이 스킬을 만들어 줘. 내용은 바꾸지 말고 저장해 줘.
 
 [이름]
@@ -540,6 +532,17 @@ counseling-practice-room
  <p class="muted">※ 메뉴 이름과 위치는 바뀔 수 있어요.</p>
 </div></section>
 
+<!-- 실습2 부르기 -->
+<section class="slide" data-t="실습 2 · 상담 연습실 열기"><div class="inner">
+ <span class="kicker">⑥ 실습 2-2 · 상담 연습실 열기</span>
+ <h2>새 채팅에서 불러요 — 유료·무료가 갈려요</h2>
+ <div class="say rv">1. <b>새 채팅</b> → <b>@</b> 또는 <b>/</b> → <b>내 상담 연습실 스킬</b> 고르기</div>
+ <div class="say rv">2. 아래 문장 보내기 (설정은 앱 안에서 채워도 돼요)</div>
+ <div class="copybox"><div class="fh"><span>보낼 문장</span><button class="copybtn" data-c="cl0">복사</button></div><textarea id="cl0" class="ro" rows="1" readonly>상담 연습실 만들어 줘</textarea></div>
+ <div class="card rv" style="border-color:var(--sky)"><b>💳 유료 계정</b> — 캔버스에 <b>앱이 바로</b> 만들어져요 → 다음 장 ‘기다리는 5분’</div>
+ <div class="card rv" style="border-color:var(--red);background:#fff7f6"><b>🆓 무료 계정</b> — 앱 대신 <b>코드</b>가 나와요 → ‘기다리는 5분’ 다음 장에서 <b>코드를 캔버스에 붙여 넣기</b></div>
+</div></section>
+
 <!-- 10 기다리는 5분 -->
 <section class="slide" data-t="기다리는 5분 · 상담 준비" data-init="prep"><div class="inner">
  <span class="kicker">⑥ 실습 2-2 · 캔버스를 기다리는 동안</span>
@@ -555,7 +558,27 @@ counseling-practice-room
  <div class="field"><label>4. 오늘 목표 하나</label><div class="choice" data-k="c_goal"><button class="chip">열린 질문 3번 이상</button><button class="chip">조언 서두르지 않기</button><button class="chip">감정 알아주기</button></div></div>
  <div class="saved" id="savedMsg"></div>
  <div class="copybox"><div class="fh"><span>📋 내 설정으로 부르기 문장</span><button class="copybtn" data-c="callTxt">복사</button></div><textarea id="callTxt" class="ro" rows="7" readonly></textarea></div>
- <p class="muted">↑ 위 칸을 채우면 자동으로 만들어져요. 새 채팅에서 <b>@</b> 또는 <b>/</b> → <b>내 상담 연습실 스킬</b>을 고른 뒤 붙여 넣어요.</p>
+ <p class="muted">↑ 위 칸을 채우면 자동으로 만들어져요. 앱의 <b>① 내담자 정하기</b> 칸에 옮겨 써도 되고, 설정까지 한 번에 보내고 싶으면 이 문장을 써요.</p>
+</div></section>
+
+<!-- 무료 사용자 -->
+<section class="slide" data-t="무료 계정은 이렇게"><div class="inner">
+ <span class="kicker">⑥ 실습 2-2 · 무료 계정</span>
+ <h2>🆓 무료 계정: <span style="color:var(--red)">코드 복사 → 새 채팅 캔버스</span></h2>
+ <table class="ftab">
+  <tr><th></th><th>💳 유료</th><th>🆓 무료</th></tr>
+  <tr><td><b>스킬</b></td><td>○</td><td>○ 똑같이 돼요</td></tr>
+  <tr><td><b>웹앱</b></td><td>바로 미리보기</td><td>코드로 받아 <b style="color:var(--red)">새 창 캔버스</b>에</td></tr>
+  <tr><td><b>사용량</b></td><td>넉넉</td><td>적어요 · 몇 시간 뒤 다시 채워짐</td></tr>
+ </table>
+ <p style="font-weight:900;margin:6px 0">🆓 무료 계정 순서</p>
+ <div class="pstep rv"><span class="n">1</span>앞에서 불러서 보내면 → <b>코드</b>가 나와요</div>
+ <div class="pstep key rv"><span class="n">2</span>코드 상자의 <b>복사</b> 버튼 누르기</div>
+ <div class="copybox"><div class="fh"><span>설명만 나오고 코드가 없다면</span><button class="copybtn" data-c="fr1">복사</button></div><textarea id="fr1" class="ro" rows="2" readonly>방금 만든 웹앱을 HTML 코드 한 파일로 전체를 줘.</textarea></div>
+ <div class="pstep key rv"><span class="n">3</span><b>새 채팅</b> → 입력창 <b>＋</b> → <b>Canvas</b> 켜기</div>
+ <div class="pstep rv"><span class="n">4</span>코드 <b>붙여 넣고 보내기</b> → 캔버스에 앱 완성!</div>
+ <div class="note">💡 코드가 길어도 걱정 마세요. 코드 상자 오른쪽 위 <b>복사</b> 버튼 한 번이면 돼요.<br>⏳ 사용량이 끝났다고 나오면 → 짝의 휴대폰으로 같이, 또는 채팅으로 역할극 → 정리만 받기</div>
+ <p class="src">출처: 강사 실습 확인(2026.11); PCWorld(2026.9.30); 9to5Google(2026.5). 화면은 바뀔 수 있어요.</p>
 </div></section>
 
 <!-- 11 연습하고 돌아보기 -->
