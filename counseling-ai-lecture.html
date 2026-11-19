@@ -231,7 +231,7 @@ b.r{color:var(--red)}
 .plan-tabs button{min-height:54px;padding:6px 20px;font-size:21px;font-weight:900;border-radius:14px;border:3px solid var(--line);background:#fff;color:var(--navy)}
 .plan-tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
 .plan{display:none;animation:floatIn .5s ease both}.plan.on{display:block}
-.pstep{display:flex;gap:12px;align-items:center;background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:8px;font-size:20px}
+.pstep{display:flex;gap:12px;align-items:center;background:#fff;border:3px solid var(--line);border-radius:14px;padding:9px 14px;margin-bottom:8px;font-size:19px}
 .pstep .n{flex:0 0 38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font-weight:900;display:grid;place-items:center}
 .pstep.key{border-color:var(--red);background:#fff5f4}.pstep.key .n{background:var(--red)}
 .ftab{width:100%;border-collapse:collapse;font-size:18px;background:#fff;border-radius:14px;overflow:hidden}
@@ -579,31 +579,32 @@ b.r{color:var(--red)}
 <!-- 무료 사용자 -->
 <section class="slide"><div class="inner">
  <span class="kicker">⑤ 웹 만드는 법 · 무료 사용자</span>
- <h2>🆓 무료 계정은 <span style="color:var(--red)">캔버스를 먼저 켜고</span> 시작해요</h2>
- <div class="grid2" style="grid-template-columns:1fr 1.1fr">
+ <h2>🆓 무료 계정은 <span style="color:var(--red)">코드로 받아서 → 캔버스에 붙여 넣기</span></h2>
+ <div class="grid2" style="grid-template-columns:.95fr 1.15fr">
   <div>
    <table class="ftab">
     <tr><th></th><th>💳 유료</th><th>🆓 무료</th></tr>
     <tr><td><b>스킬</b></td><td>○</td><td>○ 똑같이 돼요</td></tr>
-    <tr><td><b>캔버스</b></td><td>스킬이 알아서 열어요</td><td><b class="r">＋ → Canvas</b>를 먼저 켜요</td></tr>
+    <tr><td><b>웹앱</b></td><td>바로 미리보기</td><td>미리보기가 안 나와요 → <b class="r">코드로 받아 새 창 캔버스에</b></td></tr>
     <tr><td><b>사용량</b></td><td>넉넉해요</td><td>적어요 · 몇 시간 지나면 다시 채워져요</td></tr>
-    <tr><td><b>긴 대화</b></td><td>길게 기억</td><td>기억하는 양이 작아요 → <b>연습은 짧게</b></td></tr>
+    <tr><td><b>긴 대화</b></td><td>길게 기억</td><td>기억하는 양이 작아요 → 연습은 짧게</td></tr>
    </table>
-   <p class="src" style="margin-top:8px">출처: PCWorld(2026.9.30, 스킬 무료 제공), 9to5Google·Google 요금제 안내(무료 32,000토큰·표준 한도). 화면은 바뀔 수 있어요.</p>
+   <div class="note" style="font-size:17px">⏳ 사용량이 끝났다고 나오면 → 짝의 휴대폰으로 같이 하거나, 채팅으로 역할극 → 정리만 받기</div>
+   <p class="src" style="margin-top:6px">출처: 강사 실습 확인(2026.11); PCWorld(2026.9.30); 9to5Google(2026.5). 화면은 바뀔 수 있어요.</p>
   </div>
   <div>
    <div class="plan-tabs"><button class="on" data-plan="free">🆓 무료</button><button data-plan="paid">💳 유료</button></div>
    <div class="plan on" id="plan-free">
-    <div class="pstep"><span class="n">1</span>새 채팅 열기</div>
-    <div class="pstep key"><span class="n">2</span>입력창 왼쪽 <b>＋</b> → <b>Canvas</b> 켜기</div>
-    <div class="pstep"><span class="n">3</span><b>@</b> 또는 <b>/</b> → 내 스킬 고르기</div>
-    <div class="pstep"><span class="n">4</span>내담자 설정 붙여 넣고 보내기</div>
-    <div class="note" style="font-size:18px">🔁 캔버스가 안 열리면 “<b>캔버스로 만들어 줘</b>” 한 번 더<br>⏳ 사용량이 끝났다고 나오면 → 짝의 휴대폰으로 같이 하거나, 채팅으로 역할극 → 정리만 캔버스로</div>
+    <div class="pstep"><span class="n">1</span><b>@</b> 또는 <b>/</b> → 내 스킬 고르기 → 설정 붙여 보내기</div>
+    <div class="pstep key"><span class="n">2</span>미리보기가 안 나오면: “<b>HTML 코드로 전체를 줘</b>”</div>
+    <div class="pstep"><span class="n">3</span>코드 상자의 <b>복사</b> 버튼 누르기</div>
+    <div class="pstep key"><span class="n">4</span><b>새 채팅</b> → <b>＋</b> → <b>Canvas</b> 켜기</div>
+    <div class="pstep"><span class="n">5</span>코드 <b>붙여 넣고 보내기</b> → 캔버스에 웹앱 완성!</div>
    </div>
    <div class="plan" id="plan-paid">
     <div class="pstep"><span class="n">1</span>새 채팅 열기</div>
     <div class="pstep"><span class="n">2</span><b>@</b> 또는 <b>/</b> → 내 스킬 고르기</div>
-    <div class="pstep"><span class="n">3</span>내담자 설정 붙여 넣고 보내기 → 캔버스가 알아서 열려요</div>
+    <div class="pstep"><span class="n">3</span>내담자 설정 붙여 넣고 보내기 → 캔버스 미리보기가 바로 나와요</div>
    </div>
   </div>
  </div>
