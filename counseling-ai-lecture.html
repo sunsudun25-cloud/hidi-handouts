@@ -162,8 +162,8 @@ b.r{color:var(--red)}
 .fixc .ic{font-size:40px}
 .code{background:#14284b;color:#fff;border-radius:12px;padding:8px 12px;font-size:16px;line-height:1.5;margin-top:6px}
 .sum{background:var(--navy);color:#fff;border-radius:20px;padding:18px 24px;font-size:28px;font-weight:900;text-align:center;margin-top:14px}
-.srclist{font-size:17px;line-height:1.7}
-.srclist li{margin-bottom:6px}
+.srclist{font-size:14.5px;line-height:1.45;columns:2;column-gap:28px}
+.srclist li{margin-bottom:5px;break-inside:avoid;overflow-wrap:anywhere}
 .srclist a{color:var(--navy2)}
 
 
@@ -227,6 +227,16 @@ b.r{color:var(--red)}
 .illus svg{width:100%;height:auto;display:block}
 .credit{font-size:13px;color:#7a879a;text-align:right;margin-top:4px}
 
+.cmp3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.cmp3 .ai{background:#fff;border:3px solid var(--line);border-radius:18px;padding:10px 14px}
+.cmp3 .ai h3{font-size:24px;margin-bottom:4px}
+.cmp3 .row{border-radius:12px;padding:6px 10px;margin-top:6px;font-size:19px;line-height:1.4;transition:background .5s,box-shadow .5s}
+.cmp3 .row .k{display:block;font-size:14px;font-weight:900;color:var(--muted,#4a5a73)}
+.cmp3.hl-call .row.call,.cmp3.hl-make .row.make,.cmp3.hl-free .row.free{background:#fff4c2;box-shadow:0 0 0 3px #f0c27a inset}
+.qbtns{display:flex;gap:10px;flex-wrap:wrap}
+.qbtns button{min-height:52px;padding:4px 18px;font-size:20px;font-weight:900;border-radius:14px;border:3px solid var(--line);background:#fff;color:var(--navy)}
+.qbtns button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+@media (max-width:760px){.cmp3{grid-template-columns:1fr}.srclist{columns:1}}
 .plan-tabs{display:flex;gap:10px;margin-bottom:10px}
 .plan-tabs button{min-height:54px;padding:6px 20px;font-size:21px;font-weight:900;border-radius:14px;border:3px solid var(--line);background:#fff;color:var(--navy)}
 .plan-tabs button.on{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -512,6 +522,38 @@ b.r{color:var(--red)}
    <div class="slot" onclick="this.classList.add('fill')"><span class="k">요청 사항 — 할 일·순서·형식·안전 규칙</span><span class="v">① 열린/닫힌 판정 ② 열린 질문 3개 ③ 실명이 보이면 멈추기</span></div>
   </div>
  </div>
+</div></section>
+
+<!-- 세 AI 스킬 비교 -->
+<section class="slide"><div class="inner">
+ <span class="kicker">③ 스킬 만드는 법 · 한눈에 비교</span>
+ <h2>스킬은 제미나이에만 있을까? — <span style="color:var(--teal)">세 AI 비교</span></h2>
+ <div class="qbtns">
+  <button data-k="call" onclick="var c=this.closest('.inner').querySelector('.cmp3');var on=this.classList.contains('on');this.parentNode.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});c.className='cmp3';if(!on){this.classList.add('on');c.classList.add('hl-'+this.dataset.k)}">📣 부르는 법</button>
+  <button data-k="make" onclick="var c=this.closest('.inner').querySelector('.cmp3');var on=this.classList.contains('on');this.parentNode.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});c.className='cmp3';if(!on){this.classList.add('on');c.classList.add('hl-'+this.dataset.k)}">🛠️ 만드는 법</button>
+  <button data-k="free" onclick="var c=this.closest('.inner').querySelector('.cmp3');var on=this.classList.contains('on');this.parentNode.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});c.className='cmp3';if(!on){this.classList.add('on');c.classList.add('hl-'+this.dataset.k)}">🆓 무료로 되나요?</button>
+ </div>
+ <div class="cmp3">
+  <div class="ai rv" style="border-top:8px solid #4aa8e0"><h3>✨ 제미나이</h3>
+   <div class="row call"><span class="k">📣 어떻게 부르나요?</span>채팅창에 <b>@ 또는 /</b> → 골라서 써요</div>
+   <div class="row make"><span class="k">🛠️ 어떻게 만드나요?</span><b>대화로</b> “스킬 만들어 줘” 또는 설정의 스킬 화면</div>
+   <div class="row free"><span class="k">🆓 무료 계정은?</span>✅ <b>무료도 돼요</b><br><small>2026년 11월 ‘젬’이 스킬로 바뀜</small></div>
+  </div>
+
+  <div class="ai rv" style="border-top:8px solid #e07a4a"><h3>🟠 클로드</h3>
+   <div class="row call"><span class="k">📣 어떻게 부르나요?</span>대화를 보고 <b>알아서</b> 꺼내 써요<br><small>이름을 말해 불러도 돼요</small></div>
+   <div class="row make"><span class="k">🛠️ 어떻게 만드나요?</span><b>대화로</b> 만들거나, 스킬 파일(SKILL.md) 올리기</div>
+   <div class="row free"><span class="k">🆓 무료 계정은?</span>✅ <b>무료도 돼요</b><br><small>2026년 2월부터</small></div>
+  </div>
+
+  <div class="ai rv" style="border-top:8px solid #13917f"><h3>🟢 챗GPT</h3>
+   <div class="row call"><span class="k">📣 어떻게 부르나요?</span>필요할 때 <b>알아서</b> 써요<br><small>사이드바 ‘플러그인’ → 스킬</small></div>
+   <div class="row make"><span class="k">🛠️ 어떻게 만드나요?</span>스킬 화면에서 만들기·올리기<br><small>예전 방식: 맞춤 GPT</small></div>
+   <div class="row free"><span class="k">🆓 무료 계정은?</span>⚠️ <b>개인 스킬은 업무용 요금제</b><br><small>(Business·Enterprise·Edu)</small></div>
+  </div>
+
+ </div>
+ <div class="sum rv" style="font-size:20px;margin-top:8px;padding:8px 14px">🤝 셋 다 <b>이름·설명·요청 사항</b>의 ‘레시피 카드’라 다른 AI로 옮겨 쓸 수도 있어요. 오늘은 <b>무료·휴대폰</b>으로 되는 제미나이로!</div>
 </div></section>
 
 <!-- 11 대화로 만들기 -->
@@ -846,6 +888,7 @@ b.r{color:var(--red)}
   <li>PCWorld, 「Adios, Gems: Google’s new Gemini skills won’t be paywalled」, 2026.9.30; 9to5Google, Gemini 무료·유료 기능 비교(2026.5)</li>
   <li>교안 속 그림(일러스트): 하이디 교육컨설팅 자체 제작</li>
   <li>Google, Gemini Apps 고객센터 「About the transition from Gems to skills」; gemini.google 안내 페이지</li>
+ <li>OpenAI 고객센터 「Skills in ChatGPT」(2026.11); Anthropic 무료 플랜 기능 확대 발표(2026.2.11, MacRumors 보도)</li>
  </ol>
  <p class="muted" style="margin-top:10px">2026년 11월 기준. 메뉴·기능·제도는 바뀔 수 있어요.</p>
 </div></section>
