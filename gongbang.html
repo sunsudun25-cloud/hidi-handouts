@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실습지 — 제미나이 캔버스로 나만의 책 만들기 앱 (하이디 공방)</title>
+<style>
+:root{--navy:#14284b;--navy2:#1f3d6e;--sky:#4aa8e0;--sky-l:#e6f3fb;--sky-m:#b9def4;--red:#d93a2f;--teal:#13917f;--purple:#7a52c7;--muted:#4a5a73;--bg:#f6f9fc;--ease:cubic-bezier(.22,.8,.3,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;background:var(--bg);color:var(--navy);font-size:22px;line-height:1.65;word-break:keep-all}
+button,input,textarea{font-family:inherit}
+button{cursor:pointer}
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:26px 20px 24px}
+.hero .in,.wrap{max-width:760px;margin:0 auto}
+.hero small{display:inline-block;background:rgba(255,255,255,.16);padding:4px 14px;border-radius:999px;font-size:17px;font-weight:800}
+.hero h1{font-size:30px;line-height:1.35;margin:12px 0 6px}
+.hero p{font-size:19px;opacity:.9}
+.hero input{width:100%;margin-top:14px;min-height:58px;border-radius:14px;border:none;padding:0 16px;font-size:22px}
+.tabs{position:sticky;top:0;z-index:10;display:flex;background:#fff;border-bottom:2px solid #dde6f0}
+.tabs button{flex:1;min-height:64px;border:none;background:#fff;font-size:21px;font-weight:800;color:var(--muted);border-bottom:5px solid transparent;transition:all .4s}
+.tabs button.on{color:var(--navy);border-bottom-color:var(--sky)}
+.wrap{padding:6px 16px 120px}
+.pane{display:none}.pane.on{display:block;animation:fade .6s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+h2{font-size:26px;margin:28px 0 12px;display:flex;align-items:center;gap:10px}
+h2 .n{flex:0 0 46px;height:46px;border-radius:14px;color:#fff;display:grid;place-items:center;font-size:22px}
+.card{background:#fff;border-radius:20px;padding:20px;border:2px solid #dfe8f2;margin-bottom:14px}
+.small{font-size:18px;color:var(--muted)}
+/* check */
+.chk{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid #eef2f7;cursor:pointer}
+.chk:last-child{border-bottom:none}
+.chk .box{flex:0 0 42px;height:42px;border-radius:12px;border:4px solid var(--sky);display:grid;place-items:center;color:#fff;font-weight:900;font-size:24px;transition:all .4s}
+.chk.on .box{background:var(--teal);border-color:var(--teal)}
+.chk.on span{color:var(--muted)}
+/* rules */
+.rule{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #eef2f7}
+.rule:last-child{border-bottom:none}
+.dot{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;margin-top:3px}
+/* steps */
+.step{display:flex;align-items:center;gap:14px;padding:12px 0}
+.step .num{flex:0 0 48px;height:48px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:900;font-size:22px}
+.step.hl .num{background:var(--red)}
+.step .k{display:inline-block;background:var(--sky-l);border:2px solid var(--sky-m);border-radius:10px;padding:0 10px;font-weight:800}
+.step.hl .k{border-color:var(--red);background:#fdecea}
+/* prompt */
+.pbox{background:#0f1e38;color:#e3eefa;border-radius:18px;padding:18px 20px;font-size:19px;line-height:1.75;white-space:pre-wrap;max-height:300px;overflow:auto}
+.cbtn{display:block;width:100%;min-height:68px;margin-top:10px;border-radius:16px;border:none;background:var(--sky);color:#fff;font-size:23px;font-weight:900;transition:background .3s,transform .2s}
+.cbtn:active{transform:scale(.98)}
+.cbtn.ok{background:var(--teal)}
+/* say chips */
+.say{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--sky-l);border-radius:16px;padding:12px 12px 12px 18px;margin-bottom:10px;font-size:21px;font-weight:700}
+.say button{flex:0 0 auto;min-height:52px;padding:0 16px;border-radius:12px;border:none;background:var(--navy);color:#fff;font-size:18px;font-weight:800}
+.say button.ok{background:var(--teal)}
+/* topics */
+.topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.topic{min-height:96px;border-radius:18px;border:3px solid #dfe8f2;background:#fff;font-size:21px;font-weight:800;color:var(--navy);transition:all .4s}
+.topic .e{display:block;font-size:34px}
+.topic.on{border-color:var(--sky);background:var(--sky-l)}
+.qshow{margin-top:12px;background:var(--navy);color:#fff;border-radius:18px;padding:18px 20px;font-size:21px;min-height:80px}
+textarea,input.t{width:100%;border:3px solid #d6e3f0;border-radius:16px;padding:14px 16px;font-size:22px;line-height:1.7;background:#fff}
+textarea:focus,input.t:focus{outline:none;border-color:var(--sky)}
+textarea{min-height:110px;resize:vertical}
+label.f{display:block;font-weight:800;margin:14px 0 6px}
+.mic{display:flex;align-items:center;gap:12px;background:#fff8eb;border:2px solid #f0c27a;border-radius:16px;padding:12px 16px;font-size:19px;margin-top:10px}
+.mic .mi{font-size:30px}
+.yn{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #eef2f7}
+.yn:last-child{border-bottom:none}
+.yn .tag{font-weight:900;color:#fff;border-radius:10px;padding:4px 12px;font-size:18px;text-align:center}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #dde6f0;padding:10px 12px;display:flex;gap:10px;justify-content:center;z-index:20}
+.bottom button{flex:1;max-width:340px;min-height:64px;border-radius:16px;font-size:21px;font-weight:900;border:3px solid var(--navy);background:#fff;color:var(--navy)}
+.bottom button.primary{background:var(--navy);color:#fff}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:14px 24px;border-radius:14px;font-weight:800;font-size:20px;opacity:0;pointer-events:none;transition:all .5s var(--ease);z-index:30;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{margin-top:24px;font-size:16px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
+
+.pbox.easy{max-height:none!important;overflow:visible!important;font-size:1.12em;line-height:1.7;background:#f2fbf8;border:3px solid #13917f;color:#14284b}
+details.more{margin-top:12px;border:2px dashed #c8d6e5;border-radius:14px;padding:10px 14px;background:#fff}
+details.more summary{cursor:pointer;font-weight:800;color:#1f3d6e;min-height:44px;display:flex;align-items:center}
+details.more .more-tip{color:#4a5a73;margin:6px 0 8px;font-size:.92em}
+details.more .pbox{font-size:.9em}
+.cbtn.sub{background:#1f3d6e}
+
+.purple{}:root{--purple:#7a52c7}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+  <small>AI 글쓰기 교실 · 실습지</small>
+  <h1>제미나이 캔버스로<br>나만의 책 만들기 앱 — 하이디 공방</h1>
+  <p>파란 버튼을 누르면 글이 복사돼요</p>
+  <input id="who" class="save" placeholder="성함을 적어 주세요">
+</div></header>
+<nav class="tabs"><button class="on" data-p="p1">① 앱 만들기</button><button data-p="p2">② 내 책 쓰기</button></nav>
+
+<div class="wrap">
+<div class="pane on" id="p1">
+  <h2><span class="n" style="background:var(--navy2)">✓</span>시작 전 확인</h2>
+  <div class="card">
+    <div class="chk" data-k="a1"><div class="box">✓</div><span>제미나이 앱에 로그인했어요</span></div>
+    <div class="chk" data-k="a2"><div class="box">✓</div><span>와이파이(인터넷)가 연결돼 있어요</span></div>
+    <div class="chk" data-k="a3"><div class="box">✓</div><span>이 실습지와 제미나이 앱을 <b>번갈아</b> 오갈 수 있어요 <span class="small">(모르면 손 들기 ✋)</span></span></div>
+  </div>
+
+  <h2><span class="n" style="background:var(--red)">!</span>꼭 지켜 주세요</h2>
+  <div class="card">
+    <div class="rule"><span class="dot" style="background:var(--red)">✕</span><div>주민등록번호·통장 번호·집 주소는 <b>책에도, 앱에도</b> 넣지 않아요</div></div>
+    <div class="rule"><span class="dot" style="background:#e7a93a">!</span><div>가족 얼굴 사진·실명 이야기는 <b>먼저 허락</b>받아요</div></div>
+    <div class="rule"><span class="dot" style="background:#e7a93a">!</span><div>앱을 <b>공유 링크</b>로 보내면 받은 사람 누구나 안의 내용을 볼 수 있어요</div></div>
+  </div>
+
+  <h2><span class="n" style="background:var(--teal)">1</span>캔버스 켜기</h2>
+  <div class="card">
+    <div class="step"><span class="num">1</span><div>제미나이 앱 입력창 왼쪽 <span class="k">＋</span> 누르기</div></div>
+    <div class="step hl"><span class="num">2</span><div><span class="k">Canvas</span> 고르기 👆</div></div>
+    <div class="step"><span class="num">3</span><div>아래 <b>주문서 ①</b>을 복사 → 입력창을 <b>길게 눌러 붙여넣기</b></div></div>
+    <div class="step"><span class="num">4</span><div>보내기 <span class="k">↑</span> 누르고 <b>1~2분 기다리기</b></div></div>
+    <p class="small">⚠ 메뉴 이름·위치는 바뀔 수 있어요</p>
+  </div>
+
+  <h2><span class="n" style="background:var(--teal)">2</span>주문서 ① 기본 틀</h2>
+  <div class="pbox easy" id="pr1">캔버스로 책 만들기 앱을 만들어 줘. 이름은 하이디 공방. A5 크기 책 페이지를 한 장씩 보여 주고, 위에 표지 만들기, 글 등록, 이미지 등록, 목차, 저장, PDF로 저장 버튼을 크게 넣어 줘. 글을 등록하면 새 장이 새 페이지에서 시작하게 해 줘.</div>
+  <button class="cbtn" data-copy="pr1">📋 주문서 ① 복사하기</button><details class="more"><summary>🔍 더 자세한 주문서 (선택)</summary><p class="more-tip">앱이 너무 단순하게 나오거나 버튼이 빠졌으면, 이 글을 <b>같은 대화창</b>에 이어서 보내요.</p><div class="pbox" id="pr1d">캔버스로 &#x27;하이디 공방 — 나만의 책 만들기&#x27; 앱을 만들어 줘. HTML 파일 하나로 만들어 줘.
+- 위쪽에 큰 버튼: [표지 만들기] [글 등록] [이미지 등록] [목차] [저장] [PDF로 저장]
+- 가운데에 A5 크기(148×210mm) 책 페이지를 한 장씩 보여 주고, [◀ 이전 쪽] [다음 쪽 ▶] 버튼과 쪽수를 표시해 줘.
+- [글 등록]을 누르면 &#x27;장 제목&#x27;과 &#x27;본문&#x27;을 쓰는 창이 열린다. 등록하면 새 장은 새 페이지에서 시작하고, 글이 길면 다음 페이지로 자동으로 넘긴다.
+- 어르신이 쓰기 쉽게 글씨와 버튼을 크게(버튼 높이 56px 이상), 쉬운 한국어로, 네이비와 하늘색으로 만들어 줘.</div><button class="cbtn sub" data-copy="pr1d">📋 자세한 주문서 복사</button></details>
+  <div class="chk" data-k="o1" style="margin-top:6px"><div class="box">✓</div><span>보냈고, 앱이 만들어졌어요</span></div>
+
+  <h2><span class="n" style="background:var(--teal)">3</span>주문서 ② 차례·사진·표지</h2>
+  <div class="card" style="background:#fff8eb;border-color:#f0c27a">⚠ <b>같은 대화창</b>에 이어서 붙여 넣어요. 새 대화를 열면 처음부터 다시 만들어져요.</div>
+  <div class="pbox easy" id="pr2">목차가 자동으로 만들어지게 하고, 사진 넣기와 표지 만들기, 고치기와 지우기 버튼을 넣어 줘. 있던 기능은 그대로 둬.</div>
+  <button class="cbtn" data-copy="pr2">📋 주문서 ② 복사하기</button><details class="more"><summary>🔍 더 자세한 주문서 (선택)</summary><p class="more-tip">앱이 너무 단순하게 나오거나 버튼이 빠졌으면, 이 글을 <b>같은 대화창</b>에 이어서 보내요.</p><div class="pbox" id="pr2d">지금 앱에 아래 기능을 추가해 줘. 있던 기능은 그대로 둬.
+- 목차: 글을 등록할 때마다 표지 다음 쪽 &#x27;차례&#x27;에 장 제목과 쪽수를 자동으로 넣는다.
+- 이미지 등록: 휴대폰 사진을 골라 지금 장의 끝에 넣는다. 크기(작게/중간/한 면 가득)와 사진 설명을 고를 수 있게. 사진은 자동으로 작게 줄여서 넣는다.
+- 표지: 책 제목, 지은이, 표지 사진을 넣는다.
+- 등록한 글과 사진마다 [고치기] [지우기] 버튼. 지울 때는 한 번 더 물어본다.</div><button class="cbtn sub" data-copy="pr2d">📋 자세한 주문서 복사</button></details>
+  <div class="chk" data-k="o2" style="margin-top:6px"><div class="box">✓</div><span>차례·사진·표지 버튼이 생겼어요</span></div>
+
+  <h2><span class="n" style="background:var(--teal)">4</span>주문서 ③ 저장·PDF</h2>
+  <div class="pbox easy" id="pr3">쓴 내용이 자동으로 저장되게 하고, 작업 파일 저장과 불러오기, PDF로 저장, 글자 크기 버튼을 넣어 줘. 있던 기능은 그대로 둬.</div>
+  <button class="cbtn" data-copy="pr3">📋 주문서 ③ 복사하기</button><details class="more"><summary>🔍 더 자세한 주문서 (선택)</summary><p class="more-tip">앱이 너무 단순하게 나오거나 버튼이 빠졌으면, 이 글을 <b>같은 대화창</b>에 이어서 보내요.</p><div class="pbox" id="pr3d">지금 앱에 아래 기능을 추가해 줘. 있던 기능은 그대로 둬.
+- 쓴 내용은 자동으로 저장하고, 저장이 안 되는 화면이면 위쪽에 큰 글씨로 알려 준다.
+- [저장] 버튼: 책 전체를 &#x27;작업 파일&#x27;로 내려받고 다시 불러올 수 있게 한다. 내려받기가 막히면 내용을 복사해서 보관할 수 있게 한다.
+- [PDF로 저장]: A5 크기로 책 페이지만 PDF로 만든다. 인쇄 창이 안 열려도 PDF 파일을 바로 받을 수 있게 한다.
+- 본문 글자 크기를 [작게] [보통] [크게]로 바꾸는 버튼을 넣는다.</div><button class="cbtn sub" data-copy="pr3d">📋 자세한 주문서 복사</button></details>
+  <div class="chk" data-k="o3" style="margin-top:6px"><div class="box">✓</div><span>저장·PDF 버튼이 생겼어요 🎉</span></div>
+
+  <h2><span class="n" style="background:var(--red)">🔧</span>안 될 때는 이렇게 말해요</h2>
+  <p class="small" style="margin-bottom:8px">버튼을 누르면 복사돼요 → 같은 대화창에 붙여넣기</p>
+  <div class="say"><span><span class="small" style="display:block;font-weight:700">화면이 하얗게 나와요</span>“미리보기가 안 보여요. 다시 만들어 줘.”</span><button data-say="미리보기가 안 보여요. 다시 만들어 줘.">복사</button></div><div class="say"><span><span class="small" style="display:block;font-weight:700">빨간 오류 글자가 보여요</span>“(오류 글을 복사해 붙여 넣고) 이 오류를 고쳐 줘.”</span><button data-say="(오류 글을 복사해 붙여 넣고) 이 오류를 고쳐 줘.">복사</button></div><div class="say"><span><span class="small" style="display:block;font-weight:700">버튼·글씨가 작아요</span>“버튼과 글씨를 더 크게 해 줘.”</span><button data-say="버튼과 글씨를 더 크게 해 줘.">복사</button></div><div class="say"><span><span class="small" style="display:block;font-weight:700">글이 페이지 밖으로 넘쳐요</span>“글이 넘치지 않게 다음 쪽으로 넘겨 줘.”</span><button data-say="글이 넘치지 않게 다음 쪽으로 넘겨 줘.">복사</button></div><div class="say"><span><span class="small" style="display:block;font-weight:700">있던 기능이 없어졌어요</span>“방금 전 기능이 사라졌어. 있던 기능을 다시 살려 줘.”</span><button data-say="방금 전 기능이 사라졌어. 있던 기능을 다시 살려 줘.">복사</button></div>
+</div>
+
+<div class="pane" id="p2">
+  <h2><span class="n" style="background:var(--purple)">1</span>표지에 쓸 내용</h2>
+  <div class="card">
+    <label class="f" style="margin-top:0">📕 책 제목</label><input class="t save" id="bTitle" placeholder="예: 노란 봉투에 담긴 날들">
+    <label class="f">✍️ 지은이</label><input class="t save" id="bAuthor" placeholder="예: 김순자">
+    <p class="small" style="margin-top:8px">앱의 <b>[표지 만들기]</b>를 누르고 이 내용을 써 넣어요</p>
+  </div>
+
+  <h2><span class="n" style="background:var(--purple)">2</span>오늘의 이야기 고르기</h2>
+  <div class="topics">
+    <button class="topic" data-t="노란 월급봉투|그날 봉투를 받아 든 손이 덜덜 떨렸다."><span class="e">💰</span>첫 월급</button>
+    <button class="topic" data-t="어머니의 밥상|우리 집 밥상에는 늘 김치와 콩나물무침이 올라왔다."><span class="e">🍚</span>어머니의 밥상</button>
+    <button class="topic" data-t="내 고향 골목|골목 끝에는 커다란 감나무가 한 그루 있었다."><span class="e">🏘️</span>내 고향 골목</button>
+    <button class="topic" data-t="이사하던 날|그날 짐을 실은 트럭에 나도 함께 올라탔다."><span class="e">📦</span>이사하던 날</button>
+    <button class="topic" data-t="손주와 보낸 하루|손주가 처음으로 할머니라고 부른 날이었다."><span class="e">👶</span>손주와 보낸 하루</button>
+    <button class="topic" data-t="처음 배운 기술|처음 재봉틀 앞에 앉았을 때 발이 떨렸다."><span class="e">🧵</span>처음 배운 기술</button>
+  </div>
+  <div class="qshow" id="qshow">카드를 누르면 장 제목과 첫 문장 예시가 나와요</div>
+
+  <h2><span class="n" style="background:var(--purple)">3</span>첫 장 미리 써 두기</h2>
+  <div class="card">
+    <p class="small">여기에 먼저 써 두고 복사해서 앱의 <b>[글 등록]</b>에 붙여 넣어도 돼요. 🎤 키보드 마이크로 말해서 써도 좋아요.</p>
+    <label class="f">장 제목</label><input class="t save" id="chTitle" placeholder="예: 노란 월급봉투">
+    <label class="f">본문</label><textarea class="save" id="chBody" style="min-height:240px" placeholder="이야기를 써 주세요. 문단은 줄을 바꿔서 나눠요."></textarea>
+    <button class="cbtn" id="cpTitle" style="background:var(--purple)">📋 장 제목 복사</button>
+    <button class="cbtn" id="cpBody" style="background:var(--purple)">📋 본문 복사</button>
+  </div>
+
+  <h2><span class="n" style="background:var(--purple)">4</span>앱에서 차례대로</h2>
+  <div class="card">
+    <div class="chk" data-k="w1"><div class="box">✓</div><span>📕 [표지 만들기] — 제목·지은이</span></div>
+    <div class="chk" data-k="w2"><div class="box">✓</div><span>✍️ [글 등록] — 장 제목·본문 붙여넣기</span></div>
+    <div class="chk" data-k="w3"><div class="box">✓</div><span>🖼️ [이미지 등록] — 사진 1장, 크기 고르기</span></div>
+    <div class="chk" data-k="w4"><div class="box">✓</div><span>📑 [목차] — 차례에 제목·쪽수가 생겼는지 확인</span></div>
+  </div>
+
+  <h2><span class="n" style="background:var(--red)">💾</span>꼭! 저장하기</h2>
+  <div class="card" style="border-color:var(--red)">
+    <p>캔버스 앱은 새로고침하거나 다른 휴대폰에서 열면 <b>쓴 글이 사라질 수 있어요.</b></p>
+    <div class="chk" data-k="s1"><div class="box">✓</div><span>[저장] → [작업 파일 내려받기] 했어요</span></div>
+    <div class="chk" data-k="s2"><div class="box">✓</div><span>막혀서 [복사해서 보관] → 카카오톡 ‘나와의 채팅’에 붙여넣었어요</span></div>
+    <div class="chk" data-k="s3"><div class="box">✓</div><span>[PDF로 저장]도 해 봤어요</span></div>
+  </div>
+
+  <h2><span class="n" style="background:#e7a93a">🏠</span>다음 시간까지</h2>
+  <div class="card">
+    <p>이야기 <b>한 장</b>을 더 써 오세요.</p>
+    <label class="f">다음 장 제목</label><input class="t save" id="nextTitle" placeholder="예: 어머니의 밥상">
+    <textarea class="save" id="nextBody" style="min-height:200px;margin-top:8px" placeholder="미리 써 두면 다음 시간에 복사해서 바로 넣을 수 있어요"></textarea>
+  </div>
+</div>
+
+<p class="foot">하이디 교육컨설팅 · 강사 최선희 · 2026년 11월<br>메뉴 위치는 바뀔 수 있어요 · 적은 글은 이 휴대폰에만 저장돼요</p>
+</div>
+
+<div class="bottom"><button id="top">⬆ 맨 위로</button><button class="primary" id="help">✋ 도움이 필요해요</button></div>
+<div class="toast" id="toast">복사됐어요!</div>
+
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const KEY='hidi-gongbang-class-v1';let st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){st={};}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}};
+function toast(m,ms){const t=$('#toast');t.textContent=m||'복사됐어요!';t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),ms||1800);}
+function legacyCopy(text){const a=document.createElement('textarea');a.value=text;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px';document.body.appendChild(a);
+  let r=false;try{a.focus();a.select();a.setSelectionRange(0,text.length);r=document.execCommand('copy');}catch(e){r=false;}a.remove();return r;}
+function showManual(text){let m=document.getElementById('manualCopy');
+  if(!m){m=document.createElement('div');m.id='manualCopy';m.style.cssText='position:fixed;inset:0;background:rgba(10,20,40,.75);z-index:99;display:flex;align-items:center;justify-content:center;padding:16px';
+    m.innerHTML='<div style="background:#fff;border-radius:20px;padding:18px;width:100%;max-width:640px;font-family:inherit;color:#14284b">'+
+      '<div style="font-size:21px;font-weight:900;margin-bottom:6px">📋 이 휴대폰은 자동 복사가 막혀 있어요</div>'+
+      '<div style="font-size:18px;margin-bottom:10px">아래 글을 <b>길게 눌러</b> → <b>모두 선택</b> → <b>복사</b>를 눌러 주세요</div>'+
+      '<textarea readonly style="width:100%;height:46vh;font-size:18px;line-height:1.6;border:3px solid #4aa8e0;border-radius:14px;padding:12px;font-family:inherit"></textarea>'+
+      '<div style="display:flex;gap:10px;margin-top:10px"><button data-act="sel" style="flex:1;min-height:60px;border-radius:14px;border:3px solid #14284b;background:#fff;font-size:20px;font-weight:900;color:#14284b">전체 선택</button>'+
+      '<button data-act="close" style="flex:1;min-height:60px;border-radius:14px;border:none;background:#14284b;color:#fff;font-size:20px;font-weight:900">닫기</button></div></div>';
+    document.body.appendChild(m);
+    m.querySelector('[data-act=close]').onclick=()=>{m.style.display='none';};
+    m.querySelector('[data-act=sel]').onclick=()=>{const t=m.querySelector('textarea');t.focus();t.select();t.setSelectionRange(0,t.value.length);};}
+  const t=m.querySelector('textarea');t.value=text;m.style.display='flex';setTimeout(()=>{t.focus();t.select();t.setSelectionRange(0,t.value.length);},50);}
+function smartCopy(text,ok){const fail=()=>{if(legacyCopy(text))ok();else showManual(text);};
+  try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(fail);}else fail();}catch(e){fail();}}
+
+function copy(text,btn,label){const ok=()=>{toast('복사됐어요! 입력창을 길게 눌러 붙여넣기');if(btn){btn.classList.add('ok');btn.textContent='✓ 복사됐어요';setTimeout(()=>{btn.classList.remove('ok');btn.textContent=label;},2000);}};smartCopy(text,ok);}
+$$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.pane').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));st.tab=b.dataset.p;save();window.scrollTo({top:0,behavior:'smooth'});});
+if(st.tab){const b=$('.tabs button[data-p="'+st.tab+'"]');if(b)b.click();}
+$$('.save').forEach(el=>{if(st[el.id])el.value=st[el.id];el.addEventListener('input',()=>{st[el.id]=el.value;save();});});
+$$('.chk').forEach(c=>{if(st['c'+c.dataset.k])c.classList.add('on');c.onclick=()=>{c.classList.toggle('on');st['c'+c.dataset.k]=c.classList.contains('on');save();};});
+$$('[data-copy]').forEach(b=>{const l=b.textContent;b.onclick=()=>copy(document.getElementById(b.dataset.copy).innerText.trim(),b,l);});
+$$('[data-say]').forEach(b=>b.onclick=()=>copy(b.dataset.say,b,'복사'));
+$$('.topic').forEach(t=>t.onclick=()=>{$$('.topic').forEach(x=>x.classList.toggle('on',x===t));const [ti,fi]=t.dataset.t.split('|');
+  $('#qshow').innerHTML='📖 장 제목: <b>'+ti+'</b><br>✍️ 첫 문장 예: “'+fi+'”';
+  const T=$('#chTitle'),B=$('#chBody');if(!T.value.trim()){T.value=ti;st.chTitle=ti;}if(!B.value.trim()){B.value=fi+'\n';st.chBody=B.value;}save();toast('장 제목과 첫 문장을 아래 칸에 넣었어요',2200);});
+$('#cpTitle').onclick=e=>{const v=$('#chTitle').value.trim();if(!v){toast('장 제목 칸이 비어 있어요');return;}copy(v,e.currentTarget,'📋 장 제목 복사');};
+$('#cpBody').onclick=e=>{const v=$('#chBody').value.trim();if(!v){toast('본문 칸이 비어 있어요');return;}copy(v,e.currentTarget,'📋 본문 복사');};
+$('#top').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+$('#help').onclick=()=>toast('✋ 손을 들어 주세요. 강사가 갈게요!',2500);
+})();
+</script>
+</body>
+</html>
